@@ -32,6 +32,9 @@ export interface LocalizedString {
   es: string;
 }
 
+// LocalizedNames alias (다른 파일에서 사용)
+export type LocalizedNames = LocalizedString;
+
 // 날짜 범위 (MM-DD 형식)
 export interface DateRange {
   start: string; // MM-DD format

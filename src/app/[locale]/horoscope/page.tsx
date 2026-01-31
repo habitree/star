@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { setRequestLocale } from 'next-intl/server';
 import { locales, type Locale } from '@/i18n/config';
 import { getTodayTopSigns, generateDailyHoroscope } from '@/lib/horoscope-generator';
-import { zodiacData } from '@/components/ui/ZodiacCard';
+import { zodiacData } from '@/data/zodiac-info';
 import type { ZodiacSignId } from '@/types';
 
 // 페이지 제목 다국어

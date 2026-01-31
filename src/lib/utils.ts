@@ -27,12 +27,14 @@ export function formatDate(
     return '';
   }
 
-  const dateFormatOptions: Intl.DateTimeFormatOptions = {
+  const formatOptions: Record<string, Intl.DateTimeFormatOptions> = {
     short: { year: '2-digit', month: 'numeric', day: 'numeric' },
     medium: { year: 'numeric', month: 'short', day: 'numeric' },
     long: { year: 'numeric', month: 'long', day: 'numeric' },
     full: { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' },
-  }[format];
+  };
+
+  const dateFormatOptions: Intl.DateTimeFormatOptions = { ...formatOptions[format] };
 
   if (includeTime) {
     dateFormatOptions.hour = '2-digit';

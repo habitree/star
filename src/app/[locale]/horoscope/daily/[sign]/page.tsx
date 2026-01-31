@@ -8,7 +8,7 @@ import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 import { locales, type Locale } from '@/i18n/config';
 import { generateDailyHoroscope, generateWeeklyHoroscope } from '@/lib/horoscope-generator';
-import { zodiacData } from '@/components/ui/ZodiacCard';
+import { zodiacData } from '@/data/zodiac-info';
 import ScoreBar from '@/components/ui/ScoreBar';
 import type { ZodiacSignId, HoroscopeCategory } from '@/types';
 

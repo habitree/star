@@ -6,7 +6,7 @@ import { zodiacSigns } from '@/data/zodiac-signs';
 import { getCompatibilityData, getCompatibilityGrade, getGradeLabel } from '@/data/compatibility-data';
 import { getZodiacElement, getZodiacModality, isValidZodiacSign } from '@/lib/zodiac-utils';
 import CompatibilityResult from '@/components/compatibility/CompatibilityResult';
-import type { ZodiacSignId, CompatibilityResult as CompatibilityResultType } from '@/types';
+import type { ZodiacSignId, CompatibilityResult as CompatibilityResultType, LocalizedText } from '@/types';
 
 interface Props {
   params: Promise<{ locale: Locale; sign1: string; sign2: string }>;
@@ -88,8 +88,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 // 원소 궁합 설명 생성
-function getElementDescription(element1: string, element2: string): Record<string, string> {
-  const descriptions: Record<string, Record<string, string>> = {
+function getElementDescription(element1: string, element2: string): LocalizedText {
+  const descriptions: Record<string, LocalizedText> = {
     'fire-fire': {
       ko: '불의 원소가 만나 열정이 배가됩니다.',
       en: 'Fire elements meet, doubling the passion.',
@@ -175,9 +175,9 @@ function getElementDescription(element1: string, element2: string): Record<strin
 }
 
 // 모달리티 궁합 설명 생성
-function getModalityDescription(modality1: string, modality2: string): Record<string, string> {
+function getModalityDescription(modality1: string, modality2: string): LocalizedText {
   if (modality1 === modality2) {
-    const sameModalityDesc: Record<string, Record<string, string>> = {
+    const sameModalityDesc: Record<string, LocalizedText> = {
       cardinal: {
         ko: '두 카디널 사인이 만나 리더십을 공유해야 합니다.',
         en: 'Two cardinal signs meet, needing to share leadership.',
