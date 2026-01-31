@@ -1,9 +1,8 @@
-name = "zodiac-service"
-compatibility_date = "2024-01-01"
+name = "star"
+compatibility_date = "2024-12-30"
 compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".open-next/assets"
+main = ".open-next/worker.js"
 
-# Cloudflare Pages 빌드 출력 디렉토리
-pages_build_output_dir = ".vercel/output/static"
-
-[vars]
-NODE_ENV = "production"
+[assets]
+binding = "ASSETS"
