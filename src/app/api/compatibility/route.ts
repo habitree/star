@@ -4,6 +4,8 @@ import { zodiacSigns } from '@/data/zodiac-signs';
 import type { ZodiacSignId, CompatibilityResult, LocalizedText } from '@/types';
 import { getZodiacElement, getZodiacModality } from '@/lib/zodiac-utils';
 
+export const runtime = 'edge';
+
 interface CompatibilityRequest {
   sign1: string;
   sign2: string;

@@ -7,6 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { generateWeeklyHoroscope } from '@/lib/horoscope-generator';
 import type { ZodiacSignId, HoroscopeResponse, WeeklyHoroscope } from '@/types';
 
+export const runtime = 'edge';
+
 // 유효한 별자리 ID 목록
 const validSigns: ZodiacSignId[] = [
   'aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo',

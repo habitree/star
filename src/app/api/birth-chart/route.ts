@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { calculateBirthChart } from '@/lib/astro-calculator';
 import type { BirthChartInput, BirthChartResult } from '@/types';
 
+export const runtime = 'edge';
+
 /**
  * 출생 차트 계산 API
  * POST /api/birth-chart

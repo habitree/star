@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 import { type Locale, locales } from '@/i18n/config';
+
+export const runtime = 'edge';
 import { zodiacSigns } from '@/data/zodiac-signs';
 import { type ZodiacSignId } from '@/types/zodiac';
 import { isValidZodiacSign, ZODIAC_ORDER } from '@/lib/zodiac-utils';

@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 import { locales, type Locale } from '@/i18n/config';
+
+export const runtime = 'edge';
 import { zodiacSigns } from '@/data/zodiac-signs';
 import { getCompatibilityData, getCompatibilityGrade, getGradeLabel } from '@/data/compatibility-data';
 import { getZodiacElement, getZodiacModality, isValidZodiacSign } from '@/lib/zodiac-utils';

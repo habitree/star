@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 import { type Locale, locales } from '@/i18n/config';
+
+export const runtime = 'edge';
 import { zodiacSigns } from '@/data/zodiac-signs';
 import { type Element, type ZodiacSign } from '@/types/zodiac';
 import ZodiacCard from '@/components/ui/ZodiacCard';

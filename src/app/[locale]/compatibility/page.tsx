@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 import { locales, type Locale } from '@/i18n/config';
+
+export const runtime = 'edge';
 import CompatibilityForm from '@/components/compatibility/CompatibilityForm';
 
 interface Props {

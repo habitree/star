@@ -7,6 +7,8 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { setRequestLocale } from 'next-intl/server';
 import { locales, type Locale } from '@/i18n/config';
+
+export const runtime = 'edge';
 import { getAllDailyHoroscopes } from '@/lib/horoscope-generator';
 import { zodiacData } from '@/data/zodiac-info';
 import ScoreBar from '@/components/ui/ScoreBar';
