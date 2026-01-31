@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { type ZodiacSignId, type Element } from '@/types/zodiac';
 import { type Locale } from '@/i18n/config';
+import ZodiacIcon from '@/components/ui/ZodiacIcon';
 
 interface ZodiacInfo {
   symbol: string;
@@ -92,25 +93,29 @@ interface ZodiacCardProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
+// Map card size to icon size
+const iconSizeMap = {
+  sm: 'sm' as const,
+  md: 'md' as const,
+  lg: 'lg' as const,
+};
+
 export default function ZodiacCard({ sign, locale, size = 'md' }: ZodiacCardProps) {
   const data = zodiacData[sign];
 
   const sizeClasses = {
     sm: {
       container: 'p-3',
-      symbol: 'text-2xl',
       name: 'text-sm',
       date: 'text-xs',
     },
     md: {
       container: 'p-4',
-      symbol: 'text-4xl',
       name: 'text-base',
       date: 'text-xs',
     },
     lg: {
       container: 'p-6',
-      symbol: 'text-6xl',
       name: 'text-lg',
       date: 'text-sm',
     },
@@ -128,15 +133,9 @@ export default function ZodiacCard({ sign, locale, size = 'md' }: ZodiacCardProp
           cursor-pointer group
         `}
       >
-        <span
-          className={`
-            ${classes.symbol} mb-2
-            group-hover:scale-110 transition-transform duration-300
-            filter drop-shadow-lg
-          `}
-        >
-          {data.symbol}
-        </span>
+        <div className="mb-2 group-hover:scale-110 transition-transform duration-300">
+          <ZodiacIcon sign={sign} size={iconSizeMap[size]} animated />
+        </div>
         <h3 className={`font-semibold ${classes.name} text-white mb-1`}>
           {data.names[locale]}
         </h3>

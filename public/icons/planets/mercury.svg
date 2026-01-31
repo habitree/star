@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="mercuryGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#cbd5e1"/>
+      <stop offset="100%" stop-color="#94a3b8"/>
+    </linearGradient>
+  </defs>
+  <!-- Mercury symbol: circle with horns (crescent) on top, cross below -->
+  <!-- Crescent/horns on top -->
+  <path d="M22 16 C22 8 32 4 32 4 C32 4 42 8 42 16" fill="none" stroke="url(#mercuryGradient)" stroke-width="3" stroke-linecap="round"/>
+  <!-- Main circle -->
+  <circle cx="32" cy="26" r="12" fill="none" stroke="url(#mercuryGradient)" stroke-width="3"/>
+  <!-- Vertical line -->
+  <line x1="32" y1="38" x2="32" y2="56" stroke="url(#mercuryGradient)" stroke-width="3" stroke-linecap="round"/>
+  <!-- Horizontal cross line -->
+  <line x1="24" y1="48" x2="40" y2="48" stroke="url(#mercuryGradient)" stroke-width="3" stroke-linecap="round"/>
+</svg>

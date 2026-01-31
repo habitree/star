@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="fireGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#D32F2F"/>
+      <stop offset="50%" stop-color="#FF5722"/>
+      <stop offset="100%" stop-color="#FF6F00"/>
+    </linearGradient>
+    <linearGradient id="fireInnerGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#FF6F00"/>
+      <stop offset="100%" stop-color="#FFCA28"/>
+    </linearGradient>
+  </defs>
+  <!-- Main flame -->
+  <path d="M32 4 C32 4 44 20 44 32 C48 28 52 34 52 42 C52 54 43 60 32 60 C21 60 12 54 12 42 C12 34 16 28 20 32 C20 20 32 4 32 4 Z" fill="url(#fireGradient)"/>
+  <!-- Inner flame -->
+  <path d="M32 18 C32 18 40 30 40 38 C40 48 36 52 32 52 C28 52 24 48 24 38 C24 30 32 18 32 18 Z" fill="url(#fireInnerGradient)"/>
+  <!-- Core glow -->
+  <ellipse cx="32" cy="46" rx="6" ry="8" fill="#FFECB3" opacity="0.8"/>
+</svg>

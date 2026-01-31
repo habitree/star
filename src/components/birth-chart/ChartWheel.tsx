@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import type { ZodiacSignId } from '@/types';
 
 interface ChartWheelProps {
@@ -8,7 +9,7 @@ interface ChartWheelProps {
   risingSign: ZodiacSignId;
 }
 
-// 별자리 심볼
+// 별자리 심볼 (fallback용)
 const zodiacSymbols: Record<ZodiacSignId, string> = {
   aries: '\u2648',
   taurus: '\u2649',
@@ -286,11 +287,21 @@ export default function ChartWheel({
       {/* 범례 */}
       <div className="flex justify-center gap-6 mt-4">
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-full bg-gradient-to-br from-yellow-300 to-orange-500" />
+          <Image
+            src="/icons/planets/sun.svg"
+            alt="Sun"
+            width={20}
+            height={20}
+          />
           <span className="text-white/70 text-sm">Sun</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-full bg-gradient-to-br from-blue-300 to-purple-500" />
+          <Image
+            src="/icons/planets/moon.svg"
+            alt="Moon"
+            width={20}
+            height={20}
+          />
           <span className="text-white/70 text-sm">Moon</span>
         </div>
         <div className="flex items-center gap-2">

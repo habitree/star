@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" id="capricorn-icon">
+  <defs>
+    <linearGradient id="capricorn-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8B4513"/>
+      <stop offset="100%" stop-color="#2D5016"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke="url(#capricorn-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- V shape with curved start -->
+    <path d="M16 16 C16 24, 20 32, 28 40 L28 44"/>
+    <path d="M28 40 C36 32, 40 24, 40 20"/>
+    <!-- Loop tail -->
+    <path d="M40 20 C40 28, 44 32, 48 32 C52 32, 52 24, 48 20 C44 16, 40 20, 44 28 C48 36, 48 44, 44 48"/>
+  </g>
+</svg>

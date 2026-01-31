@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="plutoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4c1d95"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+  </defs>
+  <!-- Pluto symbol: P and L combined, or circle in arc with cross -->
+  <!-- Vertical stem -->
+  <line x1="24" y1="8" x2="24" y2="56" stroke="url(#plutoGradient)" stroke-width="3" stroke-linecap="round"/>
+  <!-- P bowl (arc on top right) -->
+  <path d="M24 8 L36 8 C48 8 48 28 36 28 L24 28" fill="none" stroke="url(#plutoGradient)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Arc/crescent embracing from outside -->
+  <path d="M40 14 C54 18 54 38 40 42" fill="none" stroke="url(#plutoGradient)" stroke-width="3" stroke-linecap="round"/>
+  <!-- Horizontal line at bottom -->
+  <line x1="16" y1="48" x2="40" y2="48" stroke="url(#plutoGradient)" stroke-width="3" stroke-linecap="round"/>
+</svg>

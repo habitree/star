@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="jupiterGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8B5CF6"/>
+      <stop offset="100%" stop-color="#A855F7"/>
+    </linearGradient>
+  </defs>
+  <!-- Jupiter symbol: stylized number 4 or Zeus's lightning bolt variant -->
+  <!-- Main curved shape (like a 2 rotated) -->
+  <path d="M18 12 L18 32 L48 32" fill="none" stroke="url(#jupiterGradient)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Vertical descender -->
+  <line x1="38" y1="18" x2="38" y2="52" stroke="url(#jupiterGradient)" stroke-width="3" stroke-linecap="round"/>
+  <!-- Top curve/hook -->
+  <path d="M18 12 C18 6 28 6 28 12" fill="none" stroke="url(#jupiterGradient)" stroke-width="3" stroke-linecap="round"/>
+</svg>

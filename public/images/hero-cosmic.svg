@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <!-- Main cosmic gradient -->
+    <radialGradient id="cosmicCore" cx="30%" cy="40%" r="60%" fx="25%" fy="35%">
+      <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.8"/>
+      <stop offset="30%" stop-color="#6366f1" stop-opacity="0.6"/>
+      <stop offset="60%" stop-color="#4c1d95" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#1e1b4b" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Secondary nebula gradient -->
+    <radialGradient id="nebulaSecondary" cx="70%" cy="60%" r="50%" fx="75%" fy="55%">
+      <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.6"/>
+      <stop offset="40%" stop-color="#7c3aed" stop-opacity="0.4"/>
+      <stop offset="70%" stop-color="#4c1d95" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#1e1b4b" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Accent glow -->
+    <radialGradient id="accentGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#c4b5fd" stop-opacity="0.5"/>
+      <stop offset="50%" stop-color="#8b5cf6" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#6366f1" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Star glow -->
+    <radialGradient id="starGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset="30%" stop-color="#e0e7ff" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#c4b5fd" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Swirl gradient -->
+    <linearGradient id="swirlGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.3"/>
+      <stop offset="50%" stop-color="#6366f1" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#a78bfa" stop-opacity="0.3"/>
+    </linearGradient>
+
+    <!-- Filter for soft glow effect -->
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="20" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="subtleBlur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="8"/>
+    </filter>
+  </defs>
+
+  <!-- Transparent background -->
+  <rect width="1200" height="600" fill="transparent"/>
+
+  <!-- Main cosmic nebula shapes -->
+  <ellipse cx="300" cy="250" rx="400" ry="280" fill="url(#cosmicCore)" filter="url(#softGlow)"/>
+  <ellipse cx="850" cy="350" rx="350" ry="250" fill="url(#nebulaSecondary)" filter="url(#softGlow)"/>
+
+  <!-- Cosmic swirl shapes -->
+  <g filter="url(#subtleBlur)">
+    <path d="M100,300 Q200,150 400,200 T700,180 Q850,200 900,300 Q950,400 800,450 Q600,500 400,450 Q200,400 100,300"
+          fill="url(#swirlGrad)" opacity="0.4"/>
+    <path d="M200,400 Q350,300 500,350 T800,320 Q950,350 1000,420 Q1050,500 900,530 Q700,560 500,520 Q300,480 200,400"
+          fill="url(#swirlGrad)" opacity="0.3"/>
+  </g>
+
+  <!-- Accent glowing orbs -->
+  <circle cx="250" cy="200" r="80" fill="url(#accentGlow)" filter="url(#subtleBlur)"/>
+  <circle cx="550" cy="280" r="60" fill="url(#accentGlow)" filter="url(#subtleBlur)"/>
+  <circle cx="900" cy="250" r="70" fill="url(#accentGlow)" filter="url(#subtleBlur)"/>
+  <circle cx="150" cy="450" r="50" fill="url(#accentGlow)" filter="url(#subtleBlur)"/>
+  <circle cx="1050" cy="400" r="55" fill="url(#accentGlow)" filter="url(#subtleBlur)"/>
+
+  <!-- Subtle constellation hints -->
+  <g stroke="#a78bfa" stroke-width="0.5" fill="none" opacity="0.2">
+    <path d="M180,120 L250,160 L320,140 L380,180"/>
+    <path d="M250,160 L270,220 L320,280"/>
+    <path d="M700,100 L780,130 L850,110 L920,150"/>
+    <path d="M780,130 L800,200 L850,260"/>
+    <path d="M100,380 L170,420 L150,500"/>
+    <path d="M950,320 L1020,360 L1080,340"/>
+  </g>
+
+  <!-- Constellation star points -->
+  <g fill="#e0e7ff">
+    <circle cx="180" cy="120" r="2" opacity="0.6"/>
+    <circle cx="250" cy="160" r="3" opacity="0.7"/>
+    <circle cx="320" cy="140" r="2" opacity="0.6"/>
+    <circle cx="380" cy="180" r="2.5" opacity="0.65"/>
+    <circle cx="270" cy="220" r="2" opacity="0.55"/>
+    <circle cx="320" cy="280" r="2" opacity="0.5"/>
+    <circle cx="700" cy="100" r="2" opacity="0.6"/>
+    <circle cx="780" cy="130" r="3" opacity="0.7"/>
+    <circle cx="850" cy="110" r="2" opacity="0.6"/>
+    <circle cx="920" cy="150" r="2.5" opacity="0.65"/>
+    <circle cx="800" cy="200" r="2" opacity="0.55"/>
+    <circle cx="850" cy="260" r="2" opacity="0.5"/>
+    <circle cx="100" cy="380" r="2" opacity="0.6"/>
+    <circle cx="170" cy="420" r="2.5" opacity="0.65"/>
+    <circle cx="150" cy="500" r="2" opacity="0.6"/>
+    <circle cx="950" cy="320" r="2" opacity="0.6"/>
+    <circle cx="1020" cy="360" r="2.5" opacity="0.65"/>
+    <circle cx="1080" cy="340" r="2" opacity="0.6"/>
+  </g>
+
+  <!-- Scattered ambient stars -->
+  <g fill="#ffffff">
+    <circle cx="50" cy="80" r="1.5" opacity="0.8"/>
+    <circle cx="150" cy="50" r="1" opacity="0.6"/>
+    <circle cx="420" cy="70" r="1.5" opacity="0.7"/>
+    <circle cx="580" cy="40" r="1" opacity="0.5"/>
+    <circle cx="750" cy="60" r="1.5" opacity="0.8"/>
+    <circle cx="1000" cy="80" r="1" opacity="0.6"/>
+    <circle cx="1120" cy="50" r="1.5" opacity="0.7"/>
+    <circle cx="80" cy="550" r="1" opacity="0.6"/>
+    <circle cx="280" cy="530" r="1.5" opacity="0.7"/>
+    <circle cx="450" cy="560" r="1" opacity="0.5"/>
+    <circle cx="620" cy="540" r="1.5" opacity="0.8"/>
+    <circle cx="800" cy="570" r="1" opacity="0.6"/>
+    <circle cx="980" cy="550" r="1.5" opacity="0.7"/>
+    <circle cx="1150" cy="530" r="1" opacity="0.5"/>
+    <circle cx="500" cy="150" r="1" opacity="0.5"/>
+    <circle cx="650" cy="400" r="1.5" opacity="0.6"/>
+    <circle cx="350" cy="480" r="1" opacity="0.5"/>
+    <circle cx="1100" cy="200" r="1.5" opacity="0.7"/>
+    <circle cx="50" cy="300" r="1" opacity="0.5"/>
+  </g>
+
+  <!-- Brighter accent stars with glow -->
+  <g>
+    <circle cx="220" cy="180" r="4" fill="url(#starGlow)"/>
+    <circle cx="480" cy="120" r="3" fill="url(#starGlow)"/>
+    <circle cx="820" cy="180" r="4" fill="url(#starGlow)"/>
+    <circle cx="1050" cy="280" r="3" fill="url(#starGlow)"/>
+    <circle cx="350" cy="380" r="3" fill="url(#starGlow)"/>
+    <circle cx="700" cy="480" r="4" fill="url(#starGlow)"/>
+  </g>
+</svg>

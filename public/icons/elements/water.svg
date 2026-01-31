@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="waterGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#003DA5"/>
+      <stop offset="100%" stop-color="#008B8B"/>
+    </linearGradient>
+    <linearGradient id="waterHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4FC3F7"/>
+      <stop offset="100%" stop-color="#003DA5"/>
+    </linearGradient>
+  </defs>
+  <!-- Main droplet -->
+  <path d="M32 4 C32 4 12 28 12 40 C12 52 21 60 32 60 C43 60 52 52 52 40 C52 28 32 4 32 4 Z" fill="url(#waterGradient)"/>
+  <!-- Highlight reflection -->
+  <ellipse cx="24" cy="36" rx="6" ry="10" fill="url(#waterHighlight)" opacity="0.4"/>
+  <!-- Small highlight -->
+  <ellipse cx="22" cy="32" rx="3" ry="5" fill="#B3E5FC" opacity="0.6"/>
+  <!-- Wave lines at bottom -->
+  <path d="M18 48 Q24 44 32 48 T46 48" fill="none" stroke="#4FC3F7" stroke-width="1.5" opacity="0.5"/>
+  <path d="M20 52 Q28 48 36 52 T44 52" fill="none" stroke="#4FC3F7" stroke-width="1" opacity="0.4"/>
+</svg>

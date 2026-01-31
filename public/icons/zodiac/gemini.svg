@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" id="gemini-icon">
+  <defs>
+    <linearGradient id="gemini-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFD700"/>
+      <stop offset="100%" stop-color="#06B6D4"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke="url(#gemini-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Top horizontal line with curves -->
+    <path d="M16 18 C24 22, 40 22, 48 18"/>
+    <!-- Bottom horizontal line with curves -->
+    <path d="M16 46 C24 42, 40 42, 48 46"/>
+    <!-- Left vertical pillar -->
+    <line x1="24" y1="20" x2="24" y2="44"/>
+    <!-- Right vertical pillar -->
+    <line x1="40" y1="20" x2="40" y2="44"/>
+  </g>
+</svg>

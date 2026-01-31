@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" id="virgo-icon">
+  <defs>
+    <linearGradient id="virgo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8B4513"/>
+      <stop offset="100%" stop-color="#2D5016"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke="url(#virgo-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- M shape with loops -->
+    <path d="M16 44 L16 24 C16 20, 20 16, 24 20 L24 44"/>
+    <path d="M24 24 C24 20, 28 16, 32 20 L32 44"/>
+    <path d="M32 24 C32 20, 36 16, 40 20 L40 36"/>
+    <!-- Curved tail crossing -->
+    <path d="M40 36 C44 40, 48 36, 48 32 C48 28, 44 28, 42 32 C40 36, 44 44, 48 48"/>
+  </g>
+</svg>

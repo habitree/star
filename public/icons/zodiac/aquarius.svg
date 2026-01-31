@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" id="aquarius-icon">
+  <defs>
+    <linearGradient id="aquarius-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFD700"/>
+      <stop offset="100%" stop-color="#06B6D4"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke="url(#aquarius-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Top wave -->
+    <path d="M16 24 C20 20, 24 28, 28 24 C32 20, 36 28, 40 24 C44 20, 48 28, 48 24"/>
+    <!-- Bottom wave -->
+    <path d="M16 36 C20 32, 24 40, 28 36 C32 32, 36 40, 40 36 C44 32, 48 40, 48 36"/>
+  </g>
+</svg>

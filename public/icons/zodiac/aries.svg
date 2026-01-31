@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" id="aries-icon">
+  <defs>
+    <linearGradient id="aries-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D32F2F"/>
+      <stop offset="100%" stop-color="#FF6F00"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke="url(#aries-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Left horn spiral -->
+    <path d="M20 44 C20 36, 16 28, 16 24 C16 18, 20 16, 24 16 C28 16, 30 20, 30 24"/>
+    <!-- Right horn spiral -->
+    <path d="M44 44 C44 36, 48 28, 48 24 C48 18, 44 16, 40 16 C36 16, 34 20, 34 24"/>
+    <!-- Center line -->
+    <path d="M32 24 L32 48"/>
+  </g>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" id="pisces-icon">
+  <defs>
+    <linearGradient id="pisces-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#003DA5"/>
+      <stop offset="100%" stop-color="#008B8B"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke="url(#pisces-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Left fish curve ))  -->
+    <path d="M20 16 C12 24, 12 40, 20 48"/>
+    <!-- Right fish curve (( -->
+    <path d="M44 16 C52 24, 52 40, 44 48"/>
+    <!-- Horizontal connecting line -->
+    <line x1="16" y1="32" x2="48" y2="32"/>
+  </g>
+</svg>

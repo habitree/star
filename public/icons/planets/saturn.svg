@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="saturnGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#78350f"/>
+      <stop offset="100%" stop-color="#92400e"/>
+    </linearGradient>
+  </defs>
+  <!-- Saturn symbol: h-shape with cross on top -->
+  <!-- Top cross -->
+  <line x1="20" y1="8" x2="20" y2="20" stroke="url(#saturnGradient)" stroke-width="3" stroke-linecap="round"/>
+  <line x1="14" y1="14" x2="26" y2="14" stroke="url(#saturnGradient)" stroke-width="3" stroke-linecap="round"/>
+  <!-- Vertical stem -->
+  <line x1="20" y1="20" x2="20" y2="56" stroke="url(#saturnGradient)" stroke-width="3" stroke-linecap="round"/>
+  <!-- Curved arm to the right (h shape) -->
+  <path d="M20 32 C20 24 36 24 36 32 L36 56" fill="none" stroke="url(#saturnGradient)" stroke-width="3" stroke-linecap="round"/>
+  <!-- Ring accent -->
+  <ellipse cx="44" cy="44" rx="10" ry="4" fill="none" stroke="url(#saturnGradient)" stroke-width="2" opacity="0.6"/>
+</svg>

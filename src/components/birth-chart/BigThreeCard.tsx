@@ -3,6 +3,8 @@
 import { useTranslations } from 'next-intl';
 import type { ZodiacSignId } from '@/types';
 import type { Locale } from '@/i18n/config';
+import PlanetIcon, { type PlanetId } from '@/components/ui/PlanetIcon';
+import ZodiacIcon from '@/components/ui/ZodiacIcon';
 
 interface BigThreeCardProps {
   type: 'sun' | 'moon' | 'rising';
@@ -66,57 +68,22 @@ const zodiacData: Record<
   },
 };
 
-// 타입별 아이콘 및 색상
+// 타입별 색상 설정
 const typeConfig = {
   sun: {
-    icon: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        className="w-6 h-6"
-      >
-        <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />
-      </svg>
-    ),
+    planetId: 'sun' as PlanetId,
     gradient: 'from-yellow-400 to-orange-500',
     bgGradient: 'from-yellow-500/20 to-orange-500/20',
     borderColor: 'border-yellow-500/30',
   },
   moon: {
-    icon: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        className="w-6 h-6"
-      >
-        <path
-          fillRule="evenodd"
-          d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z"
-          clipRule="evenodd"
-        />
-      </svg>
-    ),
+    planetId: 'moon' as PlanetId,
     gradient: 'from-blue-400 to-purple-500',
     bgGradient: 'from-blue-500/20 to-purple-500/20',
     borderColor: 'border-blue-500/30',
   },
   rising: {
-    icon: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        className="w-6 h-6"
-      >
-        <path
-          fillRule="evenodd"
-          d="M11.47 2.47a.75.75 0 011.06 0l3.75 3.75a.75.75 0 01-1.06 1.06l-2.47-2.47V21a.75.75 0 01-1.5 0V4.81L8.78 7.28a.75.75 0 01-1.06-1.06l3.75-3.75z"
-          clipRule="evenodd"
-        />
-      </svg>
-    ),
+    planetId: 'sun' as PlanetId, // Rising uses ascendant symbol
     gradient: 'from-pink-400 to-rose-500',
     bgGradient: 'from-pink-500/20 to-rose-500/20',
     borderColor: 'border-pink-500/30',
@@ -167,25 +134,16 @@ export default function BigThreeCard({
           className={`
             p-2 rounded-lg
             bg-gradient-to-br ${config.gradient}
-            text-white
           `}
         >
-          {config.icon}
+          <PlanetIcon planet={config.planetId} size="sm" />
         </div>
         <span className="text-white/70 font-medium">{typeLabels[type]}</span>
       </div>
 
       {/* 별자리 심볼과 이름 */}
       <div className="flex items-center gap-4 mb-4">
-        <span
-          className={`
-            text-5xl filter drop-shadow-lg
-            bg-gradient-to-br ${config.gradient}
-            bg-clip-text text-transparent
-          `}
-        >
-          {signData.symbol}
-        </span>
+        <ZodiacIcon sign={sign} size="lg" animated />
         <div>
           <h3 className="text-2xl font-bold text-white">
             {signData.names[locale]}

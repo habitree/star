@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" id="cancer-icon">
+  <defs>
+    <linearGradient id="cancer-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#003DA5"/>
+      <stop offset="100%" stop-color="#008B8B"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke="url(#cancer-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Top curl (69 shape rotated) -->
+    <path d="M16 28 C16 20, 32 16, 44 20 C48 22, 48 28, 44 28 C40 28, 40 24, 44 24"/>
+    <!-- Bottom curl -->
+    <path d="M48 36 C48 44, 32 48, 20 44 C16 42, 16 36, 20 36 C24 36, 24 40, 20 40"/>
+  </g>
+</svg>

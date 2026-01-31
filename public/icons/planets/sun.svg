@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="sunGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D"/>
+      <stop offset="100%" stop-color="#F97316"/>
+    </linearGradient>
+    <radialGradient id="sunCoreGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FEF3C7"/>
+      <stop offset="100%" stop-color="#FCD34D"/>
+    </radialGradient>
+  </defs>
+  <!-- Rays -->
+  <g fill="url(#sunGradient)">
+    <polygon points="32,2 35,14 29,14"/>
+    <polygon points="32,62 35,50 29,50"/>
+    <polygon points="2,32 14,35 14,29"/>
+    <polygon points="62,32 50,35 50,29"/>
+    <polygon points="10,10 19,17 15,21"/>
+    <polygon points="54,10 45,17 49,21"/>
+    <polygon points="10,54 19,47 15,43"/>
+    <polygon points="54,54 45,47 49,43"/>
+  </g>
+  <!-- Sun core -->
+  <circle cx="32" cy="32" r="16" fill="url(#sunCoreGradient)"/>
+  <!-- Inner glow -->
+  <circle cx="32" cy="32" r="12" fill="url(#sunGradient)" opacity="0.6"/>
+</svg>

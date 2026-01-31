@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" id="leo-icon">
+  <defs>
+    <linearGradient id="leo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D32F2F"/>
+      <stop offset="100%" stop-color="#FF6F00"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke="url(#leo-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Main mane curve -->
+    <circle cx="26" cy="26" r="10"/>
+    <!-- Curved tail -->
+    <path d="M26 36 C26 44, 32 48, 38 48 C46 48, 48 40, 44 36 C40 32, 36 36, 40 40"/>
+  </g>
+</svg>
