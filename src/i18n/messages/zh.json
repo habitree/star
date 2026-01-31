@@ -1,0 +1,124 @@
+{
+  "common": {
+    "appName": "星座运势",
+    "home": "首页",
+    "horoscope": "运势",
+    "zodiac": "星座",
+    "compatibility": "配对",
+    "birthChart": "出生图"
+  },
+  "nav": {
+    "logo": "星座运势",
+    "home": "首页",
+    "horoscope": "今日运势",
+    "zodiac": "星座",
+    "compatibility": "配对",
+    "birthChart": "出生图"
+  },
+  "home": {
+    "title": "今日星座运势",
+    "subtitle": "查看12星座的今日运势、星座配对和出生星盘",
+    "selectSign": "选择星座",
+    "selectZodiac": "选择您的星座",
+    "quickHoroscope": "快速查看运势",
+    "quickHoroscopeDesc": "立即查看您的今日运势和星座配对",
+    "viewHoroscope": "查看今日运势",
+    "checkCompatibility": "查看配对",
+    "feature1Title": "每日更新",
+    "feature1Desc": "每日更新准确的运势信息",
+    "feature2Title": "星座配对",
+    "feature2Desc": "查看与恋人、朋友和同事的配对",
+    "feature3Title": "出生图",
+    "feature3Desc": "使用准确的出生时间分析您的星盘"
+  },
+  "horoscope": {
+    "daily": "每日运势",
+    "weekly": "每周运势",
+    "monthly": "每月运势",
+    "overall": "综合运",
+    "love": "爱情运",
+    "career": "事业运",
+    "health": "健康运",
+    "money": "财运",
+    "luckyNumber": "幸运数字",
+    "luckyColor": "幸运颜色"
+  },
+  "compatibility": {
+    "title": "星座配对",
+    "selectFirst": "第一个星座",
+    "selectSecond": "第二个星座",
+    "checkResult": "查看配对结果",
+    "score": "配对分数",
+    "loveCompat": "爱情配对",
+    "friendCompat": "友情配对",
+    "workCompat": "工作配对"
+  },
+  "birthChart": {
+    "title": "出生图",
+    "description": "输入您的出生时间和地点，了解您的三巨头（太阳、月亮和上升星座）。",
+    "form": {
+      "title": "输入出生信息",
+      "birthDate": "出生日期",
+      "birthTime": "出生时间",
+      "birthPlace": "出生地点",
+      "optional": "可选",
+      "timeHint": "如果不知道，请留空。将使用中午（12:00）。",
+      "searchCity": "搜索城市（例如：首尔、北京）",
+      "useCoordinates": "输入坐标",
+      "useCity": "选择城市",
+      "latitude": "纬度",
+      "longitude": "经度",
+      "calculate": "计算星盘",
+      "calculating": "计算中..."
+    },
+    "errors": {
+      "dateRequired": "请输入出生日期。",
+      "dateInFuture": "不能输入未来日期。",
+      "locationRequired": "请选择出生地点。",
+      "invalidLatitude": "纬度必须在-90到90之间。",
+      "invalidLongitude": "经度必须在-180到180之间。"
+    },
+    "bigThree": {
+      "sun": "太阳星座",
+      "moon": "月亮星座",
+      "rising": "上升星座"
+    },
+    "info": {
+      "whatIsBigThree": "什么是三巨头？",
+      "sunSign": "太阳星座",
+      "sunSignDesc": "代表您的核心自我和身份。最广为人知的星座。",
+      "moonSign": "月亮星座",
+      "moonSignDesc": "代表您的内心情感、本能和潜意识反应。",
+      "risingSign": "上升星座",
+      "risingSignDesc": "代表您的第一印象、外在表现和社交面具。",
+      "whyTimeMatters": "为什么出生时间很重要？",
+      "timeExplanation": "月亮星座和上升星座会根据出生时间而变化。月亮大约每2.5天换一个星座，而上升星座每2小时变化一次。知道准确的出生时间可以得到更准确的星盘。"
+    },
+    "result": {
+      "summary": "星盘摘要",
+      "dominantElement": "主导元素",
+      "dominantModality": "主导模式",
+      "birthInfo": "出生信息",
+      "date": "日期",
+      "time": "时间",
+      "latitude": "纬度",
+      "longitude": "经度",
+      "calculateAgain": "重新计算"
+    }
+  },
+  "footer": {
+    "logo": "星座运势",
+    "description": "查看12星座的今日运势、星座配对和出生星盘。每日更新准确的运势信息。",
+    "quickLinks": "快速链接",
+    "services": "服务",
+    "about": "关于我们",
+    "privacy": "隐私政策",
+    "terms": "服务条款",
+    "contact": "联系我们",
+    "dailyHoroscope": "今日运势",
+    "compatibility": "配对",
+    "birthChart": "出生图",
+    "zodiacSigns": "星座",
+    "allRightsReserved": "版权所有。"
+  }
+}

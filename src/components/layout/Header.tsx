@@ -1,0 +1,124 @@
+'use client';
+
+import { useState } from 'react';
+import Link from 'next/link';
+import { useParams, usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import LanguageSelector from '@/components/ui/LanguageSelector';
+import { type Locale } from '@/i18n/config';
+
+export default function Header() {
+  const t = useTranslations('nav');
+  const params = useParams();
+  const pathname = usePathname();
+  const locale = params.locale as Locale;
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const navItems = [
+    { href: `/${locale}`, label: t('home') },
+    { href: `/${locale}/horoscope`, label: t('horoscope') },
+    { href: `/${locale}/zodiac`, label: t('zodiac') },
+    { href: `/${locale}/compatibility`, label: t('compatibility') },
+    { href: `/${locale}/birth-chart`, label: t('birthChart') },
+  ];
+
+  const isActive = (href: string) => {
+    if (href === `/${locale}`) {
+      return pathname === href;
+    }
+    return pathname.startsWith(href);
+  };
+
+  return (
+    <header className="sticky top-0 z-50 backdrop-blur-lg bg-zodiac-dark/80 border-b border-white/10">
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <Link href={`/${locale}`} className="flex items-center gap-2 group">
+            <span className="text-2xl">&#x2B50;</span>
+            <span className="font-display text-xl font-bold text-gradient group-hover:opacity-80 transition-opacity">
+              {t('logo')}
+            </span>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-1">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`nav-link ${isActive(item.href) ? 'active' : ''}`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Language Selector & Mobile Menu Button */}
+          <div className="flex items-center gap-4">
+            <LanguageSelector />
+
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden p-2 text-white/70 hover:text-white transition-colors"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? (
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Navigation */}
+        {isMobileMenuOpen && (
+          <nav className="md:hidden py-4 border-t border-white/10">
+            <div className="flex flex-col gap-2">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`px-4 py-3 rounded-lg transition-colors ${
+                    isActive(item.href)
+                      ? 'bg-white/10 text-white'
+                      : 'text-white/70 hover:bg-white/5 hover:text-white'
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </nav>
+        )}
+      </div>
+    </header>
+  );
+}

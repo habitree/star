@@ -1,0 +1,124 @@
+{
+  "common": {
+    "appName": "Horoscopo",
+    "home": "Inicio",
+    "horoscope": "Horoscopo",
+    "zodiac": "Zodiaco",
+    "compatibility": "Compatibilidad",
+    "birthChart": "Carta Natal"
+  },
+  "nav": {
+    "logo": "Horoscopo",
+    "home": "Inicio",
+    "horoscope": "Horoscopo Diario",
+    "zodiac": "Zodiaco",
+    "compatibility": "Compatibilidad",
+    "birthChart": "Carta Natal"
+  },
+  "home": {
+    "title": "Horoscopo de Hoy",
+    "subtitle": "Descubre el horoscopo diario, la compatibilidad zodiacal y la carta natal de los 12 signos",
+    "selectSign": "Seleccionar Signo",
+    "selectZodiac": "Selecciona Tu Signo",
+    "quickHoroscope": "Consulta Rapida del Horoscopo",
+    "quickHoroscopeDesc": "Consulta tu horoscopo diario y compatibilidad zodiacal ahora mismo",
+    "viewHoroscope": "Ver Horoscopo Diario",
+    "checkCompatibility": "Ver Compatibilidad",
+    "feature1Title": "Actualizaciones Diarias",
+    "feature1Desc": "Informacion precisa del horoscopo actualizada diariamente",
+    "feature2Title": "Compatibilidad Zodiacal",
+    "feature2Desc": "Consulta la compatibilidad con tu pareja, amigos y colegas",
+    "feature3Title": "Carta Natal",
+    "feature3Desc": "Analiza tu carta unica con la hora exacta de nacimiento"
+  },
+  "horoscope": {
+    "daily": "Horoscopo Diario",
+    "weekly": "Horoscopo Semanal",
+    "monthly": "Horoscopo Mensual",
+    "overall": "General",
+    "love": "Amor",
+    "career": "Trabajo",
+    "health": "Salud",
+    "money": "Dinero",
+    "luckyNumber": "Numero de la Suerte",
+    "luckyColor": "Color de la Suerte"
+  },
+  "compatibility": {
+    "title": "Compatibilidad del Zodiaco",
+    "selectFirst": "Primer Signo",
+    "selectSecond": "Segundo Signo",
+    "checkResult": "Ver Compatibilidad",
+    "score": "Puntuacion de Compatibilidad",
+    "loveCompat": "Compatibilidad Amorosa",
+    "friendCompat": "Compatibilidad de Amistad",
+    "workCompat": "Compatibilidad Laboral"
+  },
+  "birthChart": {
+    "title": "Carta Natal",
+    "description": "Ingresa tu hora y lugar de nacimiento para descubrir tu Gran Trio (Sol, Luna y Ascendente).",
+    "form": {
+      "title": "Ingresa Informacion de Nacimiento",
+      "birthDate": "Fecha de Nacimiento",
+      "birthTime": "Hora de Nacimiento",
+      "birthPlace": "Lugar de Nacimiento",
+      "optional": "opcional",
+      "timeHint": "Deja en blanco si no sabes. Se usara mediodia (12:00).",
+      "searchCity": "Buscar ciudad (ej: Madrid, Nueva York)",
+      "useCoordinates": "Ingresar coordenadas",
+      "useCity": "Seleccionar ciudad",
+      "latitude": "Latitud",
+      "longitude": "Longitud",
+      "calculate": "Calcular Carta",
+      "calculating": "Calculando..."
+    },
+    "errors": {
+      "dateRequired": "Por favor ingresa tu fecha de nacimiento.",
+      "dateInFuture": "No se permiten fechas futuras.",
+      "locationRequired": "Por favor selecciona tu lugar de nacimiento.",
+      "invalidLatitude": "La latitud debe estar entre -90 y 90.",
+      "invalidLongitude": "La longitud debe estar entre -180 y 180."
+    },
+    "bigThree": {
+      "sun": "Signo Solar",
+      "moon": "Signo Lunar",
+      "rising": "Ascendente (ASC)"
+    },
+    "info": {
+      "whatIsBigThree": "Que es el Gran Trio?",
+      "sunSign": "Signo Solar",
+      "sunSignDesc": "Representa tu yo esencial e identidad. El signo zodiacal mas conocido.",
+      "moonSign": "Signo Lunar",
+      "moonSignDesc": "Representa tus emociones internas, instintos y reacciones subconscientes.",
+      "risingSign": "Ascendente",
+      "risingSignDesc": "Representa tu primera impresion, apariencia externa y mascara social.",
+      "whyTimeMatters": "Por que importa la hora de nacimiento?",
+      "timeExplanation": "El signo lunar y el ascendente cambian segun la hora de nacimiento. La Luna cambia de signo aproximadamente cada 2.5 dias, mientras que el ascendente cambia cada 2 horas. Conocer tu hora exacta de nacimiento te da una carta mas precisa."
+    },
+    "result": {
+      "summary": "Resumen de la Carta",
+      "dominantElement": "Elemento Dominante",
+      "dominantModality": "Modalidad Dominante",
+      "birthInfo": "Informacion de Nacimiento",
+      "date": "Fecha",
+      "time": "Hora",
+      "latitude": "Latitud",
+      "longitude": "Longitud",
+      "calculateAgain": "Calcular de Nuevo"
+    }
+  },
+  "footer": {
+    "logo": "Horoscopo",
+    "description": "Consulta el horoscopo diario, compatibilidad zodiacal y cartas natales de los 12 signos. Actualizaciones precisas cada dia.",
+    "quickLinks": "Enlaces Rapidos",
+    "services": "Servicios",
+    "about": "Acerca de",
+    "privacy": "Politica de Privacidad",
+    "terms": "Terminos de Servicio",
+    "contact": "Contacto",
+    "dailyHoroscope": "Horoscopo Diario",
+    "compatibility": "Compatibilidad",
+    "birthChart": "Carta Natal",
+    "zodiacSigns": "Signos del Zodiaco",
+    "allRightsReserved": "Todos los derechos reservados."
+  }
+}

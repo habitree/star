@@ -1,0 +1,192 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+    --gradient-dark: linear-gradient(180deg, #0f0a1e 0%, #1e1b4b 100%);
+    --gradient-card: linear-gradient(145deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-zodiac-dark text-white antialiased;
+    background: var(--gradient-dark);
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  /* 그라데이션 배경 */
+  .bg-gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .bg-gradient-dark {
+    background: var(--gradient-dark);
+  }
+
+  /* 글래스모피즘 카드 */
+  .glass-card {
+    @apply backdrop-blur-lg bg-white/10 border border-white/20 rounded-2xl;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300;
+  }
+
+  .glass-card-hover:hover {
+    @apply bg-white/15 border-white/30 scale-[1.02];
+    box-shadow: 0 12px 40px rgba(99, 102, 241, 0.3);
+  }
+
+  /* 원소별 카드 배경 */
+  .element-fire {
+    @apply bg-gradient-to-br from-element-fire/20 to-orange-500/10 border-element-fire/30;
+  }
+
+  .element-earth {
+    @apply bg-gradient-to-br from-element-earth/20 to-green-600/10 border-element-earth/30;
+  }
+
+  .element-air {
+    @apply bg-gradient-to-br from-element-air/20 to-sky-400/10 border-element-air/30;
+  }
+
+  .element-water {
+    @apply bg-gradient-to-br from-element-water/20 to-blue-600/10 border-element-water/30;
+  }
+
+  /* 네비게이션 링크 */
+  .nav-link {
+    @apply relative px-4 py-2 text-white/70 hover:text-white transition-colors duration-200;
+  }
+
+  .nav-link::after {
+    content: '';
+    @apply absolute bottom-0 left-1/2 w-0 h-0.5 bg-zodiac-primary transition-all duration-300;
+    transform: translateX(-50%);
+  }
+
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    @apply w-full;
+  }
+
+  .nav-link.active {
+    @apply text-white;
+  }
+
+  /* 버튼 스타일 */
+  .btn-primary {
+    @apply px-6 py-3 bg-gradient-primary text-white font-medium rounded-xl;
+    @apply hover:opacity-90 active:scale-95 transition-all duration-200;
+    @apply shadow-lg shadow-zodiac-primary/30;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 bg-white/10 text-white font-medium rounded-xl border border-white/20;
+    @apply hover:bg-white/20 active:scale-95 transition-all duration-200;
+  }
+
+  /* 스코어 바 */
+  .score-bar {
+    @apply h-2 rounded-full bg-white/10 overflow-hidden;
+  }
+
+  .score-bar-fill {
+    @apply h-full rounded-full bg-gradient-to-r from-zodiac-primary to-zodiac-secondary;
+    transition: width 0.5s ease-out;
+  }
+
+  /* 별 아이콘 */
+  .star-filled {
+    @apply text-zodiac-accent;
+  }
+
+  .star-empty {
+    @apply text-white/20;
+  }
+
+  /* 드롭다운 */
+  .dropdown-menu {
+    @apply absolute right-0 mt-2 py-2 w-48 glass-card z-50;
+    @apply opacity-0 invisible transform -translate-y-2;
+    transition: all 0.2s ease;
+  }
+
+  .dropdown-menu.open {
+    @apply opacity-100 visible translate-y-0;
+  }
+
+  .dropdown-item {
+    @apply px-4 py-2 text-white/70 hover:text-white hover:bg-white/10 transition-colors cursor-pointer;
+  }
+
+  /* 반짝이는 효과 */
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  /* 부드러운 페이드인 */
+  .fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* 별자리 심볼 */
+  .zodiac-symbol {
+    @apply text-4xl filter drop-shadow-lg;
+  }
+
+  .zodiac-symbol-lg {
+    @apply text-6xl filter drop-shadow-lg;
+  }
+}
+
+@layer utilities {
+  /* 텍스트 그라데이션 */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-zodiac-primary via-zodiac-secondary to-purple-400;
+  }
+
+  /* 그림자 */
+  .shadow-glow {
+    box-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+  }
+
+  .shadow-glow-sm {
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+  }
+}
