@@ -1,28 +1,22 @@
 'use client';
 
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
-import { useTranslations } from 'next-intl';
-import { type Locale } from '@/i18n/config';
 
 export default function Footer() {
-  const t = useTranslations('footer');
-  const params = useParams();
-  const locale = params.locale as Locale;
   const currentYear = new Date().getFullYear();
 
   const footerLinks = [
-    { href: `/${locale}/about`, label: t('about') },
-    { href: `/${locale}/privacy`, label: t('privacy') },
-    { href: `/${locale}/terms`, label: t('terms') },
-    { href: `/${locale}/contact`, label: t('contact') },
+    { href: '/about', label: '소개' },
+    { href: '/privacy', label: '개인정보처리방침' },
+    { href: '/terms', label: '이용약관' },
+    { href: '/contact', label: '문의하기' },
   ];
 
   const zodiacLinks = [
-    { href: `/${locale}/horoscope`, label: t('dailyHoroscope') },
-    { href: `/${locale}/compatibility`, label: t('compatibility') },
-    { href: `/${locale}/birth-chart`, label: t('birthChart') },
-    { href: `/${locale}/zodiac`, label: t('zodiacSigns') },
+    { href: '/horoscope', label: '오늘의 운세' },
+    { href: '/compatibility', label: '궁합' },
+    { href: '/birth-chart', label: '출생차트' },
+    { href: '/zodiac', label: '별자리' },
   ];
 
   return (
@@ -31,20 +25,20 @@ export default function Footer() {
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           {/* Logo & Description */}
           <div className="md:col-span-2">
-            <Link href={`/${locale}`} className="flex items-center gap-2 mb-4">
+            <Link href="/" className="flex items-center gap-2 mb-4">
               <span className="text-2xl">&#x2B50;</span>
               <span className="font-display text-xl font-bold text-gradient">
-                {t('logo')}
+                별자리 운세
               </span>
             </Link>
             <p className="text-white/60 text-sm max-w-md">
-              {t('description')}
+              12별자리의 오늘의 운세, 별자리 궁합, 출생 차트를 확인하세요. 매일 업데이트되는 정확한 운세 정보를 제공합니다.
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-semibold text-white mb-4">{t('quickLinks')}</h3>
+            <h3 className="font-semibold text-white mb-4">바로가기</h3>
             <ul className="space-y-2">
               {footerLinks.map((link) => (
                 <li key={link.href}>
@@ -61,7 +55,7 @@ export default function Footer() {
 
           {/* Services */}
           <div>
-            <h3 className="font-semibold text-white mb-4">{t('services')}</h3>
+            <h3 className="font-semibold text-white mb-4">서비스</h3>
             <ul className="space-y-2">
               {zodiacLinks.map((link) => (
                 <li key={link.href}>
@@ -80,7 +74,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-white/40 text-sm">
-            &copy; {currentYear} {t('logo')}. {t('allRightsReserved')}
+            &copy; {currentYear} 별자리 운세. 모든 권리 보유.
           </p>
 
           {/* Social Links */}

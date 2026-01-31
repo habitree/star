@@ -1,71 +1,29 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
 import type { ZodiacSignId } from '@/types';
-import type { Locale } from '@/i18n/config';
 import PlanetIcon, { type PlanetId } from '@/components/ui/PlanetIcon';
 import ZodiacIcon from '@/components/ui/ZodiacIcon';
 
 interface BigThreeCardProps {
   type: 'sun' | 'moon' | 'rising';
   sign: ZodiacSignId;
-  locale: Locale;
   interpretation?: string;
 }
 
 // 별자리 심볼 및 이름
-const zodiacData: Record<
-  ZodiacSignId,
-  { symbol: string; names: Record<Locale, string> }
-> = {
-  aries: {
-    symbol: '\u2648',
-    names: { ko: '양자리', en: 'Aries', zh: '白羊座', ja: '牡羊座', es: 'Aries' },
-  },
-  taurus: {
-    symbol: '\u2649',
-    names: { ko: '황소자리', en: 'Taurus', zh: '金牛座', ja: '牡牛座', es: 'Tauro' },
-  },
-  gemini: {
-    symbol: '\u264A',
-    names: { ko: '쌍둥이자리', en: 'Gemini', zh: '双子座', ja: '双子座', es: 'Geminis' },
-  },
-  cancer: {
-    symbol: '\u264B',
-    names: { ko: '게자리', en: 'Cancer', zh: '巨蟹座', ja: '蟹座', es: 'Cancer' },
-  },
-  leo: {
-    symbol: '\u264C',
-    names: { ko: '사자자리', en: 'Leo', zh: '狮子座', ja: '獅子座', es: 'Leo' },
-  },
-  virgo: {
-    symbol: '\u264D',
-    names: { ko: '처녀자리', en: 'Virgo', zh: '处女座', ja: '乙女座', es: 'Virgo' },
-  },
-  libra: {
-    symbol: '\u264E',
-    names: { ko: '천칭자리', en: 'Libra', zh: '天秤座', ja: '天秤座', es: 'Libra' },
-  },
-  scorpio: {
-    symbol: '\u264F',
-    names: { ko: '전갈자리', en: 'Scorpio', zh: '天蝎座', ja: '蠍座', es: 'Escorpio' },
-  },
-  sagittarius: {
-    symbol: '\u2650',
-    names: { ko: '사수자리', en: 'Sagittarius', zh: '射手座', ja: '射手座', es: 'Sagitario' },
-  },
-  capricorn: {
-    symbol: '\u2651',
-    names: { ko: '염소자리', en: 'Capricorn', zh: '摩羯座', ja: '山羊座', es: 'Capricornio' },
-  },
-  aquarius: {
-    symbol: '\u2652',
-    names: { ko: '물병자리', en: 'Aquarius', zh: '水瓶座', ja: '水瓶座', es: 'Acuario' },
-  },
-  pisces: {
-    symbol: '\u2653',
-    names: { ko: '물고기자리', en: 'Pisces', zh: '双鱼座', ja: '魚座', es: 'Piscis' },
-  },
+const zodiacData: Record<ZodiacSignId, { symbol: string; name: string }> = {
+  aries: { symbol: '\u2648', name: '양자리' },
+  taurus: { symbol: '\u2649', name: '황소자리' },
+  gemini: { symbol: '\u264A', name: '쌍둥이자리' },
+  cancer: { symbol: '\u264B', name: '게자리' },
+  leo: { symbol: '\u264C', name: '사자자리' },
+  virgo: { symbol: '\u264D', name: '처녀자리' },
+  libra: { symbol: '\u264E', name: '천칭자리' },
+  scorpio: { symbol: '\u264F', name: '전갈자리' },
+  sagittarius: { symbol: '\u2650', name: '사수자리' },
+  capricorn: { symbol: '\u2651', name: '염소자리' },
+  aquarius: { symbol: '\u2652', name: '물병자리' },
+  pisces: { symbol: '\u2653', name: '물고기자리' },
 };
 
 // 타입별 색상 설정
@@ -93,18 +51,15 @@ const typeConfig = {
 export default function BigThreeCard({
   type,
   sign,
-  locale,
   interpretation,
 }: BigThreeCardProps) {
-  const t = useTranslations('birthChart');
-
   const config = typeConfig[type];
   const signData = zodiacData[sign];
 
   const typeLabels: Record<'sun' | 'moon' | 'rising', string> = {
-    sun: t('bigThree.sun'),
-    moon: t('bigThree.moon'),
-    rising: t('bigThree.rising'),
+    sun: '태양',
+    moon: '달',
+    rising: '상승궁',
   };
 
   return (
@@ -146,11 +101,8 @@ export default function BigThreeCard({
         <ZodiacIcon sign={sign} size="lg" animated />
         <div>
           <h3 className="text-2xl font-bold text-white">
-            {signData.names[locale]}
+            {signData.name}
           </h3>
-          {locale !== 'en' && (
-            <p className="text-white/50 text-sm">{signData.names.en}</p>
-          )}
         </div>
       </div>
 

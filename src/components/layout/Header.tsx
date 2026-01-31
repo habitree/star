@@ -2,28 +2,22 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useParams, usePathname } from 'next/navigation';
-import { useTranslations } from 'next-intl';
-import LanguageSelector from '@/components/ui/LanguageSelector';
-import { type Locale } from '@/i18n/config';
+import { usePathname } from 'next/navigation';
 
 export default function Header() {
-  const t = useTranslations('nav');
-  const params = useParams();
   const pathname = usePathname();
-  const locale = params.locale as Locale;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { href: `/${locale}`, label: t('home') },
-    { href: `/${locale}/horoscope`, label: t('horoscope') },
-    { href: `/${locale}/zodiac`, label: t('zodiac') },
-    { href: `/${locale}/compatibility`, label: t('compatibility') },
-    { href: `/${locale}/birth-chart`, label: t('birthChart') },
+    { href: '/', label: '홈' },
+    { href: '/horoscope', label: '오늘의 운세' },
+    { href: '/zodiac', label: '별자리' },
+    { href: '/compatibility', label: '궁합' },
+    { href: '/birth-chart', label: '출생차트' },
   ];
 
   const isActive = (href: string) => {
-    if (href === `/${locale}`) {
+    if (href === '/') {
       return pathname === href;
     }
     return pathname.startsWith(href);
@@ -34,10 +28,10 @@ export default function Header() {
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href={`/${locale}`} className="flex items-center gap-2 group">
+          <Link href="/" className="flex items-center gap-2 group">
             <span className="text-2xl">&#x2B50;</span>
             <span className="font-display text-xl font-bold text-gradient group-hover:opacity-80 transition-opacity">
-              {t('logo')}
+              별자리 운세
             </span>
           </Link>
 
@@ -54,11 +48,8 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Language Selector & Mobile Menu Button */}
+          {/* Mobile Menu Button */}
           <div className="flex items-center gap-4">
-            <LanguageSelector />
-
-            {/* Mobile Menu Button */}
             <button
               className="md:hidden p-2 text-white/70 hover:text-white transition-colors"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

@@ -1,13 +1,8 @@
 'use client';
 
-export const runtime = 'edge';
-
-import { useTranslations } from 'next-intl';
-import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import ZodiacCard from '@/components/ui/ZodiacCard';
 import { type ZodiacSignId } from '@/types/zodiac';
-import { type Locale } from '@/i18n/config';
 
 const zodiacSigns: ZodiacSignId[] = [
   'aries',
@@ -25,10 +20,6 @@ const zodiacSigns: ZodiacSignId[] = [
 ];
 
 export default function HomePage() {
-  const t = useTranslations('home');
-  const params = useParams();
-  const locale = params.locale as Locale;
-
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -41,10 +32,10 @@ export default function HomePage() {
 
         <div className="relative max-w-6xl mx-auto text-center">
           <h1 className="font-display text-4xl md:text-6xl font-bold mb-6 fade-in">
-            <span className="text-gradient">{t('title')}</span>
+            <span className="text-gradient">오늘의 별자리 운세</span>
           </h1>
           <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-10 fade-in">
-            {t('subtitle')}
+            12별자리의 오늘의 운세, 별자리 궁합, 출생 차트를 확인해보세요
           </p>
         </div>
       </section>
@@ -53,7 +44,7 @@ export default function HomePage() {
       <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
           <h2 className="font-display text-2xl md:text-3xl font-semibold text-center mb-12">
-            {t('selectZodiac')}
+            나의 별자리 선택
           </h2>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
@@ -63,7 +54,7 @@ export default function HomePage() {
                 className="fade-in"
                 style={{ animationDelay: `${index * 50}ms` }}
               >
-                <ZodiacCard sign={sign} locale={locale} size="md" />
+                <ZodiacCard sign={sign} size="md" />
               </div>
             ))}
           </div>
@@ -75,18 +66,18 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto">
           <div className="glass-card p-8 md:p-12">
             <h2 className="font-display text-2xl md:text-3xl font-semibold text-center mb-6">
-              {t('quickHoroscope')}
+              빠른 운세 확인
             </h2>
             <p className="text-white/70 text-center mb-8">
-              {t('quickHoroscopeDesc')}
+              지금 바로 오늘의 운세와 별자리 궁합을 확인해보세요
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href={`/${locale}/horoscope`} className="btn-primary text-center">
-                {t('viewHoroscope')}
+              <Link href="/horoscope" className="btn-primary text-center">
+                오늘의 운세 보기
               </Link>
-              <Link href={`/${locale}/compatibility`} className="btn-secondary text-center">
-                {t('checkCompatibility')}
+              <Link href="/compatibility" className="btn-secondary text-center">
+                궁합 확인하기
               </Link>
             </div>
           </div>
@@ -100,22 +91,22 @@ export default function HomePage() {
             {/* Feature 1 */}
             <div className="glass-card-hover p-6 text-center">
               <div className="text-4xl mb-4">&#x2728;</div>
-              <h3 className="font-semibold text-lg mb-2">{t('feature1Title')}</h3>
-              <p className="text-white/60 text-sm">{t('feature1Desc')}</p>
+              <h3 className="font-semibold text-lg mb-2">매일 업데이트</h3>
+              <p className="text-white/60 text-sm">매일 새롭게 업데이트되는 정확한 운세 정보</p>
             </div>
 
             {/* Feature 2 */}
             <div className="glass-card-hover p-6 text-center">
               <div className="text-4xl mb-4">&#x2764;</div>
-              <h3 className="font-semibold text-lg mb-2">{t('feature2Title')}</h3>
-              <p className="text-white/60 text-sm">{t('feature2Desc')}</p>
+              <h3 className="font-semibold text-lg mb-2">별자리 궁합</h3>
+              <p className="text-white/60 text-sm">연인, 친구, 동료와의 궁합을 확인하세요</p>
             </div>
 
             {/* Feature 3 */}
             <div className="glass-card-hover p-6 text-center">
               <div className="text-4xl mb-4">&#x1F4CA;</div>
-              <h3 className="font-semibold text-lg mb-2">{t('feature3Title')}</h3>
-              <p className="text-white/60 text-sm">{t('feature3Desc')}</p>
+              <h3 className="font-semibold text-lg mb-2">출생 차트</h3>
+              <p className="text-white/60 text-sm">정확한 출생 시간으로 나만의 차트 분석</p>
             </div>
           </div>
         </div>

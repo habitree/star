@@ -2,12 +2,11 @@
 
 import Link from 'next/link';
 import { type ZodiacSignId, type Element } from '@/types/zodiac';
-import { type Locale } from '@/i18n/config';
 import ZodiacIcon from '@/components/ui/ZodiacIcon';
 
 interface ZodiacInfo {
   symbol: string;
-  names: Record<Locale, string>;
+  name: string;
   element: Element;
   dateRange: string;
 }
@@ -15,73 +14,73 @@ interface ZodiacInfo {
 const zodiacData: Record<ZodiacSignId, ZodiacInfo> = {
   aries: {
     symbol: '\u2648',
-    names: { ko: '양자리', en: 'Aries', zh: '白羊座', ja: 'おひつじ座', es: 'Aries' },
+    name: '양자리',
     element: 'fire',
     dateRange: '3/21 - 4/19',
   },
   taurus: {
     symbol: '\u2649',
-    names: { ko: '황소자리', en: 'Taurus', zh: '金牛座', ja: 'おうし座', es: 'Tauro' },
+    name: '황소자리',
     element: 'earth',
     dateRange: '4/20 - 5/20',
   },
   gemini: {
     symbol: '\u264A',
-    names: { ko: '쌍둥이자리', en: 'Gemini', zh: '双子座', ja: 'ふたご座', es: 'Géminis' },
+    name: '쌍둥이자리',
     element: 'air',
     dateRange: '5/21 - 6/20',
   },
   cancer: {
     symbol: '\u264B',
-    names: { ko: '게자리', en: 'Cancer', zh: '巨蟹座', ja: 'かに座', es: 'Cáncer' },
+    name: '게자리',
     element: 'water',
     dateRange: '6/21 - 7/22',
   },
   leo: {
     symbol: '\u264C',
-    names: { ko: '사자자리', en: 'Leo', zh: '狮子座', ja: 'しし座', es: 'Leo' },
+    name: '사자자리',
     element: 'fire',
     dateRange: '7/23 - 8/22',
   },
   virgo: {
     symbol: '\u264D',
-    names: { ko: '처녀자리', en: 'Virgo', zh: '处女座', ja: 'おとめ座', es: 'Virgo' },
+    name: '처녀자리',
     element: 'earth',
     dateRange: '8/23 - 9/22',
   },
   libra: {
     symbol: '\u264E',
-    names: { ko: '천칭자리', en: 'Libra', zh: '天秤座', ja: 'てんびん座', es: 'Libra' },
+    name: '천칭자리',
     element: 'air',
     dateRange: '9/23 - 10/22',
   },
   scorpio: {
     symbol: '\u264F',
-    names: { ko: '전갈자리', en: 'Scorpio', zh: '天蝎座', ja: 'さそり座', es: 'Escorpio' },
+    name: '전갈자리',
     element: 'water',
     dateRange: '10/23 - 11/21',
   },
   sagittarius: {
     symbol: '\u2650',
-    names: { ko: '사수자리', en: 'Sagittarius', zh: '射手座', ja: 'いて座', es: 'Sagitario' },
+    name: '사수자리',
     element: 'fire',
     dateRange: '11/22 - 12/21',
   },
   capricorn: {
     symbol: '\u2651',
-    names: { ko: '염소자리', en: 'Capricorn', zh: '摩羯座', ja: 'やぎ座', es: 'Capricornio' },
+    name: '염소자리',
     element: 'earth',
     dateRange: '12/22 - 1/19',
   },
   aquarius: {
     symbol: '\u2652',
-    names: { ko: '물병자리', en: 'Aquarius', zh: '水瓶座', ja: 'みずがめ座', es: 'Acuario' },
+    name: '물병자리',
     element: 'air',
     dateRange: '1/20 - 2/18',
   },
   pisces: {
     symbol: '\u2653',
-    names: { ko: '물고기자리', en: 'Pisces', zh: '双鱼座', ja: 'うお座', es: 'Piscis' },
+    name: '물고기자리',
     element: 'water',
     dateRange: '2/19 - 3/20',
   },
@@ -89,7 +88,6 @@ const zodiacData: Record<ZodiacSignId, ZodiacInfo> = {
 
 interface ZodiacCardProps {
   sign: ZodiacSignId;
-  locale: Locale;
   size?: 'sm' | 'md' | 'lg';
 }
 
@@ -100,7 +98,7 @@ const iconSizeMap = {
   lg: 'lg' as const,
 };
 
-export default function ZodiacCard({ sign, locale, size = 'md' }: ZodiacCardProps) {
+export default function ZodiacCard({ sign, size = 'md' }: ZodiacCardProps) {
   const data = zodiacData[sign];
 
   const sizeClasses = {
@@ -124,7 +122,7 @@ export default function ZodiacCard({ sign, locale, size = 'md' }: ZodiacCardProp
   const classes = sizeClasses[size];
 
   return (
-    <Link href={`/${locale}/zodiac/${sign}`}>
+    <Link href={`/zodiac/${sign}`}>
       <div
         className={`
           glass-card-hover ${classes.container}
@@ -137,7 +135,7 @@ export default function ZodiacCard({ sign, locale, size = 'md' }: ZodiacCardProp
           <ZodiacIcon sign={sign} size={iconSizeMap[size]} animated />
         </div>
         <h3 className={`font-semibold ${classes.name} text-white mb-1`}>
-          {data.names[locale]}
+          {data.name}
         </h3>
         <p className={`${classes.date} text-white/50`}>{data.dateRange}</p>
       </div>

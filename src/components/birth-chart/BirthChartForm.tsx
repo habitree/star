@@ -1,13 +1,10 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { useTranslations } from 'next-intl';
-import { type Locale } from '@/i18n/config';
 import { majorCities, searchCities, type City } from '@/data/cities';
 import type { BirthChartInput } from '@/types';
 
 interface BirthChartFormProps {
-  locale: Locale;
   onSubmit: (input: BirthChartInput) => void;
   isLoading?: boolean;
 }
@@ -29,12 +26,9 @@ interface FormErrors {
 }
 
 export default function BirthChartForm({
-  locale,
   onSubmit,
   isLoading = false,
 }: BirthChartFormProps) {
-  const t = useTranslations('birthChart');
-
   const [formData, setFormData] = useState<FormData>({
     date: '',
     time: '',
@@ -53,8 +47,8 @@ export default function BirthChartForm({
     if (!formData.citySearch || formData.citySearch.length < 1) {
       return majorCities.slice(0, 10);
     }
-    return searchCities(formData.citySearch, locale);
-  }, [formData.citySearch, locale]);
+    return searchCities(formData.citySearch, 'ko');
+  }, [formData.citySearch]);
 
   // 폼 유효성 검사
   const validateForm = (): boolean => {
@@ -62,12 +56,12 @@ export default function BirthChartForm({
 
     // 날짜 검사
     if (!formData.date) {
-      newErrors.date = t('errors.dateRequired');
+      newErrors.date = '생년월일을 입력해주세요.';
     } else {
       const date = new Date(formData.date);
       const now = new Date();
       if (date > now) {
-        newErrors.date = t('errors.dateInFuture');
+        newErrors.date = '미래 날짜는 입력할 수 없습니다.';
       }
     }
 
@@ -77,12 +71,12 @@ export default function BirthChartForm({
       const lng = parseFloat(formData.manualLng);
 
       if (isNaN(lat) || lat < -90 || lat > 90) {
-        newErrors.location = t('errors.invalidLatitude');
+        newErrors.location = '위도는 -90에서 90 사이여야 합니다.';
       } else if (isNaN(lng) || lng < -180 || lng > 180) {
-        newErrors.location = t('errors.invalidLongitude');
+        newErrors.location = '경도는 -180에서 180 사이여야 합니다.';
       }
     } else if (!formData.selectedCity) {
-      newErrors.location = t('errors.locationRequired');
+      newErrors.location = '출생 장소를 선택해주세요.';
     }
 
     setErrors(newErrors);
@@ -125,7 +119,7 @@ export default function BirthChartForm({
     setFormData((prev) => ({
       ...prev,
       selectedCity: city,
-      citySearch: city.name[locale],
+      citySearch: city.name.ko,
     }));
     setShowCitySuggestions(false);
     setErrors((prev) => ({ ...prev, location: undefined }));
@@ -139,7 +133,7 @@ export default function BirthChartForm({
           htmlFor="birthDate"
           className="block text-sm font-medium text-white/90 mb-2"
         >
-          {t('form.birthDate')} <span className="text-red-400">*</span>
+          생년월일 <span className="text-red-400">*</span>
         </label>
         <input
           type="date"
@@ -169,8 +163,8 @@ export default function BirthChartForm({
           htmlFor="birthTime"
           className="block text-sm font-medium text-white/90 mb-2"
         >
-          {t('form.birthTime')}{' '}
-          <span className="text-white/50">({t('form.optional')})</span>
+          출생 시간{' '}
+          <span className="text-white/50">(선택사항)</span>
         </label>
         <input
           type="time"
@@ -187,14 +181,14 @@ export default function BirthChartForm({
             transition-all duration-200
           "
         />
-        <p className="mt-1 text-xs text-white/50">{t('form.timeHint')}</p>
+        <p className="mt-1 text-xs text-white/50">정확한 시간을 모르면 비워두세요. 정오(12:00)로 계산됩니다.</p>
       </div>
 
       {/* 출생 장소 */}
       <div>
         <div className="flex items-center justify-between mb-2">
           <label className="block text-sm font-medium text-white/90">
-            {t('form.birthPlace')} <span className="text-red-400">*</span>
+            출생 장소 <span className="text-red-400">*</span>
           </label>
           <button
             type="button"
@@ -207,8 +201,8 @@ export default function BirthChartForm({
             className="text-xs text-purple-400 hover:text-purple-300 transition-colors"
           >
             {formData.useManualLocation
-              ? t('form.useCity')
-              : t('form.useCoordinates')}
+              ? '도시로 선택'
+              : '직접 좌표 입력'}
           </button>
         </div>
 
@@ -217,7 +211,7 @@ export default function BirthChartForm({
             <div>
               <input
                 type="text"
-                placeholder={t('form.latitude')}
+                placeholder="위도"
                 value={formData.manualLat}
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, manualLat: e.target.value }))
@@ -234,7 +228,7 @@ export default function BirthChartForm({
             <div>
               <input
                 type="text"
-                placeholder={t('form.longitude')}
+                placeholder="경도"
                 value={formData.manualLng}
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, manualLng: e.target.value }))
@@ -253,7 +247,7 @@ export default function BirthChartForm({
           <div className="relative">
             <input
               type="text"
-              placeholder={t('form.searchCity')}
+              placeholder="도시 검색 (예: 서울, Seoul)"
               value={formData.citySearch}
               onChange={(e) => {
                 setFormData((prev) => ({
@@ -287,9 +281,9 @@ export default function BirthChartForm({
                       transition-colors duration-150
                     "
                   >
-                    <span className="font-medium">{city.name[locale]}</span>
+                    <span className="font-medium">{city.name.ko}</span>
                     <span className="text-white/50 text-sm ml-2">
-                      {city.country[locale === 'en' ? 'en' : 'ko']}
+                      {city.country.ko}
                     </span>
                   </button>
                 ))}
@@ -304,7 +298,7 @@ export default function BirthChartForm({
 
         {formData.selectedCity && !formData.useManualLocation && (
           <p className="mt-2 text-sm text-purple-300">
-            {formData.selectedCity.name[locale]} (
+            {formData.selectedCity.name.ko} (
             {formData.selectedCity.lat.toFixed(2)},{' '}
             {formData.selectedCity.lng.toFixed(2)})
           </p>
@@ -348,10 +342,10 @@ export default function BirthChartForm({
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               />
             </svg>
-            {t('form.calculating')}
+            계산 중...
           </span>
         ) : (
-          t('form.calculate')
+          '차트 계산하기'
         )}
       </button>
 

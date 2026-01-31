@@ -2,21 +2,12 @@
 
 import Link from 'next/link';
 import { type ZodiacSignId, type ZodiacCompatibility } from '@/types/zodiac';
-import { type Locale } from '@/i18n/config';
 import { zodiacSigns } from '@/data/zodiac-signs';
 
 interface CompatibilityPreviewProps {
   currentSign: ZodiacSignId;
   compatibility: ZodiacCompatibility;
-  locale: Locale;
 }
-
-const labels: Record<string, Record<Locale, string>> = {
-  title: { ko: '궁합', en: 'Compatibility', zh: '配对', ja: '相性', es: 'Compatibilidad' },
-  bestMatch: { ko: '최고의 궁합', en: 'Best Matches', zh: '最佳搭配', ja: '最高の相性', es: 'Mejores Parejas' },
-  challenging: { ko: '주의할 궁합', en: 'Challenging Matches', zh: '需注意', ja: '注意が必要', es: 'Relaciones Desafiantes' },
-  viewDetails: { ko: '자세히 보기', en: 'View Details', zh: '查看详情', ja: '詳しく見る', es: 'Ver Detalles' },
-};
 
 function getSignData(signId: ZodiacSignId) {
   return zodiacSigns.find((s) => s.id === signId);
@@ -25,11 +16,10 @@ function getSignData(signId: ZodiacSignId) {
 interface MiniCardProps {
   signId: ZodiacSignId;
   currentSign: ZodiacSignId;
-  locale: Locale;
   variant: 'best' | 'worst';
 }
 
-function MiniCard({ signId, currentSign, locale, variant }: MiniCardProps) {
+function MiniCard({ signId, currentSign, variant }: MiniCardProps) {
   const sign = getSignData(signId);
   if (!sign) return null;
 
@@ -37,7 +27,7 @@ function MiniCard({ signId, currentSign, locale, variant }: MiniCardProps) {
   const hoverBorder = variant === 'best' ? 'hover:border-green-500/60' : 'hover:border-amber-500/60';
 
   return (
-    <Link href={`/${locale}/compatibility?sign1=${currentSign}&sign2=${signId}`}>
+    <Link href={`/compatibility?sign1=${currentSign}&sign2=${signId}`}>
       <div
         className={`
           glass-card p-4 text-center cursor-pointer
@@ -49,7 +39,7 @@ function MiniCard({ signId, currentSign, locale, variant }: MiniCardProps) {
           {sign.symbol}
         </span>
         <p className="text-white font-medium text-sm">
-          {sign.names[locale]}
+          {sign.names.ko}
         </p>
       </div>
     </Link>
@@ -59,12 +49,11 @@ function MiniCard({ signId, currentSign, locale, variant }: MiniCardProps) {
 export default function CompatibilityPreview({
   currentSign,
   compatibility,
-  locale,
 }: CompatibilityPreviewProps) {
   return (
     <section className="py-8">
       <h2 className="font-display text-2xl md:text-3xl font-semibold text-center mb-8">
-        {labels.title[locale]}
+        궁합
       </h2>
 
       <div className="space-y-8">
@@ -73,7 +62,7 @@ export default function CompatibilityPreview({
           <div className="flex items-center gap-2 mb-4">
             <span className="text-xl">&#x1F49A;</span>
             <h3 className="font-semibold text-lg text-green-400">
-              {labels.bestMatch[locale]}
+              최고의 궁합
             </h3>
           </div>
           <div className="grid grid-cols-3 gap-4">
@@ -82,7 +71,6 @@ export default function CompatibilityPreview({
                 key={signId}
                 signId={signId}
                 currentSign={currentSign}
-                locale={locale}
                 variant="best"
               />
             ))}
@@ -94,7 +82,7 @@ export default function CompatibilityPreview({
           <div className="flex items-center gap-2 mb-4">
             <span className="text-xl">&#x1F9E1;</span>
             <h3 className="font-semibold text-lg text-amber-400">
-              {labels.challenging[locale]}
+              주의할 궁합
             </h3>
           </div>
           <div className="grid grid-cols-2 gap-4 max-w-xs">
@@ -103,7 +91,6 @@ export default function CompatibilityPreview({
                 key={signId}
                 signId={signId}
                 currentSign={currentSign}
-                locale={locale}
                 variant="worst"
               />
             ))}
@@ -114,10 +101,10 @@ export default function CompatibilityPreview({
       {/* View All Link */}
       <div className="mt-8 text-center">
         <Link
-          href={`/${locale}/compatibility?sign1=${currentSign}`}
+          href={`/compatibility?sign1=${currentSign}`}
           className="btn-secondary inline-flex items-center gap-2"
         >
-          {labels.viewDetails[locale]}
+          자세히 보기
           <span>&#x2192;</span>
         </Link>
       </div>

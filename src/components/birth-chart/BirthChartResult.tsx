@@ -1,35 +1,27 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
 import type { BirthChartResult as BirthChartResultType } from '@/types';
-import type { Locale } from '@/i18n/config';
 import BigThreeCard from './BigThreeCard';
 import ChartWheel from './ChartWheel';
 
 interface BirthChartResultProps {
   result: BirthChartResultType;
-  locale: Locale;
 }
 
-export default function BirthChartResult({
-  result,
-  locale,
-}: BirthChartResultProps) {
-  const t = useTranslations('birthChart');
-
+export default function BirthChartResult({ result }: BirthChartResultProps) {
   // 원소 이름 매핑
-  const elementNames: Record<string, Record<Locale, string>> = {
-    fire: { ko: '불', en: 'Fire', zh: '火', ja: '火', es: 'Fuego' },
-    earth: { ko: '흙', en: 'Earth', zh: '土', ja: '土', es: 'Tierra' },
-    air: { ko: '바람', en: 'Air', zh: '风', ja: '風', es: 'Aire' },
-    water: { ko: '물', en: 'Water', zh: '水', ja: '水', es: 'Agua' },
+  const elementNames: Record<string, string> = {
+    fire: '불',
+    earth: '흙',
+    air: '바람',
+    water: '물',
   };
 
   // 모달리티 이름 매핑
-  const modalityNames: Record<string, Record<Locale, string>> = {
-    cardinal: { ko: '활동궁', en: 'Cardinal', zh: '本位宫', ja: '活動宮', es: 'Cardinal' },
-    fixed: { ko: '고정궁', en: 'Fixed', zh: '固定宫', ja: '不動宮', es: 'Fijo' },
-    mutable: { ko: '변통궁', en: 'Mutable', zh: '变动宫', ja: '柔軟宮', es: 'Mutable' },
+  const modalityNames: Record<string, string> = {
+    cardinal: '활동궁',
+    fixed: '고정궁',
+    mutable: '변통궁',
   };
 
   return (
@@ -37,10 +29,10 @@ export default function BirthChartResult({
       {/* 요약 */}
       <div className="glass-card p-6 rounded-2xl">
         <h2 className="text-xl font-bold text-white mb-4">
-          {t('result.summary')}
+          차트 요약
         </h2>
         <p className="text-white/80 leading-relaxed">
-          {result.interpretation.summary[locale]}
+          {result.interpretation.summary.ko}
         </p>
       </div>
 
@@ -58,20 +50,17 @@ export default function BirthChartResult({
         <BigThreeCard
           type="sun"
           sign={result.sunSign}
-          locale={locale}
-          interpretation={result.interpretation.sunSignMeaning[locale]}
+          interpretation={result.interpretation.sunSignMeaning.ko}
         />
         <BigThreeCard
           type="moon"
           sign={result.moonSign}
-          locale={locale}
-          interpretation={result.interpretation.moonSignMeaning[locale]}
+          interpretation={result.interpretation.moonSignMeaning.ko}
         />
         <BigThreeCard
           type="rising"
           sign={result.risingSign}
-          locale={locale}
-          interpretation={result.interpretation.risingSignMeaning[locale]}
+          interpretation={result.interpretation.risingSignMeaning.ko}
         />
       </div>
 
@@ -80,34 +69,32 @@ export default function BirthChartResult({
         {/* 지배 원소 */}
         <div className="glass-card p-6 rounded-2xl">
           <h3 className="text-lg font-semibold text-white mb-3">
-            {t('result.dominantElement')}
+            지배 원소
           </h3>
           <div className="flex items-center gap-3">
             <ElementIcon element={result.dominantElement} />
             <span className="text-2xl font-bold text-white">
-              {elementNames[result.dominantElement]?.[locale] ||
-                result.dominantElement}
+              {elementNames[result.dominantElement] || result.dominantElement}
             </span>
           </div>
           <p className="mt-3 text-white/60 text-sm">
-            {getElementDescription(result.dominantElement, locale)}
+            {getElementDescription(result.dominantElement)}
           </p>
         </div>
 
         {/* 지배 모달리티 */}
         <div className="glass-card p-6 rounded-2xl">
           <h3 className="text-lg font-semibold text-white mb-3">
-            {t('result.dominantModality')}
+            지배 모달리티
           </h3>
           <div className="flex items-center gap-3">
             <ModalityIcon modality={result.dominantModality} />
             <span className="text-2xl font-bold text-white">
-              {modalityNames[result.dominantModality]?.[locale] ||
-                result.dominantModality}
+              {modalityNames[result.dominantModality] || result.dominantModality}
             </span>
           </div>
           <p className="mt-3 text-white/60 text-sm">
-            {getModalityDescription(result.dominantModality, locale)}
+            {getModalityDescription(result.dominantModality)}
           </p>
         </div>
       </div>
@@ -115,25 +102,25 @@ export default function BirthChartResult({
       {/* 출생 정보 */}
       <div className="glass-card p-6 rounded-2xl">
         <h3 className="text-lg font-semibold text-white mb-4">
-          {t('result.birthInfo')}
+          출생 정보
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
           <div>
-            <span className="text-white/50">{t('result.date')}</span>
+            <span className="text-white/50">날짜</span>
             <p className="text-white font-medium">{result.input.date}</p>
           </div>
           <div>
-            <span className="text-white/50">{t('result.time')}</span>
+            <span className="text-white/50">시간</span>
             <p className="text-white font-medium">{result.input.time}</p>
           </div>
           <div>
-            <span className="text-white/50">{t('result.latitude')}</span>
+            <span className="text-white/50">위도</span>
             <p className="text-white font-medium">
               {result.input.latitude.toFixed(4)}
             </p>
           </div>
           <div>
-            <span className="text-white/50">{t('result.longitude')}</span>
+            <span className="text-white/50">경도</span>
             <p className="text-white font-medium">
               {result.input.longitude.toFixed(4)}
             </p>
@@ -264,72 +251,24 @@ function ModalityIcon({ modality }: { modality: string }) {
 }
 
 // 원소 설명
-function getElementDescription(
-  element: string,
-  locale: Locale
-): string {
-  const descriptions: Record<string, Record<Locale, string>> = {
-    fire: {
-      ko: '열정, 에너지, 창의성이 당신의 주요 특성입니다.',
-      en: 'Passion, energy, and creativity are your main traits.',
-      zh: '热情、能量和创造力是你的主要特征。',
-      ja: '情熱、エネルギー、創造性があなたの主な特性です。',
-      es: 'La pasion, la energia y la creatividad son tus principales rasgos.',
-    },
-    earth: {
-      ko: '안정성, 실용성, 인내가 당신의 주요 특성입니다.',
-      en: 'Stability, practicality, and patience are your main traits.',
-      zh: '稳定、实用和耐心是你的主要特征。',
-      ja: '安定性、実用性、忍耐があなたの主な特性です。',
-      es: 'La estabilidad, la practicidad y la paciencia son tus principales rasgos.',
-    },
-    air: {
-      ko: '지성, 소통, 사회성이 당신의 주요 특성입니다.',
-      en: 'Intelligence, communication, and sociability are your main traits.',
-      zh: '智慧、沟通和社交能力是你的主要特征。',
-      ja: '知性、コミュニケーション、社交性があなたの主な特性です。',
-      es: 'La inteligencia, la comunicacion y la sociabilidad son tus principales rasgos.',
-    },
-    water: {
-      ko: '감성, 직관, 공감능력이 당신의 주요 특성입니다.',
-      en: 'Emotion, intuition, and empathy are your main traits.',
-      zh: '情感、直觉和共情能力是你的主要特征。',
-      ja: '感情、直感、共感力があなたの主な特性です。',
-      es: 'La emocion, la intuicion y la empatia son tus principales rasgos.',
-    },
+function getElementDescription(element: string): string {
+  const descriptions: Record<string, string> = {
+    fire: '열정, 에너지, 창의성이 당신의 주요 특성입니다.',
+    earth: '안정성, 실용성, 인내가 당신의 주요 특성입니다.',
+    air: '지성, 소통, 사회성이 당신의 주요 특성입니다.',
+    water: '감성, 직관, 공감능력이 당신의 주요 특성입니다.',
   };
 
-  return descriptions[element]?.[locale] || '';
+  return descriptions[element] || '';
 }
 
 // 모달리티 설명
-function getModalityDescription(
-  modality: string,
-  locale: Locale
-): string {
-  const descriptions: Record<string, Record<Locale, string>> = {
-    cardinal: {
-      ko: '시작하고 이끄는 것을 좋아합니다. 주도적인 성향을 가지고 있습니다.',
-      en: 'You like to initiate and lead. You have a proactive nature.',
-      zh: '你喜欢发起和领导。你有主动的天性。',
-      ja: '始めること、導くことが好きです。主導的な性格を持っています。',
-      es: 'Te gusta iniciar y liderar. Tienes una naturaleza proactiva.',
-    },
-    fixed: {
-      ko: '꾸준하고 끈기 있습니다. 한번 시작하면 끝까지 해냅니다.',
-      en: 'You are steady and persistent. Once you start, you finish.',
-      zh: '你稳定而坚持。一旦开始，就会完成。',
-      ja: '着実で粘り強いです。一度始めたら最後までやり遂げます。',
-      es: 'Eres constante y persistente. Una vez que empiezas, terminas.',
-    },
-    mutable: {
-      ko: '유연하고 적응력이 뛰어납니다. 변화를 잘 받아들입니다.',
-      en: 'You are flexible and adaptable. You embrace change well.',
-      zh: '你灵活且适应力强。你很好地接受变化。',
-      ja: '柔軟で適応力があります。変化をよく受け入れます。',
-      es: 'Eres flexible y adaptable. Aceptas bien los cambios.',
-    },
+function getModalityDescription(modality: string): string {
+  const descriptions: Record<string, string> = {
+    cardinal: '시작하고 이끄는 것을 좋아합니다. 주도적인 성향을 가지고 있습니다.',
+    fixed: '꾸준하고 끈기 있습니다. 한번 시작하면 끝까지 해냅니다.',
+    mutable: '유연하고 적응력이 뛰어납니다. 변화를 잘 받아들입니다.',
   };
 
-  return descriptions[modality]?.[locale] || '';
+  return descriptions[modality] || '';
 }

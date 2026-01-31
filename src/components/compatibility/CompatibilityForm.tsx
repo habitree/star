@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { ZodiacSignId } from '@/types';
-import type { Locale } from '@/i18n/config';
 
 interface ZodiacOption {
   id: ZodiacSignId;
@@ -11,96 +10,28 @@ interface ZodiacOption {
   name: string;
 }
 
-const zodiacOptions: Record<Locale, ZodiacOption[]> = {
-  ko: [
-    { id: 'aries', symbol: '\u2648', name: '양자리' },
-    { id: 'taurus', symbol: '\u2649', name: '황소자리' },
-    { id: 'gemini', symbol: '\u264A', name: '쌍둥이자리' },
-    { id: 'cancer', symbol: '\u264B', name: '게자리' },
-    { id: 'leo', symbol: '\u264C', name: '사자자리' },
-    { id: 'virgo', symbol: '\u264D', name: '처녀자리' },
-    { id: 'libra', symbol: '\u264E', name: '천칭자리' },
-    { id: 'scorpio', symbol: '\u264F', name: '전갈자리' },
-    { id: 'sagittarius', symbol: '\u2650', name: '사수자리' },
-    { id: 'capricorn', symbol: '\u2651', name: '염소자리' },
-    { id: 'aquarius', symbol: '\u2652', name: '물병자리' },
-    { id: 'pisces', symbol: '\u2653', name: '물고기자리' },
-  ],
-  en: [
-    { id: 'aries', symbol: '\u2648', name: 'Aries' },
-    { id: 'taurus', symbol: '\u2649', name: 'Taurus' },
-    { id: 'gemini', symbol: '\u264A', name: 'Gemini' },
-    { id: 'cancer', symbol: '\u264B', name: 'Cancer' },
-    { id: 'leo', symbol: '\u264C', name: 'Leo' },
-    { id: 'virgo', symbol: '\u264D', name: 'Virgo' },
-    { id: 'libra', symbol: '\u264E', name: 'Libra' },
-    { id: 'scorpio', symbol: '\u264F', name: 'Scorpio' },
-    { id: 'sagittarius', symbol: '\u2650', name: 'Sagittarius' },
-    { id: 'capricorn', symbol: '\u2651', name: 'Capricorn' },
-    { id: 'aquarius', symbol: '\u2652', name: 'Aquarius' },
-    { id: 'pisces', symbol: '\u2653', name: 'Pisces' },
-  ],
-  zh: [
-    { id: 'aries', symbol: '\u2648', name: '白羊座' },
-    { id: 'taurus', symbol: '\u2649', name: '金牛座' },
-    { id: 'gemini', symbol: '\u264A', name: '双子座' },
-    { id: 'cancer', symbol: '\u264B', name: '巨蟹座' },
-    { id: 'leo', symbol: '\u264C', name: '狮子座' },
-    { id: 'virgo', symbol: '\u264D', name: '处女座' },
-    { id: 'libra', symbol: '\u264E', name: '天秤座' },
-    { id: 'scorpio', symbol: '\u264F', name: '天蝎座' },
-    { id: 'sagittarius', symbol: '\u2650', name: '射手座' },
-    { id: 'capricorn', symbol: '\u2651', name: '摩羯座' },
-    { id: 'aquarius', symbol: '\u2652', name: '水瓶座' },
-    { id: 'pisces', symbol: '\u2653', name: '双鱼座' },
-  ],
-  ja: [
-    { id: 'aries', symbol: '\u2648', name: 'おひつじ座' },
-    { id: 'taurus', symbol: '\u2649', name: 'おうし座' },
-    { id: 'gemini', symbol: '\u264A', name: 'ふたご座' },
-    { id: 'cancer', symbol: '\u264B', name: 'かに座' },
-    { id: 'leo', symbol: '\u264C', name: 'しし座' },
-    { id: 'virgo', symbol: '\u264D', name: 'おとめ座' },
-    { id: 'libra', symbol: '\u264E', name: 'てんびん座' },
-    { id: 'scorpio', symbol: '\u264F', name: 'さそり座' },
-    { id: 'sagittarius', symbol: '\u2650', name: 'いて座' },
-    { id: 'capricorn', symbol: '\u2651', name: 'やぎ座' },
-    { id: 'aquarius', symbol: '\u2652', name: 'みずがめ座' },
-    { id: 'pisces', symbol: '\u2653', name: 'うお座' },
-  ],
-  es: [
-    { id: 'aries', symbol: '\u2648', name: 'Aries' },
-    { id: 'taurus', symbol: '\u2649', name: 'Tauro' },
-    { id: 'gemini', symbol: '\u264A', name: 'Geminis' },
-    { id: 'cancer', symbol: '\u264B', name: 'Cancer' },
-    { id: 'leo', symbol: '\u264C', name: 'Leo' },
-    { id: 'virgo', symbol: '\u264D', name: 'Virgo' },
-    { id: 'libra', symbol: '\u264E', name: 'Libra' },
-    { id: 'scorpio', symbol: '\u264F', name: 'Escorpio' },
-    { id: 'sagittarius', symbol: '\u2650', name: 'Sagitario' },
-    { id: 'capricorn', symbol: '\u2651', name: 'Capricornio' },
-    { id: 'aquarius', symbol: '\u2652', name: 'Acuario' },
-    { id: 'pisces', symbol: '\u2653', name: 'Piscis' },
-  ],
-};
-
-const labels: Record<Locale, { sign1: string; sign2: string; button: string; placeholder: string }> = {
-  ko: { sign1: '첫 번째 별자리', sign2: '두 번째 별자리', button: '궁합 확인', placeholder: '별자리를 선택하세요' },
-  en: { sign1: 'First Sign', sign2: 'Second Sign', button: 'Check Compatibility', placeholder: 'Select a sign' },
-  zh: { sign1: '第一个星座', sign2: '第二个星座', button: '查看配对', placeholder: '选择星座' },
-  ja: { sign1: '最初の星座', sign2: '2番目の星座', button: '相性を確認', placeholder: '星座を選択' },
-  es: { sign1: 'Primer Signo', sign2: 'Segundo Signo', button: 'Ver Compatibilidad', placeholder: 'Selecciona un signo' },
-};
+const zodiacOptions: ZodiacOption[] = [
+  { id: 'aries', symbol: '\u2648', name: '양자리' },
+  { id: 'taurus', symbol: '\u2649', name: '황소자리' },
+  { id: 'gemini', symbol: '\u264A', name: '쌍둥이자리' },
+  { id: 'cancer', symbol: '\u264B', name: '게자리' },
+  { id: 'leo', symbol: '\u264C', name: '사자자리' },
+  { id: 'virgo', symbol: '\u264D', name: '처녀자리' },
+  { id: 'libra', symbol: '\u264E', name: '천칭자리' },
+  { id: 'scorpio', symbol: '\u264F', name: '전갈자리' },
+  { id: 'sagittarius', symbol: '\u2650', name: '사수자리' },
+  { id: 'capricorn', symbol: '\u2651', name: '염소자리' },
+  { id: 'aquarius', symbol: '\u2652', name: '물병자리' },
+  { id: 'pisces', symbol: '\u2653', name: '물고기자리' },
+];
 
 interface CompatibilityFormProps {
-  locale: Locale;
   initialSign1?: ZodiacSignId;
   initialSign2?: ZodiacSignId;
   onSubmit?: (sign1: ZodiacSignId, sign2: ZodiacSignId) => void;
 }
 
 export default function CompatibilityForm({
-  locale,
   initialSign1,
   initialSign2,
   onSubmit,
@@ -109,9 +40,6 @@ export default function CompatibilityForm({
   const [sign1, setSign1] = useState<ZodiacSignId | ''>(initialSign1 || '');
   const [sign2, setSign2] = useState<ZodiacSignId | ''>(initialSign2 || '');
   const [isLoading, setIsLoading] = useState(false);
-
-  const options = zodiacOptions[locale] || zodiacOptions.en;
-  const label = labels[locale] || labels.en;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -123,14 +51,13 @@ export default function CompatibilityForm({
       onSubmit(sign1, sign2);
       setIsLoading(false);
     } else {
-      // URL로 이동
-      router.push(`/${locale}/compatibility/${sign1}/${sign2}`);
+      router.push(`/compatibility/${sign1}/${sign2}`);
     }
   };
 
   const getSelectedOption = (signId: ZodiacSignId | '') => {
     if (!signId) return null;
-    return options.find((opt) => opt.id === signId);
+    return zodiacOptions.find((opt) => opt.id === signId);
   };
 
   return (
@@ -140,7 +67,7 @@ export default function CompatibilityForm({
           {/* 첫 번째 별자리 선택 */}
           <div className="space-y-2">
             <label className="block text-white/80 text-sm font-medium">
-              {label.sign1}
+              첫 번째 별자리
             </label>
             <div className="relative">
               <select
@@ -151,9 +78,9 @@ export default function CompatibilityForm({
                            focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               >
                 <option value="" className="bg-gray-900">
-                  {label.placeholder}
+                  별자리를 선택하세요
                 </option>
-                {options.map((option) => (
+                {zodiacOptions.map((option) => (
                   <option key={option.id} value={option.id} className="bg-gray-900">
                     {option.symbol} {option.name}
                   </option>
@@ -176,7 +103,7 @@ export default function CompatibilityForm({
           {/* 두 번째 별자리 선택 */}
           <div className="space-y-2">
             <label className="block text-white/80 text-sm font-medium">
-              {label.sign2}
+              두 번째 별자리
             </label>
             <div className="relative">
               <select
@@ -187,9 +114,9 @@ export default function CompatibilityForm({
                            focus:outline-none focus:ring-2 focus:ring-purple-500/50"
               >
                 <option value="" className="bg-gray-900">
-                  {label.placeholder}
+                  별자리를 선택하세요
                 </option>
-                {options.map((option) => (
+                {zodiacOptions.map((option) => (
                   <option key={option.id} value={option.id} className="bg-gray-900">
                     {option.symbol} {option.name}
                   </option>
@@ -249,7 +176,7 @@ export default function CompatibilityForm({
               Loading...
             </span>
           ) : (
-            label.button
+            '궁합 확인'
           )}
         </button>
       </div>

@@ -1,20 +1,11 @@
 'use client';
 
-export const runtime = 'edge';
-
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
-import { useParams } from 'next/navigation';
-import type { Locale } from '@/i18n/config';
 import type { BirthChartInput, BirthChartResult as BirthChartResultType } from '@/types';
 import BirthChartForm from '@/components/birth-chart/BirthChartForm';
 import BirthChartResult from '@/components/birth-chart/BirthChartResult';
 
 export default function BirthChartPage() {
-  const t = useTranslations('birthChart');
-  const params = useParams();
-  const locale = (params.locale as Locale) || 'ko';
-
   const [result, setResult] = useState<BirthChartResultType | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -58,11 +49,11 @@ export default function BirthChartPage() {
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             <span className="bg-gradient-to-r from-purple-400 via-pink-500 to-indigo-500 bg-clip-text text-transparent">
-              {t('title')}
+              출생 차트
             </span>
           </h1>
           <p className="text-lg text-white/70 max-w-2xl mx-auto">
-            {t('description')}
+            출생 시간과 장소를 입력하여 당신만의 Big Three(태양, 달, 상승궁)를 알아보세요.
           </p>
         </div>
 
@@ -79,10 +70,9 @@ export default function BirthChartPage() {
             {/* 입력 폼 */}
             <div className="glass-card p-8 rounded-2xl">
               <h2 className="text-2xl font-bold text-white mb-6">
-                {t('form.title')}
+                출생 정보 입력
               </h2>
               <BirthChartForm
-                locale={locale}
                 onSubmit={handleSubmit}
                 isLoading={isLoading}
               />
@@ -92,7 +82,7 @@ export default function BirthChartPage() {
             <div className="space-y-6">
               <div className="glass-card p-6 rounded-2xl">
                 <h3 className="text-xl font-bold text-white mb-4">
-                  {t('info.whatIsBigThree')}
+                  Big Three란?
                 </h3>
                 <div className="space-y-4">
                   <div className="flex gap-4">
@@ -107,11 +97,9 @@ export default function BirthChartPage() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="text-white font-semibold">
-                        {t('info.sunSign')}
-                      </h4>
+                      <h4 className="text-white font-semibold">태양 별자리 (Sun Sign)</h4>
                       <p className="text-white/60 text-sm">
-                        {t('info.sunSignDesc')}
+                        당신의 핵심 자아와 정체성을 나타냅니다. 가장 널리 알려진 별자리입니다.
                       </p>
                     </div>
                   </div>
@@ -132,11 +120,9 @@ export default function BirthChartPage() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="text-white font-semibold">
-                        {t('info.moonSign')}
-                      </h4>
+                      <h4 className="text-white font-semibold">달 별자리 (Moon Sign)</h4>
                       <p className="text-white/60 text-sm">
-                        {t('info.moonSignDesc')}
+                        내면의 감정, 본능, 무의식적 반응을 나타냅니다.
                       </p>
                     </div>
                   </div>
@@ -157,11 +143,9 @@ export default function BirthChartPage() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="text-white font-semibold">
-                        {t('info.risingSign')}
-                      </h4>
+                      <h4 className="text-white font-semibold">상승궁 (Rising Sign)</h4>
                       <p className="text-white/60 text-sm">
-                        {t('info.risingSignDesc')}
+                        첫인상과 외부에 보이는 모습, 사회적 가면을 나타냅니다.
                       </p>
                     </div>
                   </div>
@@ -170,10 +154,10 @@ export default function BirthChartPage() {
 
               <div className="glass-card p-6 rounded-2xl">
                 <h3 className="text-xl font-bold text-white mb-4">
-                  {t('info.whyTimeMatters')}
+                  출생 시간이 왜 중요한가요?
                 </h3>
                 <p className="text-white/60 text-sm leading-relaxed">
-                  {t('info.timeExplanation')}
+                  달 별자리와 상승궁은 출생 시간에 따라 달라집니다. 달은 약 2.5일마다, 상승궁은 약 2시간마다 별자리가 바뀝니다. 정확한 출생 시간을 알면 더 정확한 차트를 얻을 수 있습니다.
                 </p>
               </div>
             </div>
@@ -205,12 +189,12 @@ export default function BirthChartPage() {
                     clipRule="evenodd"
                   />
                 </svg>
-                {t('result.calculateAgain')}
+                다시 계산하기
               </button>
             </div>
 
             {/* 결과 */}
-            <BirthChartResult result={result} locale={locale} />
+            <BirthChartResult result={result} />
           </div>
         )}
       </div>
