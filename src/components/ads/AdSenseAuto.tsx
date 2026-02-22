@@ -19,7 +19,8 @@ export default function AdSenseAuto() {
     }
 
     // 자동 광고 스크립트가 이미 로드되었는지 확인
-    if (window.adsbygoogle && Array.isArray(window.adsbygoogle.loaded)) {
+    const ag = window.adsbygoogle;
+    if (ag && 'loaded' in ag && ag.loaded) {
       return;
     }
 
@@ -35,10 +36,10 @@ export default function AdSenseAuto() {
   return null;
 }
 
-// TypeScript를 위한 전역 타입 선언
+// TypeScript를 위한 전역 타입 선언 (Google AdSense 스크립트가 배열 + loaded 속성 사용)
 declare global {
   interface Window {
-    adsbygoogle: any[];
+    adsbygoogle: unknown[] & { loaded?: boolean };
   }
 }
 
