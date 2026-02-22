@@ -1,7 +1,13 @@
 import { Inter, Playfair_Display } from 'next/font/google';
+import Script from 'next/script';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import AdSenseAuto from '@/components/ads/AdSenseAuto';
+import { getAdSensePublisherId } from '@/lib/adsense-config';
 import './globals.css';
+
+// 애드센스 소유권 확인용 (스니펫 + 메타태그)
+const ADSENSE_PUBLISHER_ID = 'ca-pub-4166976105261105';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -31,9 +37,22 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const publisherId = getAdSensePublisherId() ?? ADSENSE_PUBLISHER_ID;
+
   return (
     <html lang="ko" className={`${inter.variable} ${playfair.variable}`}>
+      <head>
+        <meta name="google-adsense-account" content="ca-pub-4166976105261105" />
+      </head>
       <body className="font-sans min-h-screen flex flex-col">
+        <Script
+          id="adsbygoogle-init"
+          strategy="afterInteractive"
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${publisherId}`}
+          crossOrigin="anonymous"
+          async
+        />
+        <AdSenseAuto />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
