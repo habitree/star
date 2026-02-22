@@ -24,7 +24,11 @@ import {
   monthlyHighlightTemplates,
   planetaryInfluenceTemplates,
   dayNames,
+  elementLuckyColors,
 } from '@/data/horoscope-templates';
+import { elementTemplates, type Element } from '@/data/element-templates';
+import { zodiacSigns } from '@/data/zodiac-signs';
+import { getPlanetForSign, isPlanetAffectingCategory } from '@/data/planet-influences';
 import { toISODateString, getWeekStart, getWeekEnd } from '@/lib/utils';
 
 // 별자리 ID를 숫자로 변환 (시드 생성용)
@@ -42,6 +46,21 @@ const signIdToNumber: Record<ZodiacSignId, number> = {
   aquarius: 11,
   pisces: 12,
 };
+
+/**
+ * 별자리 정보 가져오기
+ */
+function getSignData(signId: ZodiacSignId) {
+  return zodiacSigns.find(sign => sign.id === signId);
+}
+
+/**
+ * 별자리의 원소 가져오기
+ */
+function getSignElement(signId: ZodiacSignId): Element {
+  const signData = getSignData(signId);
+  return (signData?.element || 'fire') as Element;
+}
 
 /**
  * 시드 기반 결정적 랜덤 함수
@@ -108,9 +127,9 @@ function generateScore(random: () => number): HoroscopeScore {
 }
 
 /**
- * 카테고리별 운세 텍스트 선택
+ * 카테고리별 운세 텍스트 선택 (기존 - 범용 템플릿)
  */
-function selectTemplate(
+function selectGenericTemplate(
   category: HoroscopeCategory,
   score: HoroscopeScore,
   random: () => number
@@ -118,6 +137,38 @@ function selectTemplate(
   const level = getTemplateLevel(score);
   const templates = horoscopeTemplates[category][level];
   return selectRandom(templates, random);
+}
+
+/**
+ * 원소 기반 카테고리별 운세 텍스트 선택
+ */
+function selectElementTemplate(
+  signId: ZodiacSignId,
+  category: HoroscopeCategory,
+  score: HoroscopeScore,
+  random: () => number
+): LocalizedText {
+  const element = getSignElement(signId);
+  const level = getTemplateLevel(score);
+  const templates = elementTemplates[element][category][level];
+  return selectRandom(templates, random);
+}
+
+/**
+ * 카테고리별 운세 텍스트 선택 (원소 기반 우선)
+ */
+function selectTemplate(
+  category: HoroscopeCategory,
+  score: HoroscopeScore,
+  random: () => number,
+  signId?: ZodiacSignId
+): LocalizedText {
+  // signId가 있으면 원소 기반 템플릿 사용
+  if (signId) {
+    return selectElementTemplate(signId, category, score, random);
+  }
+  // 없으면 범용 템플릿 사용
+  return selectGenericTemplate(category, score, random);
 }
 
 /**
@@ -131,7 +182,8 @@ function generateCategoryHoroscope(
   const seed = generateSeed(signId, date, category);
   const random = seededRandom(seed);
   const score = generateScore(random);
-  const text = selectTemplate(category, score, random);
+  // 원소 기반 템플릿 사용
+  const text = selectTemplate(category, score, random, signId);
 
   return { score, text };
 }
@@ -155,8 +207,13 @@ export function generateDailyHoroscope(
   const health = generateCategoryHoroscope(signId, date, 'health');
   const money = generateCategoryHoroscope(signId, date, 'money');
 
-  // 행운의 요소들 선택
-  const luckyColor = selectRandom(luckyColors, random);
+  // 행운의 요소들 선택 (원소 기반 행운 색상 우선 사용)
+  const element = getSignElement(signId);
+  const elementColors = elementLuckyColors[element];
+  // 70% 확률로 원소 기반 색상, 30% 확률로 전체 색상
+  const luckyColor = random() < 0.7
+    ? selectRandom(elementColors, random)
+    : selectRandom(luckyColors, random);
   const luckyNumber = selectRandom(luckyNumbers, random);
   const luckyTime = selectRandom(luckyTimes, random);
   const advice = selectRandom(adviceTemplates, random);
@@ -260,23 +317,23 @@ export function generateWeeklyHoroscope(
     signId,
     overall: {
       score: overallScore,
-      text: selectTemplate('overall', overallScore, random),
+      text: selectTemplate('overall', overallScore, random, signId),
     },
     love: {
       score: loveScore,
-      text: selectTemplate('love', loveScore, random),
+      text: selectTemplate('love', loveScore, random, signId),
     },
     career: {
       score: careerScore,
-      text: selectTemplate('career', careerScore, random),
+      text: selectTemplate('career', careerScore, random, signId),
     },
     health: {
       score: healthScore,
-      text: selectTemplate('health', healthScore, random),
+      text: selectTemplate('health', healthScore, random, signId),
     },
     money: {
       score: moneyScore,
-      text: selectTemplate('money', moneyScore, random),
+      text: selectTemplate('money', moneyScore, random, signId),
     },
     weekHighlight: selectRandom(weeklyHighlightTemplates, random),
     bestDay: dayNames[bestDayDate.getDay()][locale as keyof LocalizedText] || dayNames[bestDayDate.getDay()].ko,
@@ -371,35 +428,40 @@ export function generateMonthlyHoroscope(
 
   const now = new Date().toISOString();
 
+  // 지배 행성 정보 가져오기
+  const planet = getPlanetForSign(signId);
+  const overallScore = calculateAverageScore(monthlyScores.overall);
+
   return {
     id: `monthly-${signId}-${year}-${month}`,
     year,
     month,
     signId,
     overall: {
-      score: calculateAverageScore(monthlyScores.overall),
-      text: selectTemplate('overall', calculateAverageScore(monthlyScores.overall), random),
+      score: overallScore,
+      text: selectTemplate('overall', overallScore, random, signId),
     },
     love: {
       score: calculateAverageScore(monthlyScores.love),
-      text: selectTemplate('love', calculateAverageScore(monthlyScores.love), random),
+      text: selectTemplate('love', calculateAverageScore(monthlyScores.love), random, signId),
     },
     career: {
       score: calculateAverageScore(monthlyScores.career),
-      text: selectTemplate('career', calculateAverageScore(monthlyScores.career), random),
+      text: selectTemplate('career', calculateAverageScore(monthlyScores.career), random, signId),
     },
     health: {
       score: calculateAverageScore(monthlyScores.health),
-      text: selectTemplate('health', calculateAverageScore(monthlyScores.health), random),
+      text: selectTemplate('health', calculateAverageScore(monthlyScores.health), random, signId),
     },
     money: {
       score: calculateAverageScore(monthlyScores.money),
-      text: selectTemplate('money', calculateAverageScore(monthlyScores.money), random),
+      text: selectTemplate('money', calculateAverageScore(monthlyScores.money), random, signId),
     },
     monthHighlight: selectRandom(monthlyHighlightTemplates, random),
     keyDates,
     monthlyAdvice: selectRandom(adviceTemplates, random),
-    planetaryInfluence: selectRandom(planetaryInfluenceTemplates, random),
+    // 지배 행성 영향력 (점수에 따라 긍정/부정 선택)
+    planetaryInfluence: overallScore >= 3 ? planet.positiveInfluence : planet.negativeInfluence,
     createdAt: now,
     updatedAt: now,
   };

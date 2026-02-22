@@ -12,11 +12,12 @@ export default function Footer() {
     { href: '/contact', label: '문의하기' },
   ];
 
-  const zodiacLinks = [
+  const contentLinks = [
     { href: '/horoscope', label: '오늘의 운세' },
-    { href: '/compatibility', label: '궁합' },
-    { href: '/birth-chart', label: '출생차트' },
-    { href: '/zodiac', label: '별자리' },
+    { href: '/horoscope/daily', label: '12별자리 일일 운세' },
+    { href: '/zodiac', label: '12별자리 목록' },
+    { href: '/compatibility', label: '별자리 궁합' },
+    { href: '/birth-chart', label: '출생 차트' },
   ];
 
   return (
@@ -53,11 +54,11 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Services */}
+          {/* 주요 콘텐츠 (SEO 내부 링크) */}
           <div>
-            <h3 className="font-semibold text-white mb-4">서비스</h3>
+            <h3 className="font-semibold text-white mb-4">주요 콘텐츠</h3>
             <ul className="space-y-2">
-              {zodiacLinks.map((link) => (
+              {contentLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}

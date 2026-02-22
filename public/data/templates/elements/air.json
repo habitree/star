@@ -1,0 +1,87 @@
+{
+  "overall": {
+    "high": [
+      { "ko": "새로운 아이디어와 영감이 넘치는 날입니다. 창의력을 발휘하세요.", "en": "A day overflowing with new ideas and inspiration. Exercise your creativity.", "zh": "充满新想法和灵感的一天。发挥创造力。", "ja": "新しいアイデアとインスピレーションに溢れる日です。創造力を発揮してください。", "es": "Un día rebosante de nuevas ideas e inspiración. Ejerce tu creatividad." },
+      { "ko": "소통과 교류가 행운을 가져오는 시기입니다. 적극적으로 대화하세요.", "en": "A time when communication and exchange bring luck. Actively engage in conversation.", "zh": "沟通和交流带来好运的时期。积极对话。", "ja": "コミュニケーションと交流が幸運をもたらす時期です。積極的に会話してください。", "es": "Un momento en que la comunicación e intercambio traen suerte. Participa activamente en conversaciones." },
+      { "ko": "지적 호기심이 좋은 결과로 이어집니다. 배움의 기회를 잡으세요.", "en": "Intellectual curiosity leads to good results. Seize learning opportunities.", "zh": "求知欲带来好结果。抓住学习机会。", "ja": "知的好奇心が良い結果につながります。学びの機会をつかんでください。", "es": "La curiosidad intelectual conduce a buenos resultados. Aprovecha las oportunidades de aprendizaje." }
+    ],
+    "medium": [
+      { "ko": "다양한 관점을 고려하면 해답을 찾을 수 있습니다.", "en": "Considering various perspectives can find answers.", "zh": "考虑各种观点可以找到答案。", "ja": "様々な視点を考慮すれば答えを見つけられます。", "es": "Considerar varias perspectivas puede encontrar respuestas." },
+      { "ko": "가벼운 마음으로 상황을 바라보세요. 너무 심각하게 생각하지 마세요.", "en": "Look at the situation with a light heart. Do not think too seriously.", "zh": "轻松地看待情况。不要想得太严重。", "ja": "軽い気持ちで状況を見てください。あまり深刻に考えないでください。", "es": "Mira la situación con corazón ligero. No pienses demasiado seriamente." },
+      { "ko": "정보 수집이 도움이 되는 시기입니다. 주변을 살펴보세요.", "en": "A time when gathering information helps. Look around.", "zh": "收集信息有帮助的时期。看看周围。", "ja": "情報収集が役立つ時期です。周りを見渡してください。", "es": "Un momento en que recopilar información ayuda. Mira a tu alrededor." }
+    ],
+    "low": [
+      { "ko": "생각이 너무 많아 결정을 미루게 될 수 있습니다. 직감을 믿으세요.", "en": "Too many thoughts may delay decisions. Trust your intuition.", "zh": "想太多可能会推迟决定。相信直觉。", "ja": "考えすぎて決定を先延ばしにする可能性があります。直感を信じてください。", "es": "Demasiados pensamientos pueden retrasar decisiones. Confía en tu intuición." },
+      { "ko": "산만함에 주의하세요. 한 가지에 집중하는 것이 중요합니다.", "en": "Watch out for distraction. Focusing on one thing is important.", "zh": "注意分心。专注于一件事很重要。", "ja": "散漫さに注意してください。一つのことに集中することが重要です。", "es": "Cuidado con la distracción. Concentrarte en una cosa es importante." },
+      { "ko": "말보다 행동이 필요한 시기입니다. 실천에 옮기세요.", "en": "A time when action is needed over words. Put it into practice.", "zh": "需要行动而非言语的时期。付诸实践。", "ja": "言葉より行動が必要な時期です。実践に移してください。", "es": "Un momento en que se necesita acción sobre palabras. Ponlo en práctica." }
+    ]
+  },
+  "love": {
+    "high": [
+      { "ko": "대화를 통해 마음이 통하는 날입니다. 솔직하게 이야기하세요.", "en": "A day when hearts connect through conversation. Talk honestly.", "zh": "通过对话心灵相通的一天。坦诚交谈。", "ja": "会話を通じて心が通じ合う日です。素直に話してください。", "es": "Un día en que los corazones se conectan a través de la conversación. Habla honestamente." },
+      { "ko": "지적인 교감이 사랑을 깊게 합니다. 함께 배우는 시간을 가지세요.", "en": "Intellectual connection deepens love. Have time to learn together.", "zh": "智慧的交流加深爱情。一起学习吧。", "ja": "知的な交感が愛を深めます。一緒に学ぶ時間を持ってください。", "es": "La conexión intelectual profundiza el amor. Ten tiempo para aprender juntos." },
+      { "ko": "새로운 만남의 기회가 많습니다. 사교 활동에 참여하세요.", "en": "There are many opportunities for new encounters. Participate in social activities.", "zh": "有很多新邂逅的机会。参加社交活动。", "ja": "新しい出会いの機会が多いです。社交活動に参加してください。", "es": "Hay muchas oportunidades para nuevos encuentros. Participa en actividades sociales." }
+    ],
+    "medium": [
+      { "ko": "가벼운 대화가 관계를 부드럽게 합니다.", "en": "Light conversation smooths relationships.", "zh": "轻松的对话使关系更顺畅。", "ja": "軽い会話が関係を和らげます。", "es": "La conversación ligera suaviza las relaciones." },
+      { "ko": "상대방의 생각을 경청하는 것이 중요합니다.", "en": "Listening to your partner thoughts is important.", "zh": "倾听对方的想法很重要。", "ja": "相手の考えに耳を傾けることが重要です。", "es": "Escuchar los pensamientos de tu pareja es importante." },
+      { "ko": "친구 같은 편안한 관계가 사랑의 기반이 됩니다.", "en": "A comfortable friendship-like relationship becomes the foundation of love.", "zh": "像朋友一样舒适的关系是爱情的基础。", "ja": "友達のような快適な関係が愛の基盤になります。", "es": "Una relación cómoda como amistad se convierte en la base del amor." }
+    ],
+    "low": [
+      { "ko": "말실수에 주의하세요. 상대방의 감정을 헤아리세요.", "en": "Watch out for slips of the tongue. Consider your partner feelings.", "zh": "注意说错话。考虑对方的感受。", "ja": "言い間違いに注意してください。相手の感情を汲み取ってください。", "es": "Cuidado con los lapsus. Considera los sentimientos de tu pareja." },
+      { "ko": "너무 분석적으로 접근하지 마세요. 감정도 중요합니다.", "en": "Do not approach too analytically. Emotions are also important.", "zh": "不要太过分析。情感也很重要。", "ja": "あまり分析的にアプローチしないでください。感情も重要です。", "es": "No te acerques demasiado analíticamente. Las emociones también son importantes." },
+      { "ko": "결정을 미루다 기회를 놓칠 수 있습니다. 용기를 내세요.", "en": "Delaying decisions may miss opportunities. Be brave.", "zh": "推迟决定可能会错失机会。勇敢一点。", "ja": "決定を先延ばしにしてチャンスを逃す可能性があります。勇気を出してください。", "es": "Retrasar decisiones puede perder oportunidades. Sé valiente." }
+    ]
+  },
+  "career": {
+    "high": [
+      { "ko": "창의적인 아이디어가 인정받습니다. 제안을 주저하지 마세요.", "en": "Creative ideas are recognized. Do not hesitate to make suggestions.", "zh": "创意想法得到认可。不要犹豫提出建议。", "ja": "創造的なアイデアが認められます。提案を躊躇しないでください。", "es": "Las ideas creativas son reconocidas. No dudes en hacer sugerencias." },
+      { "ko": "커뮤니케이션 능력이 빛나는 시기입니다. 발표나 회의에서 좋은 성과를 거둡니다.", "en": "A time when communication skills shine. Good results in presentations or meetings.", "zh": "沟通能力闪耀的时期。在演讲或会议中取得好成果。", "ja": "コミュニケーション能力が輝く時期です。発表や会議で良い成果を収めます。", "es": "Un momento en que las habilidades de comunicación brillan. Buenos resultados en presentaciones o reuniones." },
+      { "ko": "네트워킹이 새로운 기회를 가져옵니다.", "en": "Networking brings new opportunities.", "zh": "人脉带来新机会。", "ja": "ネットワーキングが新しい機会をもたらします。", "es": "El networking trae nuevas oportunidades." }
+    ],
+    "medium": [
+      { "ko": "팀과의 소통에 집중하세요. 협업이 중요합니다.", "en": "Focus on communication with the team. Collaboration is important.", "zh": "专注于与团队的沟通。协作很重要。", "ja": "チームとのコミュニケーションに集中してください。協業が重要です。", "es": "Concéntrate en la comunicación con el equipo. La colaboración es importante." },
+      { "ko": "다양한 업무를 효율적으로 처리하세요. 우선순위를 정하면 도움이 됩니다.", "en": "Handle various tasks efficiently. Setting priorities helps.", "zh": "高效处理各种工作。设定优先级会有帮助。", "ja": "様々な業務を効率的に処理してください。優先順位を決めると役立ちます。", "es": "Maneja varias tareas eficientemente. Establecer prioridades ayuda." },
+      { "ko": "정보 공유가 팀의 성과를 높입니다.", "en": "Sharing information improves team performance.", "zh": "信息共享提高团队绩效。", "ja": "情報共有がチームの成果を高めます。", "es": "Compartir información mejora el rendimiento del equipo." }
+    ],
+    "low": [
+      { "ko": "집중력이 흐트러질 수 있습니다. 한 번에 하나씩 처리하세요.", "en": "Concentration may scatter. Handle one thing at a time.", "zh": "注意力可能分散。一次处理一件事。", "ja": "集中力が乱れる可能性があります。一度に一つずつ処理してください。", "es": "La concentración puede dispersarse. Maneja una cosa a la vez." },
+      { "ko": "말보다 결과로 보여주는 것이 필요합니다.", "en": "Showing results rather than words is needed.", "zh": "需要用结果而非言语来证明。", "ja": "言葉より結果で示すことが必要です。", "es": "Se necesita mostrar resultados en lugar de palabras." },
+      { "ko": "약속은 반드시 지키세요. 신뢰가 중요한 시기입니다.", "en": "Always keep promises. Trust is important at this time.", "zh": "一定要遵守承诺。这是信任重要的时期。", "ja": "約束は必ず守ってください。信頼が重要な時期です。", "es": "Siempre cumple las promesas. La confianza es importante en este momento." }
+    ]
+  },
+  "health": {
+    "high": [
+      { "ko": "정신적 활력이 넘치는 날입니다. 새로운 것을 배워보세요.", "en": "A day full of mental vitality. Try learning something new.", "zh": "精神活力充沛的一天。学习新事物吧。", "ja": "精神的な活力に満ちた日です。新しいことを学んでみてください。", "es": "Un día lleno de vitalidad mental. Prueba aprender algo nuevo." },
+      { "ko": "사교 활동이 기분 전환에 도움이 됩니다.", "en": "Social activities help refresh your mood.", "zh": "社交活动有助于转换心情。", "ja": "社交活動が気分転換に役立ちます。", "es": "Las actividades sociales ayudan a refrescar tu ánimo." },
+      { "ko": "호흡과 명상이 마음의 안정을 가져옵니다.", "en": "Breathing and meditation bring peace of mind.", "zh": "呼吸和冥想带来心灵的平静。", "ja": "呼吸と瞑想が心の安定をもたらします。", "es": "La respiración y la meditación traen paz mental." }
+    ],
+    "medium": [
+      { "ko": "정신 건강에 신경 쓰세요. 스트레스 관리가 중요합니다.", "en": "Pay attention to mental health. Stress management is important.", "zh": "关注心理健康。压力管理很重要。", "ja": "精神的な健康に気を配ってください。ストレス管理が重要です。", "es": "Presta atención a la salud mental. La gestión del estrés es importante." },
+      { "ko": "가벼운 야외 활동이 기분을 좋게 합니다.", "en": "Light outdoor activities improve mood.", "zh": "轻松的户外活动让心情变好。", "ja": "軽い屋外活動が気分を良くします。", "es": "Las actividades ligeras al aire libre mejoran el ánimo." },
+      { "ko": "충분한 수면이 두뇌 활동에 도움이 됩니다.", "en": "Sufficient sleep helps brain activity.", "zh": "充足的睡眠有助于大脑活动。", "ja": "十分な睡眠が脳の活動に役立ちます。", "es": "El sueño suficiente ayuda a la actividad cerebral." }
+    ],
+    "low": [
+      { "ko": "과도한 정보 섭취가 피로를 줄 수 있습니다. 디지털 디톡스를 하세요.", "en": "Excessive information intake can cause fatigue. Do a digital detox.", "zh": "过多的信息摄入可能导致疲劳。进行数字排毒。", "ja": "過度な情報摂取が疲労を与える可能性があります。デジタルデトックスをしてください。", "es": "El consumo excesivo de información puede causar fatiga. Haz una desintoxicación digital." },
+      { "ko": "불안한 생각이 들 수 있습니다. 깊은 호흡으로 마음을 진정시키세요.", "en": "Anxious thoughts may arise. Calm your mind with deep breathing.", "zh": "可能会有焦虑的想法。用深呼吸平静心情。", "ja": "不安な考えが浮かぶかもしれません。深い呼吸で心を落ち着かせてください。", "es": "Pueden surgir pensamientos ansiosos. Calma tu mente con respiración profunda." },
+      { "ko": "머리를 쉬게 하는 시간이 필요합니다. 단순한 활동을 즐기세요.", "en": "Time to rest your mind is needed. Enjoy simple activities.", "zh": "需要让大脑休息的时间。享受简单的活动。", "ja": "頭を休ませる時間が必要です。シンプルな活動を楽しんでください。", "es": "Se necesita tiempo para descansar tu mente. Disfruta actividades simples." }
+    ]
+  },
+  "money": {
+    "high": [
+      { "ko": "정보력이 재테크에 도움이 됩니다. 트렌드를 파악하세요.", "en": "Information power helps with investments. Understand trends.", "zh": "信息能力有助于理财。了解趋势。", "ja": "情報力が資産運用に役立ちます。トレンドを把握してください。", "es": "El poder de información ayuda con las inversiones. Comprende las tendencias." },
+      { "ko": "다양한 수입원을 개발할 수 있는 시기입니다.", "en": "A time when you can develop various income sources.", "zh": "可以开发多种收入来源的时期。", "ja": "様々な収入源を開発できる時期です。", "es": "Un momento en que puedes desarrollar varias fuentes de ingresos." },
+      { "ko": "네트워크를 통한 기회가 재정에 도움이 됩니다.", "en": "Opportunities through networking help finances.", "zh": "通过人脉的机会有助于财务。", "ja": "ネットワークを通じた機会が財政に役立ちます。", "es": "Las oportunidades a través del networking ayudan a las finanzas." }
+    ],
+    "medium": [
+      { "ko": "재정 상황을 분석하고 계획을 세우세요.", "en": "Analyze your financial situation and make a plan.", "zh": "分析财务状况并制定计划。", "ja": "財政状況を分析し、計画を立ててください。", "es": "Analiza tu situación financiera y haz un plan." },
+      { "ko": "여러 옵션을 비교해보세요. 최선의 선택을 할 수 있습니다.", "en": "Compare various options. You can make the best choice.", "zh": "比较各种选择。可以做出最好的选择。", "ja": "複数のオプションを比較してみてください。最善の選択ができます。", "es": "Compara varias opciones. Puedes hacer la mejor elección." },
+      { "ko": "작은 지출도 기록하면 재정 관리에 도움이 됩니다.", "en": "Recording even small expenses helps with financial management.", "zh": "记录小支出也有助于财务管理。", "ja": "小さな支出も記録すれば財務管理に役立ちます。", "es": "Registrar incluso gastos pequeños ayuda con la gestión financiera." }
+    ],
+    "low": [
+      { "ko": "충동적인 지출에 주의하세요. 한 번 더 생각하세요.", "en": "Watch out for impulsive spending. Think twice.", "zh": "注意冲动消费。再想一想。", "ja": "衝動的な支出に注意してください。もう一度考えてください。", "es": "Cuidado con el gasto impulsivo. Piénsalo dos veces." },
+      { "ko": "불확실한 정보에 기반한 투자는 피하세요.", "en": "Avoid investments based on uncertain information.", "zh": "避免基于不确定信息的投资。", "ja": "不確実な情報に基づいた投資は避けてください。", "es": "Evita inversiones basadas en información incierta." },
+      { "ko": "약속한 금전 거래는 확실히 처리하세요. 신뢰가 중요합니다.", "en": "Handle promised financial transactions clearly. Trust is important.", "zh": "确实处理承诺的金钱交易。信任很重要。", "ja": "約束した金銭取引は確実に処理してください。信頼が重要です。", "es": "Maneja las transacciones financieras prometidas claramente. La confianza es importante." }
+    ]
+  }
+}

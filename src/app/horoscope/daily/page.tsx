@@ -8,11 +8,23 @@ import Link from 'next/link';
 import { getAllDailyHoroscopes } from '@/lib/horoscope-generator';
 import { zodiacData } from '@/data/zodiac-info';
 import ScoreBar from '@/components/ui/ScoreBar';
+import { getSiteUrl } from '@/lib/site-url';
 import type { DailyHoroscope } from '@/types';
+
+const baseUrl = getSiteUrl();
+const url = `${baseUrl}/horoscope/daily`;
+const description = '모든 별자리의 오늘 운세를 한눈에 확인하세요. 12별자리 일일 운세, 종합운·연애운·직장운·건강운·금전운.';
 
 export const metadata: Metadata = {
   title: '12별자리 일일 운세',
-  description: '모든 별자리의 오늘 운세를 한눈에 확인하세요.',
+  description,
+  openGraph: {
+    title: '12별자리 일일 운세 - 별자리 운세',
+    description,
+    url,
+    type: 'website',
+  },
+  alternates: { canonical: url },
 };
 
 // 운세 카드 컴포넌트

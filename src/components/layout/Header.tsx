@@ -3,10 +3,14 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useUser, useAuthStore } from '@/stores/auth-store';
 
 export default function Header() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const user = useUser();
+  const isHydrated = useAuthStore((s) => s.isHydrated);
+
 
   const navItems = [
     { href: '/', label: '홈' },
@@ -46,10 +50,41 @@ export default function Header() {
                 {item.label}
               </Link>
             ))}
+            {isHydrated && (
+              user ? (
+                <Link
+                  href="/profile"
+                  className={`nav-link ${pathname === '/profile' ? 'active' : ''}`}
+                >
+                  프로필
+                </Link>
+              ) : (
+                <Link href="/login" className="nav-link">
+                  로그인
+                </Link>
+              )
+            )}
           </nav>
 
           {/* Mobile Menu Button */}
           <div className="flex items-center gap-4">
+            {isHydrated && (
+              user ? (
+                <Link
+                  href="/profile"
+                  className="md:hidden px-3 py-2 text-sm text-white/80 hover:text-white"
+                >
+                  프로필
+                </Link>
+              ) : (
+                <Link
+                  href="/login"
+                  className="md:hidden px-3 py-2 text-sm text-white/80 hover:text-white"
+                >
+                  로그인
+                </Link>
+              )
+            )}
             <button
               className="md:hidden p-2 text-white/70 hover:text-white transition-colors"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -106,6 +141,29 @@ export default function Header() {
                   {item.label}
                 </Link>
               ))}
+              {isHydrated && (
+                user ? (
+                  <Link
+                    href="/profile"
+                    className={`px-4 py-3 rounded-lg transition-colors ${
+                      pathname === '/profile'
+                        ? 'bg-white/10 text-white'
+                        : 'text-white/70 hover:bg-white/5 hover:text-white'
+                    }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    프로필
+                  </Link>
+                ) : (
+                  <Link
+                    href="/login"
+                    className="px-4 py-3 rounded-lg text-white/70 hover:bg-white/5 hover:text-white"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    로그인
+                  </Link>
+                )
+              )}
             </div>
           </nav>
         )}

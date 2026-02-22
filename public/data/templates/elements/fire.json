@@ -1,0 +1,87 @@
+{
+  "overall": {
+    "high": [
+      { "ko": "불꽃 같은 열정이 당신을 이끄는 날입니다. 적극적으로 도전하세요.", "en": "A day when fiery passion leads you. Challenge yourself actively.", "zh": "火焰般的热情引领你的一天。积极挑战吧。", "ja": "炎のような情熱があなたを導く日です。積極的に挑戦してください。", "es": "Un día en que la pasión ardiente te guía. Desafíate activamente." },
+      { "ko": "당신의 용기가 빛나는 시기입니다. 주저하지 말고 앞으로 나아가세요.", "en": "A time when your courage shines. Move forward without hesitation.", "zh": "你的勇气闪耀的时期。毫不犹豫地前进吧。", "ja": "あなたの勇気が輝く時期です。躊躇せず前に進んでください。", "es": "Un momento en que tu coraje brilla. Avanza sin dudar." },
+      { "ko": "강렬한 에너지가 모든 장애물을 태워버립니다. 승리가 당신 것입니다.", "en": "Intense energy burns away all obstacles. Victory is yours.", "zh": "强烈的能量烧尽所有障碍。胜利属于你。", "ja": "強烈なエネルギーがすべての障害を焼き払います。勝利はあなたのものです。", "es": "La energía intensa quema todos los obstáculos. La victoria es tuya." }
+    ],
+    "medium": [
+      { "ko": "내면의 불꽃을 잘 조절하면 안정적인 하루가 됩니다.", "en": "Controlling your inner flame well makes for a stable day.", "zh": "好好控制内心的火焰，会是稳定的一天。", "ja": "内なる炎をうまくコントロールすれば安定した一日になります。", "es": "Controlar bien tu llama interior hace que sea un día estable." },
+      { "ko": "열정을 유지하되 급하게 서두르지 마세요. 때를 기다리세요.", "en": "Maintain your passion but do not rush. Wait for the right time.", "zh": "保持热情但不要着急。等待时机。", "ja": "情熱を維持しつつも急がないでください。時を待ちましょう。", "es": "Mantén tu pasión pero no te apresures. Espera el momento adecuado." },
+      { "ko": "행동하기 전에 한 번 더 생각하면 좋은 결과를 얻습니다.", "en": "Thinking once more before acting brings good results.", "zh": "行动前再想一想会有好结果。", "ja": "行動する前にもう一度考えると良い結果が得られます。", "es": "Pensar una vez más antes de actuar trae buenos resultados." }
+    ],
+    "low": [
+      { "ko": "에너지를 재충전할 시간입니다. 무리한 도전은 피하세요.", "en": "Time to recharge your energy. Avoid reckless challenges.", "zh": "是时候充电了。避免鲁莽的挑战。", "ja": "エネルギーを充電する時間です。無理な挑戦は避けてください。", "es": "Es hora de recargar tu energía. Evita desafíos imprudentes." },
+      { "ko": "불꽃이 약해진 날입니다. 잠시 쉬어가며 힘을 모으세요.", "en": "A day when the flame weakens. Rest and gather strength.", "zh": "火焰减弱的一天。休息一下，积蓄力量。", "ja": "炎が弱まった日です。少し休んで力を蓄えてください。", "es": "Un día en que la llama se debilita. Descansa y reúne fuerzas." },
+      { "ko": "충동적인 행동을 자제하세요. 신중함이 필요한 시기입니다.", "en": "Refrain from impulsive actions. This is a time for caution.", "zh": "克制冲动行为。这是需要谨慎的时期。", "ja": "衝動的な行動は控えてください。慎重さが必要な時期です。", "es": "Abstente de acciones impulsivas. Es un momento para la cautela." }
+    ]
+  },
+  "love": {
+    "high": [
+      { "ko": "뜨거운 사랑의 에너지가 가득합니다. 열정적으로 표현하세요.", "en": "Full of hot love energy. Express yourself passionately.", "zh": "充满炽热的爱情能量。热情地表达吧。", "ja": "熱い愛のエネルギーに満ちています。情熱的に表現してください。", "es": "Lleno de energía amorosa ardiente. Exprésate apasionadamente." },
+      { "ko": "당신의 매력이 불꽃처럼 타오릅니다. 사랑을 쟁취할 때입니다.", "en": "Your charm burns like a flame. Time to win love.", "zh": "你的魅力如火焰般燃烧。是赢得爱情的时候了。", "ja": "あなたの魅力が炎のように燃え上がります。愛を勝ち取る時です。", "es": "Tu encanto arde como una llama. Es hora de conquistar el amor." },
+      { "ko": "용기 있는 고백이 성공할 확률이 높습니다. 지금이 기회입니다.", "en": "A brave confession has high chances of success. Now is the chance.", "zh": "勇敢的告白成功率很高。现在是机会。", "ja": "勇気ある告白が成功する確率が高いです。今がチャンスです。", "es": "Una confesión valiente tiene altas probabilidades de éxito. Ahora es la oportunidad." }
+    ],
+    "medium": [
+      { "ko": "사랑에 있어 차분하게 접근하면 좋은 결과가 있습니다.", "en": "A calm approach to love brings good results.", "zh": "在爱情中冷静接近会有好结果。", "ja": "恋愛において落ち着いてアプローチすれば良い結果があります。", "es": "Un enfoque tranquilo hacia el amor trae buenos resultados." },
+      { "ko": "열정과 배려의 균형이 필요한 시기입니다.", "en": "A time when balance between passion and consideration is needed.", "zh": "需要热情与体贴平衡的时期。", "ja": "情熱と思いやりのバランスが必要な時期です。", "es": "Un momento en que se necesita equilibrio entre pasión y consideración." },
+      { "ko": "상대방의 페이스에 맞추는 것도 사랑입니다.", "en": "Matching your partner pace is also love.", "zh": "配合对方的节奏也是爱。", "ja": "相手のペースに合わせることも愛です。", "es": "Adaptarse al ritmo de tu pareja también es amor." }
+    ],
+    "low": [
+      { "ko": "감정적인 충돌을 피하세요. 한 발짝 물러서서 상황을 보세요.", "en": "Avoid emotional conflicts. Step back and observe the situation.", "zh": "避免情感冲突。退一步看看情况。", "ja": "感情的な衝突は避けてください。一歩引いて状況を見てください。", "es": "Evita conflictos emocionales. Da un paso atrás y observa la situación." },
+      { "ko": "성급한 결정은 후회를 부릅니다. 시간을 두고 생각하세요.", "en": "Hasty decisions bring regret. Take time to think.", "zh": "仓促的决定会带来后悔。花时间想想。", "ja": "急いだ決定は後悔を招きます。時間をかけて考えてください。", "es": "Las decisiones apresuradas traen arrepentimiento. Tómate tiempo para pensar." },
+      { "ko": "오늘은 사랑보다 자기 자신에게 집중하는 것이 좋겠습니다.", "en": "Today it is better to focus on yourself rather than love.", "zh": "今天比起爱情，更好专注于自己。", "ja": "今日は恋愛よりも自分自身に集中する方が良いでしょう。", "es": "Hoy es mejor concentrarte en ti mismo que en el amor." }
+    ]
+  },
+  "career": {
+    "high": [
+      { "ko": "리더십을 발휘할 절호의 기회입니다. 앞장서세요.", "en": "A golden opportunity to exercise leadership. Take the lead.", "zh": "发挥领导力的绝佳机会。带头吧。", "ja": "リーダーシップを発揮する絶好の機会です。先頭に立ってください。", "es": "Una oportunidad de oro para ejercer liderazgo. Toma la delantera." },
+      { "ko": "도전적인 프로젝트에서 빛날 수 있습니다. 적극적으로 나서세요.", "en": "You can shine in challenging projects. Be proactive.", "zh": "在挑战性项目中可以发光。积极主动吧。", "ja": "挑戦的なプロジェクトで輝けます。積極的に出てください。", "es": "Puedes brillar en proyectos desafiantes. Sé proactivo." },
+      { "ko": "당신의 추진력이 팀을 성공으로 이끕니다.", "en": "Your drive leads the team to success.", "zh": "你的推动力带领团队走向成功。", "ja": "あなたの推進力がチームを成功に導きます。", "es": "Tu impulso lleva al equipo al éxito." }
+    ],
+    "medium": [
+      { "ko": "꾸준한 노력이 인정받는 시기입니다. 묵묵히 일하세요.", "en": "A time when steady effort is recognized. Work diligently.", "zh": "稳定努力得到认可的时期。默默工作吧。", "ja": "着実な努力が認められる時期です。黙々と働いてください。", "es": "Un momento en que el esfuerzo constante es reconocido. Trabaja diligentemente." },
+      { "ko": "팀워크와 개인 역량의 균형을 맞추세요.", "en": "Balance teamwork and individual capabilities.", "zh": "平衡团队合作和个人能力。", "ja": "チームワークと個人の能力のバランスを取ってください。", "es": "Equilibra el trabajo en equipo y las capacidades individuales." },
+      { "ko": "작은 성과들이 모여 큰 결실을 맺을 것입니다.", "en": "Small achievements will accumulate into great results.", "zh": "小成就积累成大成果。", "ja": "小さな成果が集まって大きな実りとなるでしょう。", "es": "Los pequeños logros se acumularán en grandes resultados." }
+    ],
+    "low": [
+      { "ko": "직장에서의 갈등은 피하세요. 냉정을 유지하는 것이 중요합니다.", "en": "Avoid conflicts at work. Staying calm is important.", "zh": "避免工作中的冲突。保持冷静很重要。", "ja": "職場での衝突は避けてください。冷静を保つことが重要です。", "es": "Evita conflictos en el trabajo. Mantener la calma es importante." },
+      { "ko": "급한 결정보다 신중한 판단이 필요한 시기입니다.", "en": "A time when careful judgment is needed over hasty decisions.", "zh": "比起仓促决定，需要谨慎判断的时期。", "ja": "急いだ決定より慎重な判断が必要な時期です。", "es": "Un momento en que se necesita juicio cuidadoso sobre decisiones apresuradas." },
+      { "ko": "혼자 해결하려 하지 말고 동료의 도움을 구하세요.", "en": "Do not try to solve alone, seek help from colleagues.", "zh": "不要试图独自解决，寻求同事的帮助。", "ja": "一人で解決しようとせず、同僚の助けを求めてください。", "es": "No intentes resolver solo, busca ayuda de colegas." }
+    ]
+  },
+  "health": {
+    "high": [
+      { "ko": "에너지가 넘치는 날입니다. 활동적인 운동이 좋습니다.", "en": "A day full of energy. Active exercise is good.", "zh": "能量满满的一天。积极运动很好。", "ja": "エネルギーに満ちた日です。活動的な運動が良いでしょう。", "es": "Un día lleno de energía. El ejercicio activo es bueno." },
+      { "ko": "신체 활력이 최고조입니다. 새로운 스포츠에 도전해보세요.", "en": "Physical vitality is at its peak. Try a new sport.", "zh": "身体活力达到顶峰。尝试新运动吧。", "ja": "身体の活力が最高潮です。新しいスポーツに挑戦してみてください。", "es": "La vitalidad física está en su punto máximo. Prueba un nuevo deporte." },
+      { "ko": "열정적인 활동이 건강에 도움이 되는 시기입니다.", "en": "A time when passionate activities benefit health.", "zh": "热情的活动有益健康的时期。", "ja": "情熱的な活動が健康に役立つ時期です。", "es": "Un momento en que las actividades apasionadas benefician la salud." }
+    ],
+    "medium": [
+      { "ko": "규칙적인 운동 습관을 유지하세요. 꾸준함이 중요합니다.", "en": "Maintain regular exercise habits. Consistency is important.", "zh": "保持规律的运动习惯。坚持很重要。", "ja": "規則的な運動習慣を維持してください。継続が重要です。", "es": "Mantén hábitos de ejercicio regulares. La consistencia es importante." },
+      { "ko": "무리하지 않는 선에서 활동량을 늘려보세요.", "en": "Try increasing activity without overexerting.", "zh": "在不勉强的范围内增加活动量。", "ja": "無理のない範囲で活動量を増やしてみてください。", "es": "Intenta aumentar la actividad sin esforzarte demasiado." },
+      { "ko": "열정과 휴식의 균형이 필요합니다.", "en": "Balance between passion and rest is needed.", "zh": "需要热情与休息的平衡。", "ja": "情熱と休息のバランスが必要です。", "es": "Se necesita equilibrio entre pasión y descanso." }
+    ],
+    "low": [
+      { "ko": "과격한 운동은 피하세요. 부상의 위험이 있습니다.", "en": "Avoid intense exercise. There is risk of injury.", "zh": "避免剧烈运动。有受伤风险。", "ja": "激しい運動は避けてください。怪我のリスクがあります。", "es": "Evita el ejercicio intenso. Hay riesgo de lesión." },
+      { "ko": "몸의 신호에 귀 기울이세요. 휴식이 필요합니다.", "en": "Listen to your body signals. Rest is needed.", "zh": "倾听身体的信号。需要休息。", "ja": "体の信号に耳を傾けてください。休息が必要です。", "es": "Escucha las señales de tu cuerpo. Se necesita descanso." },
+      { "ko": "스트레스로 인한 피로에 주의하세요. 충분히 쉬세요.", "en": "Watch out for stress-related fatigue. Rest enough.", "zh": "注意压力引起的疲劳。充分休息。", "ja": "ストレスによる疲労に注意してください。十分に休んでください。", "es": "Cuidado con la fatiga relacionada con el estrés. Descansa lo suficiente." }
+    ]
+  },
+  "money": {
+    "high": [
+      { "ko": "과감한 투자가 좋은 결과를 가져올 수 있습니다.", "en": "Bold investments can bring good results.", "zh": "大胆投资可能带来好结果。", "ja": "大胆な投資が良い結果をもたらす可能性があります。", "es": "Las inversiones audaces pueden traer buenos resultados." },
+      { "ko": "재물운이 불타오릅니다. 기회를 놓치지 마세요.", "en": "Financial fortune is blazing. Do not miss opportunities.", "zh": "财运正旺。不要错过机会。", "ja": "金運が燃え上がっています。チャンスを逃さないでください。", "es": "La fortuna financiera está ardiendo. No pierdas oportunidades." },
+      { "ko": "적극적인 재테크 활동이 수익으로 이어집니다.", "en": "Active financial activities lead to profits.", "zh": "积极的理财活动带来收益。", "ja": "積極的な資産運用が収益につながります。", "es": "Las actividades financieras activas conducen a ganancias." }
+    ],
+    "medium": [
+      { "ko": "안정적인 재정 관리가 필요한 시기입니다.", "en": "A time when stable financial management is needed.", "zh": "需要稳定财务管理的时期。", "ja": "安定した財務管理が必要な時期です。", "es": "Un momento en que se necesita gestión financiera estable." },
+      { "ko": "충동구매를 자제하고 계획적으로 지출하세요.", "en": "Refrain from impulse buying and spend according to plan.", "zh": "克制冲动购物，计划性支出。", "ja": "衝動買いを控え、計画的に支出してください。", "es": "Abstente de compras impulsivas y gasta según el plan." },
+      { "ko": "작은 금액부터 저축을 시작하면 좋습니다.", "en": "It is good to start saving from small amounts.", "zh": "从小额开始储蓄很好。", "ja": "少額から貯蓄を始めると良いでしょう。", "es": "Es bueno empezar a ahorrar desde pequeñas cantidades." }
+    ],
+    "low": [
+      { "ko": "위험한 투자는 피하세요. 손실의 가능성이 있습니다.", "en": "Avoid risky investments. There is possibility of loss.", "zh": "避免风险投资。有亏损的可能。", "ja": "リスクの高い投資は避けてください。損失の可能性があります。", "es": "Evita inversiones arriesgadas. Hay posibilidad de pérdida." },
+      { "ko": "재정 상황을 점검하고 불필요한 지출을 줄이세요.", "en": "Review your financial situation and reduce unnecessary expenses.", "zh": "检查财务状况，减少不必要的支出。", "ja": "財政状況を点検し、不必要な支出を減らしてください。", "es": "Revisa tu situación financiera y reduce gastos innecesarios." },
+      { "ko": "큰 금액의 거래나 계약은 미루는 것이 좋겠습니다.", "en": "It would be better to postpone large transactions or contracts.", "zh": "最好推迟大额交易或合同。", "ja": "大きな金額の取引や契約は延期した方が良いでしょう。", "es": "Sería mejor posponer transacciones o contratos grandes." }
+    ]
+  }
+}

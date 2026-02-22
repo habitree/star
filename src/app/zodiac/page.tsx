@@ -2,11 +2,23 @@ import { Metadata } from 'next';
 import { zodiacSigns } from '@/data/zodiac-signs';
 import { type Element, type ZodiacSign } from '@/types/zodiac';
 import ZodiacCard from '@/components/ui/ZodiacCard';
+import { getSiteUrl } from '@/lib/site-url';
+
+const baseUrl = getSiteUrl();
+const url = `${baseUrl}/zodiac`;
+const description = '양자리부터 물고기자리까지, 12별자리의 특성과 성격을 알아보세요. 별자리 운세, 궁합, 출생 차트.';
 
 export const metadata: Metadata = {
   title: '12별자리 - 별자리 운세',
-  description: '양자리부터 물고기자리까지, 12별자리의 특성과 성격을 알아보세요.',
+  description,
   keywords: ['zodiac', 'horoscope', 'astrology', '별자리', '운세', '점성술'],
+  openGraph: {
+    title: '12별자리 - 별자리 운세',
+    description,
+    url,
+    type: 'website',
+  },
+  alternates: { canonical: url },
 };
 
 const elementLabels: Record<Element, string> = {

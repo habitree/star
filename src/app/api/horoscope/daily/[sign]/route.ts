@@ -5,81 +5,96 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { generateDailyHoroscope } from '@/lib/horoscope-generator';
-import type { ZodiacSignId, HoroscopeResponse, DailyHoroscope } from '@/types';
+import {
+  ApiError,
+  ErrorCode,
+  validateSign,
+  validateDate,
+  validateLocale,
+  createSuccessResponse,
+  createErrorResponse,
+  logError,
+  type ApiResponse,
+} from '@/lib/errors';
+import type { ZodiacSignId, DailyHoroscope } from '@/types';
 
-// 유효한 별자리 ID 목록
-const validSigns: ZodiacSignId[] = [
-  'aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo',
-  'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces'
-];
+// 캐시 설정
+const CACHE_MAX_AGE = 3600; // 1시간
+const STALE_WHILE_REVALIDATE = 86400; // 24시간
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ sign: string }> }
-): Promise<NextResponse<HoroscopeResponse<DailyHoroscope>>> {
+): Promise<NextResponse> {
+  const startTime = Date.now();
+
   try {
     const { sign } = await params;
     const { searchParams } = new URL(request.url);
 
     // 별자리 유효성 검사
-    if (!validSigns.includes(sign as ZodiacSignId)) {
-      return NextResponse.json(
-        {
-          success: false,
-          data: null,
-          error: `Invalid sign: ${sign}. Valid signs are: ${validSigns.join(', ')}`,
-        },
-        { status: 400 }
-      );
-    }
+    validateSign(sign);
 
-    // 쿼리 파라미터 파싱
+    // 쿼리 파라미터 파싱 및 검증
     const dateParam = searchParams.get('date');
-    const locale = searchParams.get('locale') || 'ko';
+    const localeParam = searchParams.get('locale') || 'ko';
+    const locale = validateLocale(localeParam);
 
     // 날짜 파싱 (기본: 오늘)
-    let date: Date;
-    if (dateParam) {
-      date = new Date(dateParam);
-      if (isNaN(date.getTime())) {
-        return NextResponse.json(
-          {
-            success: false,
-            data: null,
-            error: `Invalid date format: ${dateParam}. Use YYYY-MM-DD format.`,
-          },
-          { status: 400 }
-        );
-      }
-    } else {
-      date = new Date();
-    }
+    const date = dateParam ? validateDate(dateParam) : new Date();
 
     // 운세 생성
     const horoscope = generateDailyHoroscope(sign as ZodiacSignId, date, locale);
 
-    return NextResponse.json(
-      {
-        success: true,
-        data: horoscope,
+    // 성공 응답 생성
+    const response = createSuccessResponse(horoscope, {
+      cached: false,
+      generatedAt: new Date().toISOString(),
+    });
+
+    // 캐시 헤더 계산 (자정까지 남은 시간)
+    const now = new Date();
+    const midnight = new Date(now);
+    midnight.setHours(24, 0, 0, 0);
+    const secondsUntilMidnight = Math.floor((midnight.getTime() - now.getTime()) / 1000);
+    const maxAge = Math.min(secondsUntilMidnight, CACHE_MAX_AGE);
+
+    return NextResponse.json(response, {
+      status: 200,
+      headers: {
+        'Cache-Control': `public, max-age=${maxAge}, stale-while-revalidate=${STALE_WHILE_REVALIDATE}`,
+        'X-Response-Time': `${Date.now() - startTime}ms`,
+        'X-Cache-Status': 'MISS',
       },
-      {
-        status: 200,
-        headers: {
-          // 같은 날짜에 대해서는 캐시 사용
-          'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
-        },
-      }
-    );
+    });
   } catch (error) {
-    console.error('Daily horoscope API error:', error);
-    return NextResponse.json(
-      {
-        success: false,
-        data: null,
-        error: 'Internal server error',
-      },
-      { status: 500 }
+    // 에러 로깅
+    logError(error instanceof Error ? error : new Error(String(error)), {
+      endpoint: '/api/horoscope/daily/[sign]',
+      method: 'GET',
+      url: request.url,
+    });
+
+    // ApiError인 경우 해당 상태 코드 사용
+    if (error instanceof ApiError) {
+      return NextResponse.json(createErrorResponse(error), {
+        status: error.statusCode,
+        headers: {
+          'X-Response-Time': `${Date.now() - startTime}ms`,
+        },
+      });
+    }
+
+    // 일반 에러
+    const apiError = new ApiError(
+      ErrorCode.GENERATION_ERROR,
+      'Failed to generate daily horoscope'
     );
+    return NextResponse.json(createErrorResponse(apiError), {
+      status: 500,
+      headers: {
+        'X-Response-Time': `${Date.now() - startTime}ms`,
+      },
+    });
   }
 }

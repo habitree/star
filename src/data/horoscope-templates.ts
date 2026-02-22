@@ -601,7 +601,37 @@ export const horoscopeTemplates: HoroscopeTemplates = {
   },
 };
 
-// 행운의 색상 (다국어)
+// 원소별 행운의 색상 (Element-based lucky colors)
+export type Element = 'fire' | 'earth' | 'air' | 'water';
+
+export const elementLuckyColors: Record<Element, LocalizedText[]> = {
+  fire: [
+    { ko: '빨강', en: 'Red', zh: '红色', ja: '赤', es: 'Rojo' },
+    { ko: '주황', en: 'Orange', zh: '橙色', ja: 'オレンジ', es: 'Naranja' },
+    { ko: '금색', en: 'Gold', zh: '金色', ja: 'ゴールド', es: 'Dorado' },
+    { ko: '코랄', en: 'Coral', zh: '珊瑚色', ja: 'コーラル', es: 'Coral' },
+  ],
+  earth: [
+    { ko: '초록', en: 'Green', zh: '绿色', ja: '緑', es: 'Verde' },
+    { ko: '갈색', en: 'Brown', zh: '棕色', ja: '茶色', es: 'Marrón' },
+    { ko: '베이지', en: 'Beige', zh: '米色', ja: 'ベージュ', es: 'Beige' },
+    { ko: '카키', en: 'Khaki', zh: '卡其色', ja: 'カーキ', es: 'Caqui' },
+  ],
+  air: [
+    { ko: '노랑', en: 'Yellow', zh: '黄色', ja: '黄色', es: 'Amarillo' },
+    { ko: '하늘색', en: 'Sky Blue', zh: '天蓝色', ja: '空色', es: 'Celeste' },
+    { ko: '라벤더', en: 'Lavender', zh: '薰衣草色', ja: 'ラベンダー', es: 'Lavanda' },
+    { ko: '민트', en: 'Mint', zh: '薄荷色', ja: 'ミント', es: 'Menta' },
+  ],
+  water: [
+    { ko: '파랑', en: 'Blue', zh: '蓝色', ja: '青', es: 'Azul' },
+    { ko: '남색', en: 'Indigo', zh: '靛蓝色', ja: '藍色', es: 'Indigo' },
+    { ko: '은색', en: 'Silver', zh: '银色', ja: 'シルバー', es: 'Plateado' },
+    { ko: '보라', en: 'Purple', zh: '紫色', ja: '紫', es: 'Morado' },
+  ],
+};
+
+// 행운의 색상 (다국어) - 기본 전체 색상
 export const luckyColors: LocalizedText[] = [
   { ko: '빨강', en: 'Red', zh: '红色', ja: '赤', es: 'Rojo' },
   { ko: '주황', en: 'Orange', zh: '橙色', ja: 'オレンジ', es: 'Naranja' },

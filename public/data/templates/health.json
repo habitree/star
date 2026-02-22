@@ -1,0 +1,113 @@
+{
+  "high": [
+    {
+      "ko": "활력이 넘치는 날입니다. 운동이나 활동적인 일에 적합합니다.",
+      "en": "A day full of vitality. Suitable for exercise or active activities.",
+      "zh": "充满活力的一天。适合运动或积极的活动。",
+      "ja": "活力に満ちた一日です。運動や活動的なことに適しています。",
+      "es": "Un día lleno de vitalidad. Adecuado para ejercicio o actividades activas."
+    },
+    {
+      "ko": "면역력이 높아지는 시기입니다. 건강한 습관을 유지하세요.",
+      "en": "A time when immunity increases. Maintain healthy habits.",
+      "zh": "免疫力提高的时期。保持健康的习惯。",
+      "ja": "免疫力が高まる時期です。健康的な習慣を維持してください。",
+      "es": "Un momento en que la inmunidad aumenta. Mantén hábitos saludables."
+    },
+    {
+      "ko": "심신이 안정되어 있습니다. 명상이나 요가가 좋은 영향을 줍니다.",
+      "en": "Your mind and body are stable. Meditation or yoga has a positive effect.",
+      "zh": "身心稳定。冥想或瑜伽会有好的影响。",
+      "ja": "心身が安定しています。瞑想やヨガが良い影響を与えます。",
+      "es": "Tu mente y cuerpo están estables. La meditación o el yoga tienen un efecto positivo."
+    },
+    {
+      "ko": "에너지가 충만합니다. 새로운 운동을 시작하기 좋은 날입니다.",
+      "en": "Full of energy. A good day to start a new exercise routine.",
+      "zh": "能量充沛。适合开始新运动的一天。",
+      "ja": "エネルギーに満ちています。新しい運動を始めるのに良い日です。",
+      "es": "Lleno de energía. Un buen día para comenzar una nueva rutina de ejercicios."
+    },
+    {
+      "ko": "회복력이 좋은 시기입니다. 건강 목표를 세워보세요.",
+      "en": "A time of good recovery. Set health goals.",
+      "zh": "恢复力好的时期。设定健康目标吧。",
+      "ja": "回復力が良い時期です。健康目標を立ててみてください。",
+      "es": "Un momento de buena recuperación. Establece metas de salud."
+    }
+  ],
+  "medium": [
+    {
+      "ko": "전반적으로 안정적인 건강 상태입니다. 규칙적인 생활을 유지하세요.",
+      "en": "Generally stable health condition. Maintain a regular lifestyle.",
+      "zh": "整体健康状态稳定。保持规律的生活。",
+      "ja": "全般的に安定した健康状態です。規則正しい生活を維持してください。",
+      "es": "Condición de salud generalmente estable. Mantén un estilo de vida regular."
+    },
+    {
+      "ko": "무리하지 않는 선에서 활동하세요. 균형이 중요합니다.",
+      "en": "Be active without overexerting. Balance is important.",
+      "zh": "在不勉强的范围内活动。平衡很重要。",
+      "ja": "無理のない範囲で活動してください。バランスが重要です。",
+      "es": "Sé activo sin esforzarte demasiado. El equilibrio es importante."
+    },
+    {
+      "ko": "가벼운 산책이나 스트레칭이 도움이 됩니다.",
+      "en": "Light walking or stretching helps.",
+      "zh": "轻松的散步或伸展运动会有帮助。",
+      "ja": "軽い散歩やストレッチが役立ちます。",
+      "es": "Caminar ligero o estirar ayuda."
+    },
+    {
+      "ko": "충분한 수분 섭취와 영양 균형에 신경 쓰세요.",
+      "en": "Pay attention to sufficient hydration and nutritional balance.",
+      "zh": "注意充足的水分摄入和营养均衡。",
+      "ja": "十分な水分摂取と栄養バランスに気を配ってください。",
+      "es": "Presta atención a la hidratación suficiente y el equilibrio nutricional."
+    },
+    {
+      "ko": "일상적인 건강 관리에 충실하면 좋겠습니다.",
+      "en": "It would be good to be faithful to daily health care.",
+      "zh": "忠实于日常健康管理就好了。",
+      "ja": "日常的な健康管理に忠実であると良いでしょう。",
+      "es": "Sería bueno ser fiel al cuidado de la salud diario."
+    }
+  ],
+  "low": [
+    {
+      "ko": "피로가 누적되기 쉬운 날입니다. 충분한 휴식을 취하세요.",
+      "en": "A day when fatigue easily accumulates. Get enough rest.",
+      "zh": "容易累积疲劳的一天。充分休息。",
+      "ja": "疲労がたまりやすい日です。十分な休息を取ってください。",
+      "es": "Un día en que la fatiga se acumula fácilmente. Descansa lo suficiente."
+    },
+    {
+      "ko": "면역력이 약해질 수 있습니다. 건강 관리에 주의하세요.",
+      "en": "Immunity may weaken. Pay attention to health care.",
+      "zh": "免疫力可能下降。注意健康管理。",
+      "ja": "免疫力が弱まる可能性があります。健康管理に注意してください。",
+      "es": "La inmunidad puede debilitarse. Presta atención al cuidado de la salud."
+    },
+    {
+      "ko": "스트레스로 인한 신체 증상에 주의가 필요합니다.",
+      "en": "Attention is needed for physical symptoms caused by stress.",
+      "zh": "需要注意因压力引起的身体症状。",
+      "ja": "ストレスによる身体症状に注意が必要です。",
+      "es": "Se necesita atención a los síntomas físicos causados por el estrés."
+    },
+    {
+      "ko": "과식이나 과음을 피하세요. 절제가 필요한 시기입니다.",
+      "en": "Avoid overeating or drinking. This is a time when moderation is needed.",
+      "zh": "避免暴饮暴食。这是需要节制的时期。",
+      "ja": "過食や過度の飲酒は避けてください。節制が必要な時期です。",
+      "es": "Evita comer o beber en exceso. Es un momento en que se necesita moderación."
+    },
+    {
+      "ko": "작은 불편함도 무시하지 마세요. 건강 검진을 고려해보세요.",
+      "en": "Do not ignore even small discomfort. Consider a health checkup.",
+      "zh": "不要忽视小小的不适。考虑做健康检查。",
+      "ja": "小さな不調も無視しないでください。健康診断を検討してみてください。",
+      "es": "No ignores ni la más mínima molestia. Considera un chequeo de salud."
+    }
+  ]
+}

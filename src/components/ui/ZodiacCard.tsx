@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { type ZodiacSignId, type Element } from '@/types/zodiac';
 import ZodiacIcon from '@/components/ui/ZodiacIcon';
+import FavoriteButton from '@/components/ui/FavoriteButton';
 
 interface ZodiacInfo {
   symbol: string;
@@ -89,6 +90,7 @@ const zodiacData: Record<ZodiacSignId, ZodiacInfo> = {
 interface ZodiacCardProps {
   sign: ZodiacSignId;
   size?: 'sm' | 'md' | 'lg';
+  showFavorite?: boolean;
 }
 
 // Map card size to icon size
@@ -98,7 +100,7 @@ const iconSizeMap = {
   lg: 'lg' as const,
 };
 
-export default function ZodiacCard({ sign, size = 'md' }: ZodiacCardProps) {
+export default function ZodiacCard({ sign, size = 'md', showFavorite = true }: ZodiacCardProps) {
   const data = zodiacData[sign];
 
   const sizeClasses = {
@@ -122,24 +124,33 @@ export default function ZodiacCard({ sign, size = 'md' }: ZodiacCardProps) {
   const classes = sizeClasses[size];
 
   return (
-    <Link href={`/zodiac/${sign}`}>
-      <div
-        className={`
-          glass-card-hover ${classes.container}
-          element-${data.element}
-          flex flex-col items-center text-center
-          cursor-pointer group
-        `}
-      >
-        <div className="mb-2 group-hover:scale-110 transition-transform duration-300">
-          <ZodiacIcon sign={sign} size={iconSizeMap[size]} animated />
+    <div className="relative group">
+      <Link href={`/zodiac/${sign}`}>
+        <div
+          className={`
+            glass-card-hover ${classes.container}
+            element-${data.element}
+            flex flex-col items-center text-center
+            cursor-pointer
+          `}
+        >
+          <div className="mb-2 group-hover:scale-110 transition-transform duration-300">
+            <ZodiacIcon sign={sign} size={iconSizeMap[size]} animated />
+          </div>
+          <h3 className={`font-semibold ${classes.name} text-white mb-1`}>
+            {data.name}
+          </h3>
+          <p className={`${classes.date} text-white/50`}>{data.dateRange}</p>
         </div>
-        <h3 className={`font-semibold ${classes.name} text-white mb-1`}>
-          {data.name}
-        </h3>
-        <p className={`${classes.date} text-white/50`}>{data.dateRange}</p>
-      </div>
-    </Link>
+      </Link>
+
+      {/* Favorite Button */}
+      {showFavorite && (
+        <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+          <FavoriteButton signId={sign} size="sm" />
+        </div>
+      )}
+    </div>
   );
 }
 

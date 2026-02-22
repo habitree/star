@@ -7,11 +7,23 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { getTodayTopSigns, generateDailyHoroscope } from '@/lib/horoscope-generator';
 import { zodiacData } from '@/data/zodiac-info';
+import { getSiteUrl } from '@/lib/site-url';
 import type { ZodiacSignId } from '@/types';
+
+const baseUrl = getSiteUrl();
+const url = `${baseUrl}/horoscope`;
+const description = '12별자리의 오늘 운세를 확인하세요. 매일 업데이트되는 정확한 운세 정보를 제공합니다.';
 
 export const metadata: Metadata = {
   title: '오늘의 운세',
-  description: '12별자리의 오늘 운세를 확인하세요. 매일 업데이트되는 정확한 운세 정보를 제공합니다.',
+  description,
+  openGraph: {
+    title: '오늘의 운세 - 별자리 운세',
+    description,
+    url,
+    type: 'website',
+  },
+  alternates: { canonical: url },
 };
 
 export default async function HoroscopePage() {

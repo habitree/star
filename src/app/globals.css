@@ -354,4 +354,68 @@
       transform: scale(1);
     }
   }
+
+  /* Google AdSense 스타일 */
+  .adsense-container {
+    @apply w-full flex justify-center items-center;
+    min-height: 100px;
+    margin: 1.5rem 0;
+  }
+
+  .adsense-container ins {
+    @apply block;
+  }
+
+  /* 인-아티클 광고 스타일 */
+  .adsense-in-article {
+    @apply w-full flex justify-center items-center;
+    margin: 2rem 0;
+    min-height: 250px;
+  }
+
+  /* 인-피드 광고 스타일 */
+  .adsense-in-feed {
+    @apply w-full flex justify-center items-center;
+    margin: 1rem 0;
+    min-height: 200px;
+  }
+
+  /* 광고 로딩 플레이스홀더 */
+  .adsense-loading {
+    @apply w-full bg-white/5 rounded-lg;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  /* 반응형 광고 컨테이너 */
+  @media (max-width: 768px) {
+    .adsense-container {
+      margin: 1rem 0;
+    }
+
+    .adsense-in-article {
+      margin: 1.5rem 0;
+    }
+
+    .adsense-in-feed {
+      margin: 0.75rem 0;
+    }
+  }
+
+  /* 광고 구분선 (선택사항) */
+  .adsense-divider {
+    @apply border-t border-white/10 my-4;
+  }
 }

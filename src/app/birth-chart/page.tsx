@@ -4,6 +4,8 @@ import { useState } from 'react';
 import type { BirthChartInput, BirthChartResult as BirthChartResultType } from '@/types';
 import BirthChartForm from '@/components/birth-chart/BirthChartForm';
 import BirthChartResult from '@/components/birth-chart/BirthChartResult';
+import { AdSenseUnit } from '@/components/ads';
+import { getAdSensePublisherId } from '@/lib/adsense-config';
 
 export default function BirthChartPage() {
   const [result, setResult] = useState<BirthChartResultType | null>(null);
@@ -195,6 +197,18 @@ export default function BirthChartPage() {
 
             {/* 결과 */}
             <BirthChartResult result={result} />
+
+            {/* 결과 아래 배너 광고 */}
+            {getAdSensePublisherId() && (
+              <div className="mt-8">
+                <AdSenseUnit
+                  adSlot={`${getAdSensePublisherId()}/birth-chart-result-banner`}
+                  adFormat="auto"
+                  responsive={true}
+                  className="w-full"
+                />
+              </div>
+            )}
           </div>
         )}
       </div>

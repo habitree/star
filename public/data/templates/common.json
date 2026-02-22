@@ -1,0 +1,92 @@
+{
+  "luckyColors": [
+    { "ko": "빨강", "en": "Red", "zh": "红色", "ja": "赤", "es": "Rojo" },
+    { "ko": "주황", "en": "Orange", "zh": "橙色", "ja": "オレンジ", "es": "Naranja" },
+    { "ko": "노랑", "en": "Yellow", "zh": "黄色", "ja": "黄色", "es": "Amarillo" },
+    { "ko": "초록", "en": "Green", "zh": "绿色", "ja": "緑", "es": "Verde" },
+    { "ko": "파랑", "en": "Blue", "zh": "蓝色", "ja": "青", "es": "Azul" },
+    { "ko": "남색", "en": "Indigo", "zh": "靛蓝色", "ja": "藍色", "es": "Indigo" },
+    { "ko": "보라", "en": "Purple", "zh": "紫色", "ja": "紫", "es": "Morado" },
+    { "ko": "분홍", "en": "Pink", "zh": "粉红色", "ja": "ピンク", "es": "Rosa" },
+    { "ko": "하늘색", "en": "Sky Blue", "zh": "天蓝色", "ja": "空色", "es": "Celeste" },
+    { "ko": "갈색", "en": "Brown", "zh": "棕色", "ja": "茶色", "es": "Marrón" },
+    { "ko": "검정", "en": "Black", "zh": "黑色", "ja": "黒", "es": "Negro" },
+    { "ko": "흰색", "en": "White", "zh": "白色", "ja": "白", "es": "Blanco" },
+    { "ko": "금색", "en": "Gold", "zh": "金色", "ja": "ゴールド", "es": "Dorado" },
+    { "ko": "은색", "en": "Silver", "zh": "银色", "ja": "シルバー", "es": "Plateado" },
+    { "ko": "베이지", "en": "Beige", "zh": "米色", "ja": "ベージュ", "es": "Beige" },
+    { "ko": "민트", "en": "Mint", "zh": "薄荷色", "ja": "ミント", "es": "Menta" },
+    { "ko": "코랄", "en": "Coral", "zh": "珊瑚色", "ja": "コーラル", "es": "Coral" },
+    { "ko": "라벤더", "en": "Lavender", "zh": "薰衣草色", "ja": "ラベンダー", "es": "Lavanda" }
+  ],
+  "elementLuckyColors": {
+    "fire": [
+      { "ko": "빨강", "en": "Red", "zh": "红色", "ja": "赤", "es": "Rojo" },
+      { "ko": "주황", "en": "Orange", "zh": "橙色", "ja": "オレンジ", "es": "Naranja" },
+      { "ko": "금색", "en": "Gold", "zh": "金色", "ja": "ゴールド", "es": "Dorado" },
+      { "ko": "코랄", "en": "Coral", "zh": "珊瑚色", "ja": "コーラル", "es": "Coral" }
+    ],
+    "earth": [
+      { "ko": "초록", "en": "Green", "zh": "绿色", "ja": "緑", "es": "Verde" },
+      { "ko": "갈색", "en": "Brown", "zh": "棕色", "ja": "茶色", "es": "Marrón" },
+      { "ko": "베이지", "en": "Beige", "zh": "米色", "ja": "ベージュ", "es": "Beige" },
+      { "ko": "카키", "en": "Khaki", "zh": "卡其色", "ja": "カーキ", "es": "Caqui" }
+    ],
+    "air": [
+      { "ko": "노랑", "en": "Yellow", "zh": "黄色", "ja": "黄色", "es": "Amarillo" },
+      { "ko": "하늘색", "en": "Sky Blue", "zh": "天蓝色", "ja": "空色", "es": "Celeste" },
+      { "ko": "라벤더", "en": "Lavender", "zh": "薰衣草色", "ja": "ラベンダー", "es": "Lavanda" },
+      { "ko": "민트", "en": "Mint", "zh": "薄荷色", "ja": "ミント", "es": "Menta" }
+    ],
+    "water": [
+      { "ko": "파랑", "en": "Blue", "zh": "蓝色", "ja": "青", "es": "Azul" },
+      { "ko": "남색", "en": "Indigo", "zh": "靛蓝色", "ja": "藍色", "es": "Indigo" },
+      { "ko": "은색", "en": "Silver", "zh": "银色", "ja": "シルバー", "es": "Plateado" },
+      { "ko": "보라", "en": "Purple", "zh": "紫色", "ja": "紫", "es": "Morado" }
+    ]
+  },
+  "luckyTimes": [
+    { "ko": "새벽 (00:00-06:00)", "en": "Dawn (00:00-06:00)", "zh": "凌晨 (00:00-06:00)", "ja": "夜明け (00:00-06:00)", "es": "Madrugada (00:00-06:00)" },
+    { "ko": "아침 (06:00-09:00)", "en": "Morning (06:00-09:00)", "zh": "早晨 (06:00-09:00)", "ja": "朝 (06:00-09:00)", "es": "Mañana (06:00-09:00)" },
+    { "ko": "오전 (09:00-12:00)", "en": "Late Morning (09:00-12:00)", "zh": "上午 (09:00-12:00)", "ja": "午前 (09:00-12:00)", "es": "Media mañana (09:00-12:00)" },
+    { "ko": "점심 (12:00-14:00)", "en": "Noon (12:00-14:00)", "zh": "中午 (12:00-14:00)", "ja": "昼 (12:00-14:00)", "es": "Mediodía (12:00-14:00)" },
+    { "ko": "오후 (14:00-18:00)", "en": "Afternoon (14:00-18:00)", "zh": "下午 (14:00-18:00)", "ja": "午後 (14:00-18:00)", "es": "Tarde (14:00-18:00)" },
+    { "ko": "저녁 (18:00-21:00)", "en": "Evening (18:00-21:00)", "zh": "傍晚 (18:00-21:00)", "ja": "夕方 (18:00-21:00)", "es": "Noche temprana (18:00-21:00)" },
+    { "ko": "밤 (21:00-24:00)", "en": "Night (21:00-24:00)", "zh": "夜晚 (21:00-24:00)", "ja": "夜 (21:00-24:00)", "es": "Noche (21:00-24:00)" }
+  ],
+  "dayNames": [
+    { "ko": "일요일", "en": "Sunday", "zh": "星期日", "ja": "日曜日", "es": "Domingo" },
+    { "ko": "월요일", "en": "Monday", "zh": "星期一", "ja": "月曜日", "es": "Lunes" },
+    { "ko": "화요일", "en": "Tuesday", "zh": "星期二", "ja": "火曜日", "es": "Martes" },
+    { "ko": "수요일", "en": "Wednesday", "zh": "星期三", "ja": "水曜日", "es": "Miércoles" },
+    { "ko": "목요일", "en": "Thursday", "zh": "星期四", "ja": "木曜日", "es": "Jueves" },
+    { "ko": "금요일", "en": "Friday", "zh": "星期五", "ja": "金曜日", "es": "Viernes" },
+    { "ko": "토요일", "en": "Saturday", "zh": "星期六", "ja": "土曜日", "es": "Sábado" }
+  ],
+  "adviceTemplates": [
+    { "ko": "오늘 하루도 최선을 다하세요. 좋은 일이 기다리고 있습니다.", "en": "Do your best today. Good things are waiting for you.", "zh": "今天也要尽最大努力。好事正在等着你。", "ja": "今日も最善を尽くしてください。良いことが待っています。", "es": "Haz tu mejor esfuerzo hoy. Cosas buenas te esperan." },
+    { "ko": "긍정적인 마음가짐이 행운을 부릅니다. 미소를 잃지 마세요.", "en": "A positive mindset attracts luck. Do not lose your smile.", "zh": "积极的心态会带来好运。不要失去微笑。", "ja": "ポジティブな心構えが幸運を呼びます。笑顔を忘れないでください。", "es": "Una mentalidad positiva atrae la suerte. No pierdas tu sonrisa." },
+    { "ko": "작은 것에도 감사하는 마음을 가지면 더 큰 행복이 찾아옵니다.", "en": "If you are grateful for small things, greater happiness will come.", "zh": "对小事心怀感恩，更大的幸福就会到来。", "ja": "小さなことにも感謝の気持ちを持てば、より大きな幸せが訪れます。", "es": "Si agradeces las pequeñas cosas, llegará una mayor felicidad." },
+    { "ko": "오늘의 노력이 내일의 성과로 이어집니다. 포기하지 마세요.", "en": "Today's effort leads to tomorrow's success. Do not give up.", "zh": "今天的努力会成为明天的成果。不要放弃。", "ja": "今日の努力が明日の成果につながります。諦めないでください。", "es": "El esfuerzo de hoy conduce al éxito de mañana. No te rindas." },
+    { "ko": "주변 사람들에게 친절하세요. 그 친절이 당신에게 돌아올 것입니다.", "en": "Be kind to those around you. That kindness will come back to you.", "zh": "对周围的人友善。那份善意会回到你身边。", "ja": "周りの人に親切にしてください。その親切があなたに返ってきます。", "es": "Sé amable con quienes te rodean. Esa amabilidad volverá a ti." },
+    { "ko": "변화를 두려워하지 마세요. 새로운 시작은 새로운 기회입니다.", "en": "Do not fear change. A new beginning is a new opportunity.", "zh": "不要害怕改变。新的开始就是新的机会。", "ja": "変化を恐れないでください。新しい始まりは新しいチャンスです。", "es": "No temas al cambio. Un nuevo comienzo es una nueva oportunidad." },
+    { "ko": "자신을 믿으세요. 당신에게는 무한한 가능성이 있습니다.", "en": "Believe in yourself. You have infinite possibilities.", "zh": "相信自己。你有无限的可能性。", "ja": "自分を信じてください。あなたには無限の可能性があります。", "es": "Cree en ti mismo. Tienes posibilidades infinitas." },
+    { "ko": "지금 이 순간에 집중하세요. 현재가 가장 중요합니다.", "en": "Focus on this moment. The present is most important.", "zh": "专注于此刻。现在是最重要的。", "ja": "今この瞬間に集中してください。現在が最も重要です。", "es": "Concéntrate en este momento. El presente es lo más importante." },
+    { "ko": "어려움 속에서도 희망을 잃지 마세요. 모든 일에는 끝이 있습니다.", "en": "Do not lose hope even in difficulties. Everything has an end.", "zh": "即使在困难中也不要失去希望。一切都会过去的。", "ja": "困難の中でも希望を失わないでください。すべてのことには終わりがあります。", "es": "No pierdas la esperanza incluso en dificultades. Todo tiene un fin." },
+    { "ko": "건강을 최우선으로 생각하세요. 건강이 모든 것의 기반입니다.", "en": "Put health first. Health is the foundation of everything.", "zh": "把健康放在首位。健康是一切的基础。", "ja": "健康を最優先に考えてください。健康はすべての基盤です。", "es": "Pon la salud en primer lugar. La salud es la base de todo." }
+  ],
+  "weeklyHighlightTemplates": [
+    { "ko": "이번 주는 새로운 도전을 시작하기 좋은 시기입니다. 용기를 내세요.", "en": "This week is a good time to start new challenges. Be brave.", "zh": "这周是开始新挑战的好时机。勇敢一点。", "ja": "今週は新しい挑戦を始めるのに良い時期です。勇気を出してください。", "es": "Esta semana es un buen momento para comenzar nuevos desafíos. Sé valiente." },
+    { "ko": "이번 주는 관계 개선에 집중하면 좋은 결과가 있을 것입니다.", "en": "Focusing on improving relationships this week will bring good results.", "zh": "这周专注于改善关系会有好结果。", "ja": "今週は関係改善に集中すれば良い結果が得られるでしょう。", "es": "Enfocarte en mejorar las relaciones esta semana traerá buenos resultados." },
+    { "ko": "이번 주는 자기 성찰의 시간을 가지면 많은 깨달음을 얻을 수 있습니다.", "en": "Taking time for self-reflection this week can bring many insights.", "zh": "这周花时间自我反省会获得很多领悟。", "ja": "今週は自己省察の時間を持てば多くの気づきを得られます。", "es": "Tomarte tiempo para la autorreflexión esta semana puede traer muchas perspectivas." },
+    { "ko": "이번 주는 재정 관리에 신경 쓰면 안정을 찾을 수 있습니다.", "en": "Paying attention to financial management this week can bring stability.", "zh": "这周注意财务管理可以找到稳定。", "ja": "今週は財務管理に気を配れば安定を見つけられます。", "es": "Prestar atención a la gestión financiera esta semana puede traer estabilidad." },
+    { "ko": "이번 주는 건강에 특히 주의를 기울이세요. 휴식이 필요합니다.", "en": "Pay special attention to health this week. Rest is needed.", "zh": "这周特别注意健康。需要休息。", "ja": "今週は健康に特に注意を払ってください。休息が必要です。", "es": "Presta especial atención a la salud esta semana. Se necesita descanso." }
+  ],
+  "monthlyHighlightTemplates": [
+    { "ko": "이번 달은 성장과 발전의 시기입니다. 새로운 것을 배우기 좋습니다.", "en": "This month is a time of growth and development. Good for learning new things.", "zh": "这个月是成长和发展的时期。适合学习新事物。", "ja": "今月は成長と発展の時期です。新しいことを学ぶのに良いです。", "es": "Este mes es un tiempo de crecimiento y desarrollo. Bueno para aprender cosas nuevas." },
+    { "ko": "이번 달은 인간관계가 풍요로워지는 시기입니다. 소중한 사람들과 시간을 보내세요.", "en": "This month relationships become enriched. Spend time with precious people.", "zh": "这个月人际关系会更加丰富。与珍贵的人共度时光。", "ja": "今月は人間関係が豊かになる時期です。大切な人と時間を過ごしてください。", "es": "Este mes las relaciones se enriquecen. Pasa tiempo con personas preciadas." },
+    { "ko": "이번 달은 재물운이 상승하는 시기입니다. 투자 기회를 살펴보세요.", "en": "This month financial fortune rises. Look for investment opportunities.", "zh": "这个月财运上升。寻找投资机会。", "ja": "今月は金運が上昇する時期です。投資機会を探してみてください。", "es": "Este mes la fortuna financiera sube. Busca oportunidades de inversión." },
+    { "ko": "이번 달은 건강 관리에 집중하면 좋은 결과를 얻을 수 있습니다.", "en": "Focusing on health care this month can bring good results.", "zh": "这个月专注于健康管理可以获得好结果。", "ja": "今月は健康管理に集中すれば良い結果を得られます。", "es": "Enfocarte en el cuidado de la salud este mes puede traer buenos resultados." },
+    { "ko": "이번 달은 창의력이 빛나는 시기입니다. 아이디어를 적극적으로 펼쳐보세요.", "en": "This month creativity shines. Actively express your ideas.", "zh": "这个月创造力闪耀。积极展示你的想法。", "ja": "今月は創造力が輝く時期です。アイデアを積極的に展開してみてください。", "es": "Este mes la creatividad brilla. Expresa tus ideas activamente." }
+  ]
+}

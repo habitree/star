@@ -39,7 +39,7 @@ export default function ZodiacHeader({ sign }: ZodiacHeaderProps) {
       <div className="relative z-10">
         {/* Symbol and Name */}
         <div className="flex flex-col items-center text-center mb-8">
-          <div className="mb-4 animate-pulse-slow">
+          <div className="mb-4 animate-pulse-slow" role="img" aria-label={sign.names.ko}>
             <ZodiacIcon sign={sign.id} size="xl" animated />
           </div>
           <h1 className="font-display text-4xl md:text-5xl font-bold text-white mb-2">

@@ -1,0 +1,87 @@
+{
+  "overall": {
+    "high": [
+      { "ko": "직관이 뛰어난 날입니다. 내면의 소리에 귀 기울이세요.", "en": "A day of excellent intuition. Listen to your inner voice.", "zh": "直觉敏锐的一天。倾听内心的声音。", "ja": "直感が優れた日です。内なる声に耳を傾けてください。", "es": "Un día de excelente intuición. Escucha tu voz interior." },
+      { "ko": "감정의 흐름이 좋은 방향으로 이끕니다. 느낌을 믿으세요.", "en": "The flow of emotions leads in a good direction. Trust your feelings.", "zh": "情感的流动引向好的方向。相信感觉。", "ja": "感情の流れが良い方向に導きます。感覚を信じてください。", "es": "El flujo de emociones conduce en buena dirección. Confía en tus sentimientos." },
+      { "ko": "공감 능력이 주변과의 관계를 깊게 합니다.", "en": "Empathy deepens relationships with those around you.", "zh": "共情能力加深与周围人的关系。", "ja": "共感能力が周りとの関係を深めます。", "es": "La empatía profundiza las relaciones con quienes te rodean." }
+    ],
+    "medium": [
+      { "ko": "감정의 파도를 잘 타면 평온한 하루가 됩니다.", "en": "Riding the waves of emotion well makes for a peaceful day.", "zh": "顺应情感的波浪会是平静的一天。", "ja": "感情の波をうまく乗りこなせば穏やかな一日になります。", "es": "Montar bien las olas de emoción hace que sea un día tranquilo." },
+      { "ko": "조용한 시간이 내면의 치유를 가져옵니다.", "en": "Quiet time brings inner healing.", "zh": "安静的时间带来内心的治愈。", "ja": "静かな時間が内面の癒しをもたらします。", "es": "El tiempo tranquilo trae sanación interior." },
+      { "ko": "예술이나 음악이 영감을 줄 수 있습니다.", "en": "Art or music can provide inspiration.", "zh": "艺术或音乐可以带来灵感。", "ja": "芸術や音楽がインスピレーションを与えてくれます。", "es": "El arte o la música pueden proporcionar inspiración." }
+    ],
+    "low": [
+      { "ko": "감정에 휩쓸리지 않도록 주의하세요. 객관적 시선이 필요합니다.", "en": "Be careful not to be swept away by emotions. An objective view is needed.", "zh": "注意不要被情绪冲昏。需要客观的视角。", "ja": "感情に流されないように注意してください。客観的な視点が必要です。", "es": "Ten cuidado de no dejarte llevar por las emociones. Se necesita una vista objetiva." },
+      { "ko": "우울한 기분이 들 수 있습니다. 밝은 곳에서 시간을 보내세요.", "en": "You may feel depressed. Spend time in bright places.", "zh": "可能会感到忧郁。在明亮的地方度过时光。", "ja": "憂鬱な気分になるかもしれません。明るい場所で時間を過ごしてください。", "es": "Puedes sentirte deprimido. Pasa tiempo en lugares luminosos." },
+      { "ko": "현실과 환상을 구분하는 것이 중요합니다.", "en": "Distinguishing between reality and fantasy is important.", "zh": "区分现实与幻想很重要。", "ja": "現実と幻想を区別することが重要です。", "es": "Distinguir entre realidad y fantasía es importante." }
+    ]
+  },
+  "love": {
+    "high": [
+      { "ko": "깊은 감정적 교감이 이루어지는 날입니다. 진심을 나누세요.", "en": "A day of deep emotional connection. Share your true heart.", "zh": "深层情感交流的一天。分享真心。", "ja": "深い感情的な交感が成り立つ日です。真心を分かち合ってください。", "es": "Un día de conexión emocional profunda. Comparte tu corazón verdadero." },
+      { "ko": "영혼의 단짝을 만날 수 있는 기회가 있습니다.", "en": "There is an opportunity to meet a soulmate.", "zh": "有机会遇到灵魂伴侣。", "ja": "魂の伴侶に出会える機会があります。", "es": "Hay una oportunidad de conocer a un alma gemela." },
+      { "ko": "사랑하는 사람과의 유대감이 더욱 강해집니다.", "en": "The bond with your loved one becomes stronger.", "zh": "与爱人的联系更加牢固。", "ja": "愛する人との絆がさらに強くなります。", "es": "El vínculo con tu ser querido se vuelve más fuerte." }
+    ],
+    "medium": [
+      { "ko": "상대방의 감정을 이해하려고 노력하면 관계가 좋아집니다.", "en": "Trying to understand your partner emotions improves the relationship.", "zh": "努力理解对方的情感会改善关系。", "ja": "相手の感情を理解しようと努力すれば関係が良くなります。", "es": "Tratar de entender las emociones de tu pareja mejora la relación." },
+      { "ko": "포용과 이해가 사랑을 깊게 합니다.", "en": "Acceptance and understanding deepen love.", "zh": "包容和理解加深爱情。", "ja": "受容と理解が愛を深めます。", "es": "La aceptación y comprensión profundizan el amor." },
+      { "ko": "조용하고 로맨틱한 시간이 관계에 도움이 됩니다.", "en": "Quiet and romantic time helps the relationship.", "zh": "安静浪漫的时光有助于关系。", "ja": "静かでロマンチックな時間が関係に役立ちます。", "es": "El tiempo tranquilo y romántico ayuda a la relación." }
+    ],
+    "low": [
+      { "ko": "감정적으로 예민해질 수 있습니다. 오해를 피하도록 소통하세요.", "en": "You may become emotionally sensitive. Communicate to avoid misunderstandings.", "zh": "可能会变得情绪敏感。沟通以避免误解。", "ja": "感情的に敏感になる可能性があります。誤解を避けるためにコミュニケーションしてください。", "es": "Puedes volverte emocionalmente sensible. Comunícate para evitar malentendidos." },
+      { "ko": "집착이나 의존을 경계하세요. 건강한 거리가 필요합니다.", "en": "Beware of obsession or dependence. Healthy distance is needed.", "zh": "警惕执着或依赖。需要健康的距离。", "ja": "執着や依存に注意してください。健康的な距離が必要です。", "es": "Cuidado con la obsesión o dependencia. Se necesita distancia saludable." },
+      { "ko": "과거의 상처가 떠오를 수 있습니다. 치유의 시간을 가지세요.", "en": "Past wounds may resurface. Take time to heal.", "zh": "过去的伤痛可能会浮现。花时间治愈。", "ja": "過去の傷が浮かび上がるかもしれません。癒しの時間を持ってください。", "es": "Las heridas del pasado pueden resurgir. Tómate tiempo para sanar." }
+    ]
+  },
+  "career": {
+    "high": [
+      { "ko": "직감이 업무에서 좋은 결정을 이끕니다.", "en": "Intuition leads to good decisions at work.", "zh": "直觉在工作中引导好的决定。", "ja": "直感が仕事で良い決定を導きます。", "es": "La intuición conduce a buenas decisiones en el trabajo." },
+      { "ko": "창의적인 작업에서 영감이 솟아납니다.", "en": "Inspiration flows in creative work.", "zh": "在创意工作中灵感涌现。", "ja": "創造的な作業でインスピレーションが湧きます。", "es": "La inspiración fluye en el trabajo creativo." },
+      { "ko": "동료들의 마음을 잘 읽어 좋은 협업을 이끌 수 있습니다.", "en": "Reading colleagues minds well can lead to good collaboration.", "zh": "善于读懂同事的心可以促进良好的合作。", "ja": "同僚の心をよく読んで良い協業を導けます。", "es": "Leer bien las mentes de los colegas puede conducir a buena colaboración." }
+    ],
+    "medium": [
+      { "ko": "감정을 업무에서 분리하려고 노력하세요.", "en": "Try to separate emotions from work.", "zh": "努力将情绪与工作分开。", "ja": "感情を仕事から分離しようと努力してください。", "es": "Intenta separar las emociones del trabajo." },
+      { "ko": "팀 내 분위기를 파악하면 업무가 수월해집니다.", "en": "Understanding team atmosphere makes work easier.", "zh": "了解团队氛围会使工作更顺利。", "ja": "チーム内の雰囲気を把握すれば業務がスムーズになります。", "es": "Entender la atmósfera del equipo facilita el trabajo." },
+      { "ko": "공감 능력이 고객이나 동료와의 관계에 도움이 됩니다.", "en": "Empathy helps relationships with customers or colleagues.", "zh": "共情能力有助于与客户或同事的关系。", "ja": "共感能力が顧客や同僚との関係に役立ちます。", "es": "La empatía ayuda en las relaciones con clientes o colegas." }
+    ],
+    "low": [
+      { "ko": "업무 중 감정적인 반응을 자제하세요.", "en": "Refrain from emotional reactions during work.", "zh": "工作中克制情绪反应。", "ja": "仕事中の感情的な反応は控えてください。", "es": "Abstente de reacciones emocionales durante el trabajo." },
+      { "ko": "비판을 개인적으로 받아들이지 마세요. 성장의 기회로 삼으세요.", "en": "Do not take criticism personally. Use it as an opportunity for growth.", "zh": "不要把批评当作人身攻击。作为成长的机会。", "ja": "批判を個人的に受け取らないでください。成長の機会としてください。", "es": "No tomes las críticas personalmente. Úsalas como oportunidad de crecimiento." },
+      { "ko": "명확한 경계를 설정하세요. 번아웃을 조심하세요.", "en": "Set clear boundaries. Watch out for burnout.", "zh": "设定明确的界限。注意倦怠。", "ja": "明確な境界を設定してください。バーンアウトに注意してください。", "es": "Establece límites claros. Cuidado con el agotamiento." }
+    ]
+  },
+  "health": {
+    "high": [
+      { "ko": "정서적 안정이 신체 건강에 긍정적 영향을 줍니다.", "en": "Emotional stability positively affects physical health.", "zh": "情绪稳定对身体健康有积极影响。", "ja": "情緒的な安定が身体の健康に良い影響を与えます。", "es": "La estabilidad emocional afecta positivamente la salud física." },
+      { "ko": "물가에서의 활동이 치유의 힘을 줍니다.", "en": "Activities near water give healing power.", "zh": "在水边的活动给予治愈的力量。", "ja": "水辺での活動が癒しの力を与えます。", "es": "Las actividades cerca del agua dan poder de sanación." },
+      { "ko": "명상과 휴식이 몸과 마음을 회복시킵니다.", "en": "Meditation and rest restore body and mind.", "zh": "冥想和休息恢复身心。", "ja": "瞑想と休息が体と心を回復させます。", "es": "La meditación y el descanso restauran cuerpo y mente." }
+    ],
+    "medium": [
+      { "ko": "감정 상태가 건강에 영향을 줍니다. 스트레스 관리를 하세요.", "en": "Emotional state affects health. Manage stress.", "zh": "情绪状态影响健康。管理压力。", "ja": "感情状態が健康に影響を与えます。ストレス管理をしてください。", "es": "El estado emocional afecta la salud. Maneja el estrés." },
+      { "ko": "충분한 수분 섭취가 특히 중요합니다.", "en": "Sufficient hydration is especially important.", "zh": "充足的水分摄入尤为重要。", "ja": "十分な水分摂取が特に重要です。", "es": "La hidratación suficiente es especialmente importante." },
+      { "ko": "수영이나 수중 운동이 좋은 효과를 줍니다.", "en": "Swimming or water exercises give good effects.", "zh": "游泳或水中运动效果很好。", "ja": "水泳や水中運動が良い効果を与えます。", "es": "Nadar o ejercicios acuáticos dan buenos efectos." }
+    ],
+    "low": [
+      { "ko": "감정적 스트레스가 몸에 영향을 줄 수 있습니다. 이완하세요.", "en": "Emotional stress may affect your body. Relax.", "zh": "情绪压力可能影响身体。放松一下。", "ja": "感情的なストレスが体に影響を与える可能性があります。リラックスしてください。", "es": "El estrés emocional puede afectar tu cuerpo. Relájate." },
+      { "ko": "수면의 질에 주의하세요. 충분히 쉬세요.", "en": "Pay attention to sleep quality. Rest enough.", "zh": "注意睡眠质量。充分休息。", "ja": "睡眠の質に注意してください。十分に休んでください。", "es": "Presta atención a la calidad del sueño. Descansa lo suficiente." },
+      { "ko": "우울감이 들면 전문가의 도움을 받는 것도 좋습니다.", "en": "If feeling depressed, seeking professional help is also good.", "zh": "如果感到忧郁，寻求专业帮助也是好的。", "ja": "うつ気分になったら専門家の助けを求めることも良いでしょう。", "es": "Si te sientes deprimido, buscar ayuda profesional también es bueno." }
+    ]
+  },
+  "money": {
+    "high": [
+      { "ko": "직감이 재정적 결정에 도움이 됩니다. 느낌을 믿으세요.", "en": "Intuition helps with financial decisions. Trust your feelings.", "zh": "直觉有助于财务决定。相信感觉。", "ja": "直感が財政的な決定に役立ちます。感覚を信じてください。", "es": "La intuición ayuda con decisiones financieras. Confía en tus sentimientos." },
+      { "ko": "예술이나 창작 활동이 수입으로 이어질 수 있습니다.", "en": "Art or creative activities can lead to income.", "zh": "艺术或创作活动可以带来收入。", "ja": "芸術や創作活動が収入につながる可能性があります。", "es": "El arte o actividades creativas pueden conducir a ingresos." },
+      { "ko": "타인을 돕는 활동이 풍요를 가져옵니다.", "en": "Helping others brings abundance.", "zh": "帮助他人带来丰富。", "ja": "他人を助ける活動が豊かさをもたらします。", "es": "Ayudar a otros trae abundancia." }
+    ],
+    "medium": [
+      { "ko": "감정적으로 지출하는 것을 경계하세요.", "en": "Beware of emotional spending.", "zh": "警惕情绪化消费。", "ja": "感情的に支出することに注意してください。", "es": "Cuidado con el gasto emocional." },
+      { "ko": "재정 상황을 냉정하게 평가하세요.", "en": "Evaluate your financial situation calmly.", "zh": "冷静评估财务状况。", "ja": "財政状況を冷静に評価してください。", "es": "Evalúa tu situación financiera con calma." },
+      { "ko": "기부나 나눔이 마음의 풍요를 가져옵니다.", "en": "Donation or sharing brings richness of heart.", "zh": "捐赠或分享带来心灵的丰富。", "ja": "寄付や分かち合いが心の豊かさをもたらします。", "es": "La donación o compartir trae riqueza del corazón." }
+    ],
+    "low": [
+      { "ko": "감정적인 상태에서 큰 재정 결정을 피하세요.", "en": "Avoid big financial decisions in emotional states.", "zh": "避免在情绪状态下做重大财务决定。", "ja": "感情的な状態で大きな財政決定を避けてください。", "es": "Evita grandes decisiones financieras en estados emocionales." },
+      { "ko": "타인에게 과도하게 베푸는 것에 주의하세요.", "en": "Be careful about giving too much to others.", "zh": "注意不要过度给予他人。", "ja": "他人に過度に与えることに注意してください。", "es": "Ten cuidado de no dar demasiado a otros." },
+      { "ko": "현실적인 재정 계획을 세우세요. 꿈과 현실의 균형이 필요합니다.", "en": "Make a realistic financial plan. Balance between dreams and reality is needed.", "zh": "制定现实的财务计划。需要梦想与现实的平衡。", "ja": "現実的な財政計画を立ててください。夢と現実のバランスが必要です。", "es": "Haz un plan financiero realista. Se necesita equilibrio entre sueños y realidad." }
+    ]
+  }
+}

@@ -12,7 +12,7 @@
 
 ## Tech Stack
 
-- **Framework**: Next.js 14 (App Router)
+- **Framework**: Next.js 15 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **i18n**: next-intl
@@ -54,9 +54,12 @@ npm start
 - [Keyword Strategy](./docs/multilingual_keyword_strategy.md)
 - [Competitor Analysis](./docs/competitor_analysis.md)
 
-## Deploy
+## Deploy (Cloudflare)
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/habitree/star)
+```bash
+npm run cf:build    # OpenNext로 Cloudflare용 빌드
+npm run cf:deploy   # Wrangler로 배포
+```
 
 ## License
 

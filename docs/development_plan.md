@@ -9,7 +9,7 @@
 ## 1. 기술 스택
 
 ### Frontend
-- **Framework**: Next.js 14 (App Router)
+- **Framework**: Next.js 15 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **State**: React Context + Zustand
@@ -21,7 +21,7 @@
 - **Astrology Engine**: astronomia 라이브러리
 
 ### 배포
-- **Platform**: Vercel
+- **Platform**: Cloudflare (Workers/Pages, OpenNext + Wrangler)
 - **Domain**: TBD
 
 ---

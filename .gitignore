@@ -30,9 +30,6 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
-# Vercel
-.vercel
-
 # Cloudflare
 .wrangler
 .open-next
@@ -45,6 +42,7 @@ next-env.d.ts
 # IDE
 .idea/
 .vscode/
+.cursor/
 *.swp
 *.swo
 

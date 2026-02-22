@@ -1,6 +1,6 @@
 {
   "name": "zodiac-service",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,9 +8,17 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui",
     "cf:build": "npx opennextjs-cloudflare build",
     "cf:dev": "npx wrangler dev",
-    "cf:deploy": "npm run cf:build && npx wrangler deploy"
+    "cf:deploy": "npm run cf:build && npx wrangler deploy",
+    "cf:deploy:preview": "npm run cf:build && npx wrangler deploy --env preview",
+    "cf:tail": "npx wrangler tail",
+    "cf:login": "npx wrangler login",
+    "cf:whoami": "npx wrangler whoami"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.16.1",
@@ -23,15 +31,22 @@
     "zustand": "^4.5.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.0",
+    "@testing-library/react": "^14.2.0",
     "@types/node": "^20.11.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "@vitest/coverage-v8": "^1.3.0",
+    "@vitest/ui": "^1.3.0",
     "autoprefixer": "^10.4.17",
     "eslint": "^8.56.0",
     "eslint-config-next": "^15.1.12",
+    "jsdom": "^24.0.0",
     "postcss": "^8.4.33",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3",
+    "vitest": "^1.3.0",
     "wrangler": "^4.61.1"
   }
 }

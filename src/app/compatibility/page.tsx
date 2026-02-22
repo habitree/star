@@ -1,9 +1,23 @@
 import { Metadata } from 'next';
 import CompatibilityForm from '@/components/compatibility/CompatibilityForm';
+import { AdSenseUnit } from '@/components/ads';
+import { getAdSensePublisherId } from '@/lib/adsense-config';
+import { getSiteUrl } from '@/lib/site-url';
+
+const baseUrl = getSiteUrl();
+const url = `${baseUrl}/compatibility`;
+const description = '두 별자리의 궁합을 확인해보세요. 연애, 우정, 업무 궁합을 상세하게 분석해드립니다. 12별자리 궁합.';
 
 export const metadata: Metadata = {
   title: '별자리 궁합',
-  description: '두 별자리의 궁합을 확인해보세요. 연애, 우정, 업무 궁합을 상세하게 분석해드립니다.',
+  description,
+  openGraph: {
+    title: '별자리 궁합 - 연애·우정·업무 궁합',
+    description,
+    url,
+    type: 'website',
+  },
+  alternates: { canonical: url },
 };
 
 function InfoCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
@@ -32,6 +46,18 @@ export default async function CompatibilityPage() {
 
         {/* 궁합 폼 */}
         <CompatibilityForm />
+
+        {/* 폼 아래 배너 광고 */}
+        {getAdSensePublisherId() && (
+          <div className="mt-8">
+            <AdSenseUnit
+              adSlot={`${getAdSensePublisherId()}/compatibility-form-banner`}
+              adFormat="auto"
+              responsive={true}
+              className="w-full"
+            />
+          </div>
+        )}
 
         {/* 추가 정보 */}
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">

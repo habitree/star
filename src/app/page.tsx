@@ -2,6 +2,9 @@
 
 import Link from 'next/link';
 import ZodiacCard from '@/components/ui/ZodiacCard';
+import FavoritesSection from '@/components/ui/FavoritesSection';
+import { AdSenseUnit, AdSenseInFeed } from '@/components/ads';
+import { getAdSensePublisherId } from '@/lib/adsense-config';
 import { type ZodiacSignId } from '@/types/zodiac';
 
 const zodiacSigns: ZodiacSignId[] = [
@@ -39,6 +42,21 @@ export default function HomePage() {
           </p>
         </div>
       </section>
+
+      {/* Favorites Section */}
+      <FavoritesSection className="py-8 px-4 max-w-6xl mx-auto" />
+
+      {/* Hero 아래 배너 광고 */}
+      {getAdSensePublisherId() && (
+        <div className="py-4 px-4 max-w-6xl mx-auto">
+          <AdSenseUnit
+            adSlot={`${getAdSensePublisherId()}/home-hero-banner`}
+            adFormat="auto"
+            responsive={true}
+            className="w-full"
+          />
+        </div>
+      )}
 
       {/* Zodiac Grid Section */}
       <section className="py-16 px-4">
@@ -109,6 +127,16 @@ export default function HomePage() {
               <p className="text-white/60 text-sm">정확한 출생 시간으로 나만의 차트 분석</p>
             </div>
           </div>
+
+          {/* Features 섹션 아래 인-피드 광고 */}
+          {getAdSensePublisherId() && (
+            <div className="mt-8">
+              <AdSenseInFeed
+                adSlot={`${getAdSensePublisherId()}/home-features-feed`}
+                className="w-full"
+              />
+            </div>
+          )}
         </div>
       </section>
     </div>

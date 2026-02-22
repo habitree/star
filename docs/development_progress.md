@@ -1,23 +1,18 @@
 # 개발 진행 상황
 
-> **최종 업데이트**: 2026-01-31
-> **상태**: MVP Phase 1 완료
+> **최종 업데이트**: 2026-02-07
+> **상태**: Phase 1 완료, Phase 2 확장 진행 중 (로드맵 반영)
 
 ---
 
 ## 완료 요약
 
-| 항목 | 상태 | 파일 수 |
-|------|------|---------|
-| 프로젝트 설정 | ✅ 완료 | 5개 |
-| 타입 정의 | ✅ 완료 | 5개 |
-| 유틸리티 | ✅ 완료 | 4개 |
-| 데이터 | ✅ 완료 | 4개 |
-| 다국어 설정 | ✅ 완료 | 7개 |
-| API Routes | ✅ 완료 | 5개 |
-| 페이지 | ✅ 완료 | 10개 |
-| 컴포넌트 | ✅ 완료 | 13개 |
-| **총합** | **✅** | **53개** |
+| 항목 | 상태 | 비고 |
+|------|------|------|
+| Phase 1 MVP | ✅ 완료 | 운세·별자리·궁합·출생차트·즐겨찾기·다국어 |
+| Phase 2 인증(목업) | ✅ 완료 | 로그인/회원가입/프로필, auth-store (추후 실인증 연동) |
+| Phase 2 소셜 공유 | ✅ 완료 | ShareButton, 일일 운세·별자리 상세 페이지 적용 |
+| 푸시 알림 / 결제·구독 / AI 개인화 | 🔜 예정 | 로드맵 M4–M6 순 |
 
 ---
 
@@ -81,18 +76,20 @@
 ✅ birth-chart/route.ts              - 출생 차트 API
 ```
 
-### 페이지 (`/src/app/[locale]/`)
+### 페이지 (`/src/app/`)
 ```
 ✅ page.tsx                          - 홈페이지
 ✅ layout.tsx                        - 루트 레이아웃
 ✅ horoscope/page.tsx                - 운세 메인
 ✅ horoscope/daily/page.tsx          - 일일 운세
-✅ horoscope/daily/[sign]/page.tsx   - 별자리별 일일 운세
+✅ horoscope/daily/[sign]/page.tsx   - 별자리별 일일 운세 (공유 버튼 포함)
 ✅ zodiac/page.tsx                   - 별자리 목록
-✅ zodiac/[sign]/page.tsx            - 별자리 상세
+✅ zodiac/[sign]/page.tsx            - 별자리 상세 (공유 버튼 포함)
 ✅ compatibility/page.tsx            - 궁합 메인
-✅ compatibility/[sign1]/[sign2]/page.tsx - 궁합 결과
 ✅ birth-chart/page.tsx              - 출생 차트
+✅ login/page.tsx                    - 로그인 (Phase 2 목업)
+✅ signup/page.tsx                   - 회원가입 (Phase 2 목업)
+✅ profile/page.tsx                  - 프로필 (Phase 2, 즐겨찾기 연동)
 ```
 
 ### 컴포넌트 (`/src/components/`)
@@ -107,7 +104,9 @@
 ```
 ✅ ui/ZodiacCard.tsx        - 별자리 카드
 ✅ ui/ScoreBar.tsx          - 점수 표시 바
-✅ ui/LanguageSelector.tsx  - 언어 선택 드롭다운
+✅ ui/ShareButton.tsx        - 소셜 공유 (Web Share API / 링크 복사)
+✅ ui/FavoriteButton.tsx    - 즐겨찾기 버튼
+✅ ui/FavoritesSection.tsx  - 즐겨찾기 섹션
 ```
 
 #### Zodiac
@@ -166,11 +165,11 @@
 ## 기술 스택
 
 ```
-Framework:  Next.js 14 (App Router)
+Framework:  Next.js 15 (App Router)
 Language:   TypeScript
 Styling:    Tailwind CSS
-i18n:       next-intl (5개 언어)
-State:      React useState + Context
+State:      Zustand (user-store, auth-store) + localStorage persist
+배포:       Cloudflare (OpenNext + Wrangler)
 ```
 
 ---
@@ -188,15 +187,14 @@ State:      React useState + Context
 │   └── development_progress.md
 ├── /research               # 리서치 자료
 ├── /src
-│   ├── /app
+│   ├── /app               # 페이지 (locale 없음: /, /horoscope, /login 등)
 │   │   ├── /api           # API Routes (5개)
-│   │   ├── /[locale]      # 페이지 (10개)
 │   │   └── globals.css
-│   ├── /components        # 컴포넌트 (13개)
-│   ├── /data              # 정적 데이터 (4개)
-│   ├── /lib               # 유틸리티 (4개)
-│   ├── /types             # 타입 정의 (5개)
-│   └── /i18n              # 다국어 (7개)
+│   ├── /components        # 레이아웃·UI·별자리·궁합·출생차트
+│   ├── /data              # 정적 데이터
+│   ├── /lib               # 유틸리티·테스트
+│   ├── /stores            # user-store (즐겨찾기/설정), auth-store (인증 목업)
+│   └── /types             # 타입 정의
 ├── package.json
 ├── tsconfig.json
 ├── tailwind.config.ts
@@ -205,16 +203,27 @@ State:      React useState + Context
 
 ---
 
-## 다음 단계 (Phase 2+)
+## Phase 2 확장 (로드맵 반영)
 
-1. **테스트**: 단위 테스트, E2E 테스트
-2. **의존성 설치**: `npm install`
-3. **개발 서버**: `npm run dev`
-4. **배포**: Vercel 연동
-5. **추가 기능**:
-   - 푸시 알림
-   - 사용자 인증
-   - AI 개인화
+| 순서 | 항목 | 상태 | 비고 |
+|------|------|------|------|
+| 1 | 사용자 인증/프로필 | ✅ 목업 완료 | auth-store, /login, /signup, /profile, Header 연동 |
+| 2 | 소셜 공유 | ✅ 완료 | ShareButton, 일일 운세·별자리 상세 적용 |
+| 3 | 푸시 알림 | 🔜 | 인증 선행 완료 후 |
+| 4 | 결제/구독 | 🔜 | 인증·PG 연동 |
+| 5 | AI 개인화 분석 | 🔜 | 인증·출생차트 데이터 활용 |
+
+*상세 로드맵: docs/service_advancement_plan.md Part B.3*
+
+---
+
+## 다음 단계
+
+1. **실인증 연동**: Supabase Auth 또는 NextAuth 등으로 auth-store/API 교체 → [next_steps_guide.md](./next_steps_guide.md#1-실인증-연동)
+2. **푸시 알림**: 구독·권한·백엔드 연동 → [next_steps_guide.md](./next_steps_guide.md#2-푸시-알림)
+3. **결제/구독**: PG·빌링 선정 및 연동 → [next_steps_guide.md](./next_steps_guide.md#3-결제구독)
+4. **테스트**: `npm run test:run` (Vitest). auth-store·user-store·horoscope-generator·errors 테스트 포함.
+5. **배포**: `npm run cf:build` / `cf:deploy`
 
 ---
 

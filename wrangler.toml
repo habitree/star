@@ -8,3 +8,22 @@ main = ".open-next/worker.js"
 [assets]
 directory = ".open-next/assets"
 binding = "ASSETS"
+
+# 환경 변수 (프로덕션)
+# 실제 값은 Cloudflare Dashboard에서 설정하거나 wrangler secret put 명령으로 설정
+# [vars]
+# NEXT_PUBLIC_ADSENSE_PUBLISHER_ID = "ca-pub-xxxxxxxxxxxxxxxx"
+
+# 배포 설정
+# pages_build_output_dir = ".open-next"
+
+# KV 네임스페이스 (필요시)
+# [[kv_namespaces]]
+# binding = "CACHE"
+# id = "your-kv-namespace-id"
+
+# D1 데이터베이스 (필요시)
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "star-db"
+# database_id = "your-database-id"

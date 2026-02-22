@@ -1,0 +1,113 @@
+{
+  "high": [
+    {
+      "ko": "업무에서 뛰어난 성과를 낼 수 있는 날입니다. 적극적으로 나서세요.",
+      "en": "A day when you can achieve outstanding results at work. Be proactive.",
+      "zh": "可以在工作中取得卓越成果的一天。积极主动吧。",
+      "ja": "仕事で優れた成果を出せる日です。積極的に動きましょう。",
+      "es": "Un día en el que puedes lograr resultados sobresalientes en el trabajo. Sé proactivo."
+    },
+    {
+      "ko": "승진이나 인정받을 기회가 올 수 있습니다. 자신을 드러내세요.",
+      "en": "Opportunities for promotion or recognition may come. Show yourself.",
+      "zh": "可能会有升职或被认可的机会。展示自己吧。",
+      "ja": "昇進や認められるチャンスが来るかもしれません。自分をアピールしてください。",
+      "es": "Pueden llegar oportunidades de ascenso o reconocimiento. Muéstrate."
+    },
+    {
+      "ko": "새로운 프로젝트나 아이디어가 빛을 발합니다. 창의력을 발휘하세요.",
+      "en": "New projects or ideas will shine. Exercise your creativity.",
+      "zh": "新项目或创意将大放异彩。发挥你的创造力吧。",
+      "ja": "新しいプロジェクトやアイデアが輝きます。創造力を発揮してください。",
+      "es": "Nuevos proyectos o ideas brillarán. Ejerce tu creatividad."
+    },
+    {
+      "ko": "동료들과의 협력이 좋은 결과를 가져옵니다. 팀워크를 발휘하세요.",
+      "en": "Cooperation with colleagues brings good results. Exercise teamwork.",
+      "zh": "与同事的合作会带来好结果。发挥团队精神吧。",
+      "ja": "同僚との協力が良い結果をもたらします。チームワークを発揮してください。",
+      "es": "La cooperación con colegas trae buenos resultados. Ejerce el trabajo en equipo."
+    },
+    {
+      "ko": "리더십을 발휘할 기회입니다. 자신감 있게 앞장서세요.",
+      "en": "An opportunity to exercise leadership. Lead with confidence.",
+      "zh": "发挥领导力的机会。自信地带头吧。",
+      "ja": "リーダーシップを発揮するチャンスです。自信を持って先頭に立ってください。",
+      "es": "Una oportunidad para ejercer liderazgo. Lidera con confianza."
+    }
+  ],
+  "medium": [
+    {
+      "ko": "순조로운 업무 흐름이 예상됩니다. 계획대로 진행하세요.",
+      "en": "A smooth workflow is expected. Proceed as planned.",
+      "zh": "预计工作流程顺畅。按计划进行吧。",
+      "ja": "順調な業務の流れが予想されます。計画通りに進めてください。",
+      "es": "Se espera un flujo de trabajo fluido. Procede según lo planeado."
+    },
+    {
+      "ko": "무리하지 않는 선에서 꾸준히 노력하세요. 결실을 맺을 것입니다.",
+      "en": "Keep working steadily without overexerting. It will bear fruit.",
+      "zh": "在不勉强的范围内坚持努力。会有收获的。",
+      "ja": "無理のない範囲で着実に努力してください。実を結ぶでしょう。",
+      "es": "Sigue trabajando constantemente sin esforzarte demasiado. Dará frutos."
+    },
+    {
+      "ko": "일상적인 업무에서 만족감을 찾을 수 있습니다.",
+      "en": "You can find satisfaction in routine work.",
+      "zh": "可以在日常工作中找到满足感。",
+      "ja": "日常的な業務で満足感を見つけられます。",
+      "es": "Puedes encontrar satisfacción en el trabajo rutinario."
+    },
+    {
+      "ko": "안정적인 페이스를 유지하는 것이 중요합니다.",
+      "en": "Maintaining a stable pace is important.",
+      "zh": "保持稳定的节奏很重要。",
+      "ja": "安定したペースを維持することが重要です。",
+      "es": "Mantener un ritmo estable es importante."
+    },
+    {
+      "ko": "작은 목표를 세우고 달성해가며 성취감을 느껴보세요.",
+      "en": "Set small goals and feel a sense of achievement as you accomplish them.",
+      "zh": "设定小目标并逐步实现，感受成就感吧。",
+      "ja": "小さな目標を立てて達成しながら、達成感を感じてみてください。",
+      "es": "Establece pequeñas metas y siente logro al alcanzarlas."
+    }
+  ],
+  "low": [
+    {
+      "ko": "업무에서 장애물을 만날 수 있습니다. 인내심을 가지세요.",
+      "en": "You may encounter obstacles at work. Be patient.",
+      "zh": "工作中可能会遇到障碍。保持耐心。",
+      "ja": "仕事で障害に遭遇するかもしれません。忍耐心を持ってください。",
+      "es": "Puedes encontrar obstáculos en el trabajo. Sé paciente."
+    },
+    {
+      "ko": "중요한 결정은 다음으로 미루는 것이 좋겠습니다.",
+      "en": "It would be better to postpone important decisions.",
+      "zh": "重要的决定最好推迟到下次。",
+      "ja": "重要な決定は次に延期した方が良いでしょう。",
+      "es": "Sería mejor posponer decisiones importantes."
+    },
+    {
+      "ko": "동료와의 갈등에 주의하세요. 감정적 대응은 피하세요.",
+      "en": "Beware of conflicts with colleagues. Avoid emotional responses.",
+      "zh": "注意与同事的冲突。避免情绪化反应。",
+      "ja": "同僚との衝突に注意してください。感情的な対応は避けてください。",
+      "es": "Cuidado con los conflictos con colegas. Evita respuestas emocionales."
+    },
+    {
+      "ko": "업무 스트레스가 높을 수 있습니다. 적절한 휴식을 취하세요.",
+      "en": "Work stress may be high. Take appropriate rest.",
+      "zh": "工作压力可能较大。适当休息一下。",
+      "ja": "仕事のストレスが高いかもしれません。適切な休息を取ってください。",
+      "es": "El estrés laboral puede ser alto. Toma descanso apropiado."
+    },
+    {
+      "ko": "실수하기 쉬운 날입니다. 꼼꼼하게 확인하는 습관을 가지세요.",
+      "en": "A day when mistakes are easy to make. Have a habit of checking carefully.",
+      "zh": "容易出错的一天。养成仔细检查的习惯。",
+      "ja": "ミスしやすい日です。念入りに確認する習慣を持ちましょう。",
+      "es": "Un día en el que es fácil cometer errores. Ten el hábito de verificar cuidadosamente."
+    }
+  ]
+}

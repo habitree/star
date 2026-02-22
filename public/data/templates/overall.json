@@ -1,0 +1,113 @@
+{
+  "high": [
+    {
+      "ko": "오늘은 모든 일이 순조롭게 풀리는 행운의 날입니다. 자신감을 가지고 도전하세요.",
+      "en": "Today is a lucky day when everything goes smoothly. Challenge yourself with confidence.",
+      "zh": "今天是一切顺利的幸运日。带着自信去迎接挑战吧。",
+      "ja": "今日はすべてがうまくいく幸運な日です。自信を持ってチャレンジしてください。",
+      "es": "Hoy es un día de suerte en el que todo sale bien. Desafíate con confianza."
+    },
+    {
+      "ko": "별들이 당신을 축복하고 있습니다. 새로운 기회가 찾아올 것입니다.",
+      "en": "The stars are blessing you. New opportunities will come your way.",
+      "zh": "星星在祝福你。新的机会即将到来。",
+      "ja": "星々があなたを祝福しています。新しいチャンスが訪れるでしょう。",
+      "es": "Las estrellas te están bendiciendo. Nuevas oportunidades vendrán hacia ti."
+    },
+    {
+      "ko": "긍정적인 에너지가 가득한 하루입니다. 주변 사람들에게도 좋은 영향을 줄 수 있습니다.",
+      "en": "A day full of positive energy. You can also have a good influence on those around you.",
+      "zh": "充满积极能量的一天。你也能给周围的人带来好的影响。",
+      "ja": "ポジティブなエネルギーに満ちた一日です。周りの人にも良い影響を与えられるでしょう。",
+      "es": "Un día lleno de energía positiva. También puedes influir positivamente en quienes te rodean."
+    },
+    {
+      "ko": "오늘 하는 모든 일에서 성공을 거둘 수 있습니다. 용기를 내세요.",
+      "en": "You can achieve success in everything you do today. Be brave.",
+      "zh": "今天做的每件事都能取得成功。勇敢一点吧。",
+      "ja": "今日行うすべてのことで成功を収めることができます。勇気を持ってください。",
+      "es": "Puedes lograr el éxito en todo lo que hagas hoy. Sé valiente."
+    },
+    {
+      "ko": "최고의 운세가 함께합니다. 원하는 것을 이루기에 완벽한 날입니다.",
+      "en": "The best fortune is with you. It is a perfect day to achieve what you want.",
+      "zh": "最好的运势伴随着你。这是实现愿望的完美一天。",
+      "ja": "最高の運勢があなたと共にあります。望むものを叶えるのに完璧な日です。",
+      "es": "La mejor fortuna está contigo. Es un día perfecto para lograr lo que deseas."
+    }
+  ],
+  "medium": [
+    {
+      "ko": "평온한 하루가 될 것입니다. 작은 일에도 감사하는 마음을 가지세요.",
+      "en": "It will be a peaceful day. Be grateful for the little things.",
+      "zh": "这将是平静的一天。对小事也要怀有感恩之心。",
+      "ja": "穏やかな一日になるでしょう。小さなことにも感謝の気持ちを持ちましょう。",
+      "es": "Será un día tranquilo. Agradece las pequeñas cosas."
+    },
+    {
+      "ko": "일상적인 흐름 속에서 소소한 행복을 발견할 수 있는 날입니다.",
+      "en": "A day when you can discover small happiness in your daily routine.",
+      "zh": "可以在日常生活中发现小幸福的一天。",
+      "ja": "日常の中で小さな幸せを見つけられる日です。",
+      "es": "Un día en el que puedes descubrir pequeñas felicidades en tu rutina diaria."
+    },
+    {
+      "ko": "무난하게 흘러가는 하루입니다. 급하게 서두르지 마세요.",
+      "en": "A day that flows smoothly. Do not rush.",
+      "zh": "平稳流淌的一天。不要着急。",
+      "ja": "無難に流れる一日です。急いで焦らないでください。",
+      "es": "Un día que fluye suavemente. No te apresures."
+    },
+    {
+      "ko": "안정적인 에너지가 감싸는 날입니다. 현재에 집중하세요.",
+      "en": "A day wrapped in stable energy. Focus on the present.",
+      "zh": "稳定能量环绕的一天。专注于当下吧。",
+      "ja": "安定したエネルギーに包まれる日です。現在に集中してください。",
+      "es": "Un día envuelto en energía estable. Concéntrate en el presente."
+    },
+    {
+      "ko": "특별한 일은 없지만 편안한 하루가 될 것입니다.",
+      "en": "Nothing special, but it will be a comfortable day.",
+      "zh": "虽然没有特别的事，但会是舒适的一天。",
+      "ja": "特別なことはありませんが、快適な一日になるでしょう。",
+      "es": "Nada especial, pero será un día cómodo."
+    }
+  ],
+  "low": [
+    {
+      "ko": "조금 힘든 하루가 될 수 있습니다. 무리하지 말고 자신을 돌보세요.",
+      "en": "It could be a tough day. Take care of yourself without overexerting.",
+      "zh": "可能会是有点辛苦的一天。不要勉强，照顾好自己。",
+      "ja": "少し大変な一日になるかもしれません。無理せず自分を大切にしてください。",
+      "es": "Podría ser un día difícil. Cuídate sin esforzarte demasiado."
+    },
+    {
+      "ko": "예상치 못한 어려움이 있을 수 있습니다. 침착하게 대응하세요.",
+      "en": "There may be unexpected difficulties. Respond calmly.",
+      "zh": "可能会有意想不到的困难。请冷静应对。",
+      "ja": "予想外の困難があるかもしれません。落ち着いて対応してください。",
+      "es": "Puede haber dificultades inesperadas. Responde con calma."
+    },
+    {
+      "ko": "에너지가 낮은 날입니다. 휴식을 취하며 재충전하세요.",
+      "en": "A low energy day. Rest and recharge.",
+      "zh": "能量较低的一天。休息一下，充充电吧。",
+      "ja": "エネルギーが低い日です。休息を取って充電してください。",
+      "es": "Un día de baja energía. Descansa y recarga."
+    },
+    {
+      "ko": "신중한 결정이 필요한 날입니다. 중요한 일은 미루는 것이 좋겠습니다.",
+      "en": "A day that requires careful decisions. It would be better to postpone important matters.",
+      "zh": "需要谨慎决定的一天。重要的事情最好推迟。",
+      "ja": "慎重な決定が必要な日です。重要なことは延期した方が良いでしょう。",
+      "es": "Un día que requiere decisiones cuidadosas. Sería mejor posponer asuntos importantes."
+    },
+    {
+      "ko": "도전보다는 안정을 추구하는 것이 좋은 날입니다.",
+      "en": "A day when it is better to seek stability rather than challenges.",
+      "zh": "比起挑战，更适合追求稳定的一天。",
+      "ja": "チャレンジよりも安定を求める方が良い日です。",
+      "es": "Un día en el que es mejor buscar estabilidad que desafíos."
+    }
+  ]
+}
