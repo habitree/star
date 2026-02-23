@@ -2,11 +2,19 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { zodiacSigns } from '@/data/zodiac-signs';
+import { getZodiacDetail } from '@/data/zodiac-details';
 import { type ZodiacSignId } from '@/types/zodiac';
 import { isValidZodiacSign, ZODIAC_ORDER } from '@/lib/zodiac-utils';
 import ZodiacHeader from '@/components/zodiac/ZodiacHeader';
-import TraitsSection from '@/components/zodiac/TraitsSection';
+import DecanSection from '@/components/zodiac/DecanSection';
+import ExtendedTraitsSection from '@/components/zodiac/ExtendedTraitsSection';
+import CareerSection from '@/components/zodiac/CareerSection';
+import HealthSection from '@/components/zodiac/HealthSection';
+import FinanceSection from '@/components/zodiac/FinanceSection';
+import SymbolicSection from '@/components/zodiac/SymbolicSection';
 import CompatibilityPreview from '@/components/zodiac/CompatibilityPreview';
+import CelebritySection from '@/components/zodiac/CelebritySection';
+import MythologySection from '@/components/zodiac/MythologySection';
 import ShareButton from '@/components/ui/ShareButton';
 import { AdSenseInArticle } from '@/components/ads';
 import { getAdSensePublisherId } from '@/lib/adsense-config';
@@ -41,17 +49,31 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: 'Not Found' };
   }
 
+  const detail = getZodiacDetail(sign as ZodiacSignId);
   const name = zodiacSign.names.ko;
   const baseUrl = getSiteUrl();
   const url = `${baseUrl}/zodiac/${sign}`;
-  const description = `${name}의 성격 특성, 긍정적/부정적 특성, 그리고 다른 별자리와의 궁합을 알아보세요.`;
+
+  const decanKeywords = detail.decans.flatMap((d) => d.keywords.slice(0, 3));
+  const jobKeywords = detail.career.suitableJobs.slice(0, 3).map((j) => j.title);
+  const description = `${name}의 데칸별 성격, ${detail.personality.strengths.length}개 강점·약점, 직업 적성(${jobKeywords.join(', ')}), 건강, 재물운, 궁합, 신화까지. ${name} 완벽 가이드.`;
 
   return {
-    title: `${name} - 성격, 특성, 궁합 | 별자리 운세`,
+    title: `${name} 완벽 가이드 - 데칸, 성격, 직업, 건강, 궁합 | 별자리 운세`,
     description,
-    keywords: [zodiacSign.names.en.toLowerCase(), 'zodiac', 'horoscope', 'compatibility', name, '별자리', '운세'],
+    keywords: [
+      zodiacSign.names.en.toLowerCase(),
+      name,
+      `${name} 성격`,
+      `${name} 궁합`,
+      `${name} 직업`,
+      `${name} 데칸`,
+      '별자리',
+      '운세',
+      ...decanKeywords.slice(0, 5),
+    ],
     openGraph: {
-      title: `${name} - 성격, 특성, 궁합 | 별자리 운세`,
+      title: `${name} 완벽 가이드 - 데칸, 성격, 직업, 건강, 궁합 | 별자리 운세`,
       description,
       url,
       type: 'website',
@@ -84,6 +106,7 @@ export default async function ZodiacDetailPage({ params }: PageProps) {
     notFound();
   }
 
+  const detail = getZodiacDetail(sign as ZodiacSignId);
   const fortuneScore = getRandomScore(sign);
   const fortuneMessage = getRandomMessage(sign);
   const baseUrl = getSiteUrl();
@@ -94,8 +117,8 @@ export default async function ZodiacDetailPage({ params }: PageProps) {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
     url: pageUrl,
-    name: `${name} - 성격, 특성, 궁합 | 별자리 운세`,
-    description: `${name}의 성격 특성, 긍정적/부정적 특성, 그리고 다른 별자리와의 궁합을 알아보세요.`,
+    name: `${name} 완벽 가이드 - 데칸, 성격, 직업, 건강, 궁합 | 별자리 운세`,
+    description: `${name}의 데칸별 성격, 강점·약점, 직업 적성, 건강, 재물운, 궁합, 신화까지. ${name} 완벽 가이드.`,
     publisher: {
       '@type': 'Organization',
       name: '별자리 운세',
@@ -103,9 +126,41 @@ export default async function ZodiacDetailPage({ params }: PageProps) {
     },
   };
 
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: `${name}의 성격 특성은?`,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `${name}의 주요 강점은 ${detail.personality.strengths.slice(0, 3).map((s) => s.title).join(', ')} 등이 있으며, 주의할 점으로는 ${detail.personality.weaknesses.slice(0, 3).map((w) => w.title).join(', ')} 등이 있습니다.`,
+        },
+      },
+      {
+        '@type': 'Question',
+        name: `${name}에게 적합한 직업은?`,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `${name}에게 적합한 직업으로는 ${detail.career.suitableJobs.slice(0, 5).map((j) => j.title).join(', ')} 등이 있습니다.`,
+        },
+      },
+      {
+        '@type': 'Question',
+        name: `${name} 데칸 분류란?`,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `${name}은 3개의 데칸으로 나뉩니다: 1데칸(${detail.decans[0].dateRange}), 2데칸(${detail.decans[1].dateRange}), 3데칸(${detail.decans[2].dateRange}). 각 데칸마다 부지배행성과 성격 특성이 다릅니다.`,
+        },
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen py-8 px-4">
       <JsonLd data={webPageJsonLd} />
+      <JsonLd data={faqJsonLd} />
       <div className="max-w-4xl mx-auto">
         <Breadcrumbs
           baseUrl={baseUrl}
@@ -131,15 +186,40 @@ export default async function ZodiacDetailPage({ params }: PageProps) {
         <ZodiacHeader sign={zodiacSign} />
         <div className="mt-4 flex justify-end">
           <ShareButton
-            title={`${zodiacSign.names.ko} - 성격, 특성, 궁합 | 별자리 운세`}
-            text={`${zodiacSign.names.ko} 별자리 성격·궁합 보기`}
+            title={`${name} 완벽 가이드 | 별자리 운세`}
+            text={`${name} 별자리 데칸·성격·궁합·직업 완벽 가이드`}
             label="공유하기"
           />
         </div>
 
-        {/* Traits Section */}
+        {/* Decan Section */}
         <div className="mt-8">
-          <TraitsSection traits={zodiacSign.traits} />
+          <DecanSection decans={detail.decans} signName={name} />
+        </div>
+
+        {/* Extended Traits Section (replaces TraitsSection) */}
+        <div className="mt-8">
+          <ExtendedTraitsSection personality={detail.personality} />
+        </div>
+
+        {/* Career Section */}
+        <div className="mt-8">
+          <CareerSection career={detail.career} />
+        </div>
+
+        {/* Health Section */}
+        <div className="mt-8">
+          <HealthSection health={detail.health} />
+        </div>
+
+        {/* Finance Section */}
+        <div className="mt-8">
+          <FinanceSection finance={detail.finance} />
+        </div>
+
+        {/* Symbolic Section */}
+        <div className="mt-8">
+          <SymbolicSection symbolic={detail.symbolic} />
         </div>
 
         {/* 콘텐츠 중간 인-아티클 광고 */}
@@ -158,6 +238,16 @@ export default async function ZodiacDetailPage({ params }: PageProps) {
             currentSign={zodiacSign.id}
             compatibility={zodiacSign.compatibility}
           />
+        </div>
+
+        {/* Celebrity Section */}
+        <div className="mt-8">
+          <CelebritySection celebrities={detail.celebrities} signName={name} />
+        </div>
+
+        {/* Mythology Section */}
+        <div className="mt-8">
+          <MythologySection mythology={detail.mythology} />
         </div>
 
         {/* Today's Horoscope Preview */}

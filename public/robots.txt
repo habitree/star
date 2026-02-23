@@ -1,0 +1,5 @@
+# Google AdSense / 검색엔진 크롤러 접근 허용
+User-agent: *
+Allow: /
+
+Sitemap: https://luckytoday.one/sitemap.xml

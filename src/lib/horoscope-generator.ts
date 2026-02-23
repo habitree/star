@@ -27,6 +27,7 @@ import {
   elementLuckyColors,
 } from '@/data/horoscope-templates';
 import { elementTemplates, type Element } from '@/data/element-templates';
+import { signTemplates } from '@/data/sign-templates';
 import { zodiacSigns } from '@/data/zodiac-signs';
 import { getPlanetForSign, isPlanetAffectingCategory } from '@/data/planet-influences';
 import { toISODateString, getWeekStart, getWeekEnd } from '@/lib/utils';
@@ -155,7 +156,24 @@ function selectElementTemplate(
 }
 
 /**
- * 카테고리별 운세 텍스트 선택 (원소 기반 우선)
+ * 별자리 전용 카테고리별 운세 텍스트 선택
+ */
+function selectSignTemplate(
+  signId: ZodiacSignId,
+  category: HoroscopeCategory,
+  score: HoroscopeScore,
+  random: () => number
+): LocalizedText {
+  const level = getTemplateLevel(score);
+  const pool = signTemplates[signId][category][level];
+  return selectRandom(pool, random);
+}
+
+/**
+ * 카테고리별 운세 텍스트 선택 (3단계 우선순위)
+ * - 60%: 별자리 전용 템플릿
+ * - 30%: 원소 기반 템플릿
+ * - 10%: 범용 템플릿
  */
 function selectTemplate(
   category: HoroscopeCategory,
@@ -163,11 +181,17 @@ function selectTemplate(
   random: () => number,
   signId?: ZodiacSignId
 ): LocalizedText {
-  // signId가 있으면 원소 기반 템플릿 사용
   if (signId) {
-    return selectElementTemplate(signId, category, score, random);
+    const roll = random();
+    if (roll < 0.60) {
+      // 60%: 별자리 전용 템플릿
+      return selectSignTemplate(signId, category, score, random);
+    } else if (roll < 0.90) {
+      // 30%: 원소 기반 템플릿
+      return selectElementTemplate(signId, category, score, random);
+    }
   }
-  // 없으면 범용 템플릿 사용
+  // 10%: 범용 템플릿 (또는 signId 없을 때)
   return selectGenericTemplate(category, score, random);
 }
 

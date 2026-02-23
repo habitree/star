@@ -1,10 +1,8 @@
 import { Inter, Playfair_Display } from 'next/font/google';
-import Script from 'next/script';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import AdSenseAuto from '@/components/ads/AdSenseAuto';
 import JsonLd from '@/components/seo/JsonLd';
-import { getAdSensePublisherId } from '@/lib/adsense-config';
 import './globals.css';
 
 // 애드센스 소유권 확인용 (스니펫 + 메타태그)
@@ -35,12 +33,6 @@ export const metadata = {
     type: 'website',
     locale: 'ko_KR',
   },
-  // 애드센스 소유권 확인: 크롤러가 반드시 읽을 수 있도록 metadata로도 출력
-  verification: {
-    other: {
-      'google-adsense-account': 'ca-pub-4166976105261105',
-    },
-  },
 };
 
 export default function RootLayout({
@@ -48,8 +40,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const publisherId = getAdSensePublisherId() ?? ADSENSE_PUBLISHER_ID;
-
   const websiteJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
@@ -62,17 +52,15 @@ export default function RootLayout({
   return (
     <html lang="ko" className={`${inter.variable} ${playfair.variable}`}>
       <head>
-        <meta name="google-adsense-account" content="ca-pub-4166976105261105" />
+        <meta name="google-adsense-account" content={ADSENSE_PUBLISHER_ID} />
+        <script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_PUBLISHER_ID}`}
+          crossOrigin="anonymous"
+        />
         <JsonLd data={websiteJsonLd} />
       </head>
       <body className="font-sans min-h-screen flex flex-col">
-        <Script
-          id="adsbygoogle-init"
-          strategy="afterInteractive"
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${publisherId}`}
-          crossOrigin="anonymous"
-          async
-        />
         <AdSenseAuto />
         <Header />
         <main className="flex-1">{children}</main>

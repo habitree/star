@@ -63,3 +63,16 @@ export type {
   PlanetInfo,
   HouseMeaning,
 } from './birth-chart';
+
+// Zodiac detail types
+export type {
+  DecanInfo,
+  PersonalityExtended,
+  LoveProfile,
+  CareerProfile,
+  HealthProfile,
+  FinanceProfile,
+  SymbolicData,
+  Celebrity,
+  ZodiacDetailData,
+} from './zodiac-detail';
