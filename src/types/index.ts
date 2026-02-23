@@ -64,6 +64,41 @@ export type {
   HouseMeaning,
 } from './birth-chart';
 
+// Extended horoscope types
+export type {
+  ExtendedLuckyElements,
+  BiorhythmData,
+  TarotCard,
+  TimeBasedFortune,
+  FortuneRankingEntry,
+  FortuneTrendPoint,
+  PersonalizedHoroscopeResult,
+  AffirmationTemplate,
+} from './horoscope-extended';
+
+// Engagement types
+export type {
+  EmotionState,
+  StreakMilestone,
+  Badge,
+  StreakReward,
+  ContentLockStatus,
+  UnlockableContent,
+  UnlockCondition,
+  ChatMessage,
+  ChatChoice,
+  ChatNode,
+  ChatScenario,
+  EngagementEventType,
+  EngagementEvent,
+  SeasonalEventType,
+  SeasonalEvent,
+  ElementTheme,
+  MicroStory,
+  OnboardingStep,
+  EngagementState,
+} from './engagement';
+
 // Zodiac detail types
 export type {
   DecanInfo,

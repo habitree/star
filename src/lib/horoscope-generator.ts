@@ -14,6 +14,17 @@ import type {
   MonthlyKeyDate,
   ZodiacSignId,
 } from '@/types';
+import type {
+  ExtendedLuckyElements,
+  TarotCard,
+  TimeBasedFortune,
+  FortuneRankingEntry,
+  FortuneTrendPoint,
+} from '@/types/horoscope-extended';
+import { majorArcana } from '@/data/tarot-data';
+import { luckyDirections, luckyFoods, luckyActivities } from '@/data/lucky-elements-extended';
+import { affirmationTemplates } from '@/data/affirmation-templates';
+import { calculateCompatibilityScore } from '@/lib/zodiac-utils';
 import {
   horoscopeTemplates,
   luckyColors,
@@ -593,4 +604,260 @@ export function getAllDailyHoroscopes(
   ];
 
   return signs.map((signId) => generateDailyHoroscope(signId, date, locale));
+}
+
+// ─── 확장 함수들 (맞춤형 대시보드용) ───────────────────
+
+const allSignIds: ZodiacSignId[] = [
+  'aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo',
+  'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces'
+];
+
+/**
+ * 확장 행운 요소 생성
+ */
+export function generateExtendedLuckyElements(
+  signId: ZodiacSignId,
+  date: Date = new Date()
+): ExtendedLuckyElements {
+  const seed = generateSeed(signId, date, 'extlucky');
+  const random = seededRandom(seed);
+
+  const element = getSignElement(signId);
+  const elementColors = elementLuckyColors[element];
+  const luckyColor = random() < 0.7
+    ? selectRandom(elementColors, random)
+    : selectRandom(luckyColors, random);
+
+  // 베스트 파트너: 궁합 점수 기반
+  const partnerScores = allSignIds
+    .filter(s => s !== signId)
+    .map(s => ({ signId: s, score: calculateCompatibilityScore(signId, s) }))
+    .sort((a, b) => b.score - a.score);
+  // 상위 3개 중 랜덤
+  const bestPartner = partnerScores[Math.floor(random() * 3)].signId;
+
+  return {
+    number: selectRandom(luckyNumbers, random),
+    color: luckyColor.ko,
+    time: selectRandom(luckyTimes, random).ko,
+    direction: selectRandom(luckyDirections, random),
+    food: selectRandom(luckyFoods, random),
+    activity: selectRandom(luckyActivities, random),
+    bestPartner,
+  };
+}
+
+/**
+ * 오늘의 타로 카드 생성
+ */
+export function generateDailyTarot(
+  signId: ZodiacSignId,
+  date: Date = new Date()
+): TarotCard {
+  const seed = generateSeed(signId, date, 'tarot');
+  const random = seededRandom(seed);
+
+  const cardIndex = Math.floor(random() * majorArcana.length);
+  const card = majorArcana[cardIndex];
+  const isReversed = random() < 0.3; // 30% 확률로 역방향
+
+  return {
+    id: card.id,
+    name: card.name,
+    symbol: card.symbol,
+    meaning: isReversed ? card.reversed : card.meaning,
+    reversed: card.reversed,
+    advice: card.advice,
+    isReversed,
+  };
+}
+
+/**
+ * 시간대별 운세 생성
+ */
+export function generateTimeFortune(
+  signId: ZodiacSignId,
+  date: Date = new Date()
+): TimeBasedFortune[] {
+  const periods: Array<{ period: 'morning' | 'afternoon' | 'evening'; label: string; timeRange: string }> = [
+    { period: 'morning', label: '아침', timeRange: '06:00 - 12:00' },
+    { period: 'afternoon', label: '오후', timeRange: '12:00 - 18:00' },
+    { period: 'evening', label: '저녁', timeRange: '18:00 - 24:00' },
+  ];
+
+  return periods.map(({ period, label, timeRange }) => {
+    const seed = generateSeed(signId, date, `time_${period}`);
+    const random = seededRandom(seed);
+    const score = generateScore(random);
+    const level = getTemplateLevel(score);
+
+    const morningDescs: Record<'high' | 'medium' | 'low', string[]> = {
+      high: [
+        '상쾌한 시작! 아침 에너지가 최고조입니다. 중요한 일을 오전에 처리하세요.',
+        '활기찬 아침입니다. 새로운 계획을 세우기 좋은 시간이에요.',
+        '아침 햇살처럼 밝은 에너지가 넘칩니다. 적극적으로 행동하세요.',
+      ],
+      medium: [
+        '평온한 아침입니다. 차분하게 하루를 준비하세요.',
+        '가벼운 운동으로 시작하면 하루가 달라집니다.',
+        '아침 루틴을 잘 지키면 좋은 흐름이 이어집니다.',
+      ],
+      low: [
+        '아침에는 에너지가 다소 낮을 수 있습니다. 무리하지 마세요.',
+        '천천히 시작하세요. 오후에 에너지가 올라갑니다.',
+        '아침에 중요한 결정은 피하고, 가볍게 보내세요.',
+      ],
+    };
+
+    const afternoonDescs: Record<'high' | 'medium' | 'low', string[]> = {
+      high: [
+        '오후 에너지가 폭발합니다! 핵심 업무를 처리하기 최적의 시간입니다.',
+        '사교 활동에 좋은 시간입니다. 사람들과 소통하세요.',
+        '집중력이 최고인 시간대입니다. 어려운 과제를 도전하세요.',
+      ],
+      medium: [
+        '꾸준한 오후입니다. 일상적인 업무를 차분히 처리하세요.',
+        '점심 후 가벼운 산책이 오후 활력을 높여줍니다.',
+        '오후 회의나 미팅에서 좋은 결과를 얻을 수 있습니다.',
+      ],
+      low: [
+        '오후에는 잠시 쉬어가는 것이 좋습니다. 재충전의 시간을 가지세요.',
+        '오후 슬럼프가 올 수 있습니다. 간단한 스트레칭을 추천합니다.',
+        '중요한 결정은 오후를 피해서 내리세요.',
+      ],
+    };
+
+    const eveningDescs: Record<'high' | 'medium' | 'low', string[]> = {
+      high: [
+        '저녁에 좋은 소식이 찾아올 수 있습니다. 기대하세요!',
+        '저녁 모임이나 데이트에 최적의 시간입니다.',
+        '하루의 마무리가 아름답습니다. 특별한 일이 생길 수 있어요.',
+      ],
+      medium: [
+        '편안한 저녁을 보내세요. 충분한 휴식이 내일의 에너지가 됩니다.',
+        '저녁에는 자기계발에 시간을 투자하면 좋습니다.',
+        '소중한 사람과 함께하는 저녁이 위로가 됩니다.',
+      ],
+      low: [
+        '저녁에는 일찍 쉬는 것이 좋겠습니다. 피로를 풀어주세요.',
+        '과도한 야간 활동은 피하세요. 충분한 수면이 중요합니다.',
+        '저녁에는 조용히 자기만의 시간을 가져보세요.',
+      ],
+    };
+
+    const descMap = { morning: morningDescs, afternoon: afternoonDescs, evening: eveningDescs };
+    const tipMap: Record<string, string[]> = {
+      morning: ['아침 명상 추천', '따뜻한 음료로 시작', '간단한 스트레칭'],
+      afternoon: ['짧은 산책 추천', '수분 보충 필수', '5분 휴식 추천'],
+      evening: ['따뜻한 목욕 추천', '독서로 마무리', '감사 일기 작성'],
+    };
+
+    const description = selectRandom(descMap[period][level], random);
+    const tip = selectRandom(tipMap[period], random);
+
+    return { period, label, timeRange, description, score, tip };
+  });
+}
+
+/**
+ * 오늘의 12별자리 전체 순위 반환
+ */
+export function getTodayFullRanking(date: Date = new Date()): FortuneRankingEntry[] {
+  const rankings = allSignIds.map((signId) => {
+    const horoscope = generateDailyHoroscope(signId, date);
+    const totalScore =
+      horoscope.overall.score +
+      horoscope.love.score +
+      horoscope.career.score +
+      horoscope.health.score +
+      horoscope.money.score;
+
+    return {
+      rank: 0,
+      signId,
+      totalScore,
+      overallScore: horoscope.overall.score,
+    };
+  });
+
+  rankings.sort((a, b) => b.totalScore - a.totalScore);
+  rankings.forEach((entry, idx) => { entry.rank = idx + 1; });
+
+  return rankings;
+}
+
+/**
+ * 주간 종합 점수 트렌드 (7일)
+ */
+export function getWeeklyTrend(
+  signId: ZodiacSignId,
+  date: Date = new Date()
+): FortuneTrendPoint[] {
+  const dayLabels = ['일', '월', '화', '수', '목', '금', '토'];
+  const todayStr = toISODateString(date);
+  const result: FortuneTrendPoint[] = [];
+
+  for (let offset = -3; offset <= 3; offset++) {
+    const d = new Date(date);
+    d.setDate(d.getDate() + offset);
+    const horoscope = generateDailyHoroscope(signId, d);
+    const total =
+      horoscope.overall.score +
+      horoscope.love.score +
+      horoscope.career.score +
+      horoscope.health.score +
+      horoscope.money.score;
+
+    result.push({
+      date: toISODateString(d),
+      dayLabel: dayLabels[d.getDay()],
+      score: total,
+      isToday: toISODateString(d) === todayStr,
+    });
+  }
+
+  return result;
+}
+
+/**
+ * 오늘의 확언 생성
+ */
+export function generateDailyAffirmation(
+  signId: ZodiacSignId,
+  date: Date = new Date()
+): string {
+  const seed = generateSeed(signId, date, 'affirmation');
+  const random = seededRandom(seed);
+  const templates = affirmationTemplates[signId];
+  return selectRandom(templates, random);
+}
+
+/**
+ * 궁합 하이라이트 생성
+ */
+export function generateCompatibilityHighlight(
+  signId: ZodiacSignId,
+  date: Date = new Date()
+): { bestMatch: ZodiacSignId; score: number; message: string } {
+  const seed = generateSeed(signId, date, 'compat');
+  const random = seededRandom(seed);
+
+  const scores = allSignIds
+    .filter(s => s !== signId)
+    .map(s => ({ signId: s, score: calculateCompatibilityScore(signId, s) }))
+    .sort((a, b) => b.score - a.score);
+
+  const bestMatch = scores[0];
+  const messages = [
+    `오늘 ${bestMatch.signId === 'aries' ? '양자리' : bestMatch.signId === 'taurus' ? '황소자리' : bestMatch.signId === 'gemini' ? '쌍둥이자리' : bestMatch.signId === 'cancer' ? '게자리' : bestMatch.signId === 'leo' ? '사자자리' : bestMatch.signId === 'virgo' ? '처녀자리' : bestMatch.signId === 'libra' ? '천칭자리' : bestMatch.signId === 'scorpio' ? '전갈자리' : bestMatch.signId === 'sagittarius' ? '사수자리' : bestMatch.signId === 'capricorn' ? '염소자리' : bestMatch.signId === 'aquarius' ? '물병자리' : '물고기자리'}와의 인연이 특별히 빛나는 날입니다.`,
+    '서로의 에너지가 시너지를 만들어 놀라운 결과를 가져올 수 있어요.',
+    '함께하면 어떤 어려움도 이겨낼 수 있는 환상의 조합입니다.',
+  ];
+
+  return {
+    bestMatch: bestMatch.signId,
+    score: bestMatch.score,
+    message: selectRandom(messages, random),
+  };
 }

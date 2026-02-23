@@ -5,6 +5,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import type { ZodiacSignId } from '@/types';
+import type { Badge, OnboardingStep } from '@/types/engagement';
 
 // 즐겨찾기 항목 타입
 export interface FavoriteSign {
@@ -48,6 +49,23 @@ interface UserState {
   lastVisit: string | null;
   visitCount: number;
 
+  // 생년월일 기반 맞춤 운세
+  birthDate: string | null;        // ISO date string (YYYY-MM-DD)
+  birthSign: ZodiacSignId | null;
+  lastHoroscopeViewDate: string | null; // 마지막 운세 조회 날짜
+  visitStreak: number;             // 연속 방문 일수
+
+  // 참여도/리텐션 시스템
+  longestStreak: number;
+  earnedBadges: Badge[];
+  unlockedContentIds: string[];
+  completedActions: string[];
+  onboardingCompleted: boolean;
+  onboardingStep: OnboardingStep;
+  todayCheckedIn: boolean;
+  lastCheckInDate: string | null;
+  lastChatDate: string | null;
+
   // 즐겨찾기 관련 액션
   addFavorite: (signId: ZodiacSignId, nickname?: string) => void;
   removeFavorite: (signId: ZodiacSignId) => void;
@@ -70,6 +88,20 @@ interface UserState {
 
   // 방문 추적
   recordVisit: () => void;
+
+  // 생년월일 관련 액션
+  setBirthDate: (date: string, signId: ZodiacSignId) => void;
+  clearBirthDate: () => void;
+  recordHoroscopeView: () => void;
+
+  // 참여도/리텐션 액션
+  performCheckIn: () => void;
+  addBadge: (badge: Badge) => void;
+  unlockContent: (contentId: string) => void;
+  completeAction: (action: string) => void;
+  completeOnboarding: () => void;
+  setOnboardingStep: (step: OnboardingStep) => void;
+  recordChatSession: () => void;
 }
 
 // 기본 설정값
@@ -95,6 +127,19 @@ export const useUserStore = create<UserState>()(
       preferences: defaultPreferences,
       lastVisit: null,
       visitCount: 0,
+      birthDate: null,
+      birthSign: null,
+      lastHoroscopeViewDate: null,
+      visitStreak: 0,
+      longestStreak: 0,
+      earnedBadges: [],
+      unlockedContentIds: [],
+      completedActions: [],
+      onboardingCompleted: false,
+      onboardingStep: 'welcome' as OnboardingStep,
+      todayCheckedIn: false,
+      lastCheckInDate: null,
+      lastChatDate: null,
 
       // 즐겨찾기 액션
       addFavorite: (signId, nickname) => {
@@ -219,6 +264,91 @@ export const useUserStore = create<UserState>()(
           visitCount: get().visitCount + 1,
         });
       },
+
+      // 생년월일 관련 액션
+      setBirthDate: (date, signId) => {
+        set({ birthDate: date, birthSign: signId });
+      },
+
+      clearBirthDate: () => {
+        set({ birthDate: null, birthSign: null });
+      },
+
+      recordHoroscopeView: () => {
+        const today = new Date().toISOString().split('T')[0];
+        const { lastHoroscopeViewDate, visitStreak, longestStreak } = get();
+
+        if (lastHoroscopeViewDate === today) return; // 오늘 이미 기록됨
+
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+        const newStreak = lastHoroscopeViewDate === yesterdayStr
+          ? visitStreak + 1
+          : 1;
+
+        set({
+          lastHoroscopeViewDate: today,
+          visitStreak: newStreak,
+          longestStreak: Math.max(longestStreak, newStreak),
+        });
+      },
+
+      // 참여도/리텐션 액션
+      performCheckIn: () => {
+        const today = new Date().toISOString().split('T')[0];
+        const { lastCheckInDate, visitStreak, longestStreak } = get();
+
+        if (lastCheckInDate === today) return;
+
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+        const newStreak = lastCheckInDate === yesterdayStr
+          ? visitStreak + 1
+          : (visitStreak > 0 ? visitStreak : 1);
+
+        set({
+          todayCheckedIn: true,
+          lastCheckInDate: today,
+          visitStreak: newStreak,
+          longestStreak: Math.max(longestStreak, newStreak),
+        });
+      },
+
+      addBadge: (badge) => {
+        const { earnedBadges } = get();
+        if (earnedBadges.some(b => b.id === badge.id)) return;
+        set({
+          earnedBadges: [...earnedBadges, { ...badge, unlockedAt: new Date().toISOString() }],
+        });
+      },
+
+      unlockContent: (contentId) => {
+        const { unlockedContentIds } = get();
+        if (unlockedContentIds.includes(contentId)) return;
+        set({ unlockedContentIds: [...unlockedContentIds, contentId] });
+      },
+
+      completeAction: (action) => {
+        const { completedActions } = get();
+        if (completedActions.includes(action)) return;
+        set({ completedActions: [...completedActions, action] });
+      },
+
+      completeOnboarding: () => {
+        set({ onboardingCompleted: true, onboardingStep: 'complete' as OnboardingStep });
+      },
+
+      setOnboardingStep: (step) => {
+        set({ onboardingStep: step });
+      },
+
+      recordChatSession: () => {
+        set({ lastChatDate: new Date().toISOString().split('T')[0] });
+      },
     }),
     {
       name: 'zodiac-user-store',
@@ -229,6 +359,19 @@ export const useUserStore = create<UserState>()(
         preferences: state.preferences,
         lastVisit: state.lastVisit,
         visitCount: state.visitCount,
+        birthDate: state.birthDate,
+        birthSign: state.birthSign,
+        lastHoroscopeViewDate: state.lastHoroscopeViewDate,
+        visitStreak: state.visitStreak,
+        longestStreak: state.longestStreak,
+        earnedBadges: state.earnedBadges,
+        unlockedContentIds: state.unlockedContentIds,
+        completedActions: state.completedActions,
+        onboardingCompleted: state.onboardingCompleted,
+        onboardingStep: state.onboardingStep,
+        todayCheckedIn: state.todayCheckedIn,
+        lastCheckInDate: state.lastCheckInDate,
+        lastChatDate: state.lastChatDate,
       }),
     }
   )

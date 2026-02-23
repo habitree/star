@@ -418,4 +418,193 @@
   .adsense-divider {
     @apply border-t border-white/10 my-4;
   }
+
+  /* ─── 타로 카드 플립 ─── */
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .tarot-card-back {
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+  }
+
+  .tarot-card-revealed {
+    animation: tarotReveal 0.6s ease-out;
+  }
+
+  @keyframes tarotReveal {
+    0% {
+      opacity: 0;
+      transform: rotateY(90deg) scale(0.8);
+    }
+    50% {
+      opacity: 0.5;
+      transform: rotateY(0deg) scale(1.05);
+    }
+    100% {
+      opacity: 1;
+      transform: rotateY(0deg) scale(1);
+    }
+  }
+
+  /* ─── 스태거 페이드인 ─── */
+  .stagger-fade-in > * {
+    opacity: 0;
+    animation: staggerFadeIn 0.5s ease-out forwards;
+  }
+
+  .stagger-fade-in > *:nth-child(1) { animation-delay: 0ms; }
+  .stagger-fade-in > *:nth-child(2) { animation-delay: 80ms; }
+  .stagger-fade-in > *:nth-child(3) { animation-delay: 160ms; }
+  .stagger-fade-in > *:nth-child(4) { animation-delay: 240ms; }
+  .stagger-fade-in > *:nth-child(5) { animation-delay: 320ms; }
+  .stagger-fade-in > *:nth-child(6) { animation-delay: 400ms; }
+
+  @keyframes staggerFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(15px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ─── 원소 글로우 애니메이션 ─── */
+  .element-glow-fire {
+    animation: elementGlow 2.5s ease-in-out infinite;
+    --glow-color: rgba(239, 68, 68, 0.4);
+  }
+
+  .element-glow-earth {
+    animation: elementGlow 2.5s ease-in-out infinite;
+    --glow-color: rgba(34, 197, 94, 0.4);
+  }
+
+  .element-glow-air {
+    animation: elementGlow 2.5s ease-in-out infinite;
+    --glow-color: rgba(59, 130, 246, 0.4);
+  }
+
+  .element-glow-water {
+    animation: elementGlow 2.5s ease-in-out infinite;
+    --glow-color: rgba(139, 92, 246, 0.4);
+  }
+
+  @keyframes elementGlow {
+    0%, 100% {
+      box-shadow: 0 0 8px var(--glow-color);
+    }
+    50% {
+      box-shadow: 0 0 20px var(--glow-color);
+    }
+  }
+
+  /* ─── 카운트업 숫자 ─── */
+  .countup-number {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ─── 별 수렴 애니메이션 (StarIntro) ─── */
+  .animate-star-converge {
+    animation: starConverge 1.2s ease-in forwards;
+  }
+
+  @keyframes starConverge {
+    0% {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    30% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0.8;
+      transform: translate(
+        calc(var(--converge-x, 0) * -1),
+        calc(var(--converge-y, 0) * -1)
+      ) scale(0.3);
+      left: 50% !important;
+      top: 50% !important;
+    }
+  }
+
+  /* ─── 파티클 떠다니기 ─── */
+  .animate-particle-float {
+    animation: particleFloat 5s ease-in-out infinite;
+  }
+
+  @keyframes particleFloat {
+    0%, 100% {
+      transform: translateY(0) rotate(0deg);
+      opacity: 0.2;
+    }
+    25% {
+      transform: translateY(-15px) rotate(5deg);
+      opacity: 0.4;
+    }
+    50% {
+      transform: translateY(-8px) rotate(-3deg);
+      opacity: 0.3;
+    }
+    75% {
+      transform: translateY(-20px) rotate(2deg);
+      opacity: 0.15;
+    }
+  }
+
+  /* ─── 채팅 메시지 슬라이드 인 ─── */
+  .animate-chat-in {
+    animation: chatSlideIn 0.4s ease-out forwards;
+  }
+
+  @keyframes chatSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ─── 배지 획득 반짝 ─── */
+  .animate-badge-earn {
+    animation: badgeEarn 0.6s ease-out;
+  }
+
+  @keyframes badgeEarn {
+    0% {
+      transform: scale(0) rotate(-180deg);
+      opacity: 0;
+    }
+    60% {
+      transform: scale(1.3) rotate(10deg);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1) rotate(0deg);
+      opacity: 1;
+    }
+  }
+
+  /* ─── 카운트업 애니메이션 ─── */
+  .animate-count-up {
+    animation: countUp 1.5s ease-out forwards;
+  }
+
+  @keyframes countUp {
+    from {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
 }

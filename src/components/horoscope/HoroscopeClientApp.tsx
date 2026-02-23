@@ -1,0 +1,328 @@
+'use client';
+
+import { useState, useEffect, useCallback } from 'react';
+import { useUserStore } from '@/stores/user-store';
+import {
+  generateDailyHoroscope,
+  generateExtendedLuckyElements,
+  generateDailyTarot,
+  generateTimeFortune,
+  getTodayFullRanking,
+  getWeeklyTrend,
+  generateDailyAffirmation,
+  generateCompatibilityHighlight,
+} from '@/lib/horoscope-generator';
+import { getBiorhythmWeek } from '@/lib/biorhythm';
+import { getNewlyEarnedReward } from '@/lib/streak-rewards';
+import { getContentStatus } from '@/lib/content-unlock';
+import { startSession, trackEvent } from '@/lib/engagement-tracker';
+import { getTodaySeasonalMessage } from '@/lib/seasonal-scheduler';
+import { generateDailyMicroStory, getTomorrowTeaser } from '@/lib/micro-story';
+import { generateEmotionResponse } from '@/lib/emotion-response';
+import BirthDateForm from './BirthDateForm';
+import WelcomeBack from './WelcomeBack';
+import PersonalizedResult from './PersonalizedResult';
+import OnboardingFlow from './OnboardingFlow';
+import DailyCheckIn from './DailyCheckIn';
+import StarIntro from './StarIntro';
+import FortuneChatBot from './FortuneChatBot';
+import StreakDashboard from './StreakDashboard';
+import type { ZodiacSignId, HoroscopeCategory } from '@/types';
+import type { ContentLockStatus } from '@/types/engagement';
+
+export default function HoroscopeClientApp() {
+  const {
+    birthDate, birthSign,
+    visitStreak, longestStreak, earnedBadges,
+    unlockedContentIds, completedActions,
+    onboardingCompleted, todayCheckedIn, lastCheckInDate,
+    setBirthDate, recordHoroscopeView,
+    performCheckIn, addBadge, unlockContent, completeAction,
+    completeOnboarding,
+  } = useUserStore();
+
+  const [hydrated, setHydrated] = useState(false);
+  const [currentSign, setCurrentSign] = useState<ZodiacSignId | null>(null);
+  const [currentBirthDate, setCurrentBirthDate] = useState<string | null>(null);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showStarIntro, setShowStarIntro] = useState(false);
+  const [newRewardMessage, setNewRewardMessage] = useState<string | null>(null);
+
+  // 하이드레이션 처리
+  useEffect(() => {
+    setHydrated(true);
+    startSession();
+  }, []);
+
+  // 오늘 체크인 리셋 (날짜 변경 감지)
+  useEffect(() => {
+    if (!hydrated) return;
+    const today = new Date().toISOString().split('T')[0];
+    if (lastCheckInDate !== today) {
+      // todayCheckedIn will naturally be false for new day via store logic
+    }
+  }, [hydrated, lastCheckInDate]);
+
+  useEffect(() => {
+    if (hydrated && birthDate && birthSign) {
+      setCurrentSign(birthSign);
+      setCurrentBirthDate(birthDate);
+      const prevStreak = visitStreak;
+      recordHoroscopeView();
+
+      // 새 마일스톤 확인
+      const newStreak = useUserStore.getState().visitStreak;
+      const reward = getNewlyEarnedReward(prevStreak, newStreak);
+      if (reward) {
+        addBadge(reward.badge);
+        unlockContent(reward.unlockContent);
+        setNewRewardMessage(reward.message);
+        setTimeout(() => setNewRewardMessage(null), 5000);
+      }
+    } else if (hydrated && !birthDate && !onboardingCompleted) {
+      setShowOnboarding(true);
+    }
+  }, [hydrated, birthDate, birthSign]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleBirthDateSubmit = (date: string, signId: ZodiacSignId) => {
+    setBirthDate(date, signId);
+    setCurrentSign(signId);
+    setCurrentBirthDate(date);
+    setShowStarIntro(true);
+    recordHoroscopeView();
+    completeAction('view-basic-fortune');
+    trackEvent('horoscope_view', { signId });
+  };
+
+  const handleOnboardingComplete = (date: string, signId: ZodiacSignId) => {
+    setShowOnboarding(false);
+    completeOnboarding();
+    handleBirthDateSubmit(date, signId);
+    trackEvent('onboarding_complete', { signId });
+  };
+
+  const handleReset = () => {
+    setCurrentSign(null);
+    setCurrentBirthDate(null);
+    useUserStore.getState().clearBirthDate();
+  };
+
+  const handleStarIntroComplete = useCallback(() => {
+    setShowStarIntro(false);
+  }, []);
+
+  const handleCheckIn = () => {
+    const prevStreak = visitStreak;
+    performCheckIn();
+    const newStreak = useUserStore.getState().visitStreak;
+    const reward = getNewlyEarnedReward(prevStreak, newStreak);
+    if (reward) {
+      addBadge(reward.badge);
+      unlockContent(reward.unlockContent);
+      setNewRewardMessage(reward.message);
+      setTimeout(() => setNewRewardMessage(null), 5000);
+    }
+  };
+
+  // 하이드레이션 전
+  if (!hydrated) {
+    return (
+      <div className="max-w-2xl mx-auto mt-8">
+        <BirthDateForm onSubmit={handleBirthDateSubmit} />
+      </div>
+    );
+  }
+
+  // 온보딩
+  if (showOnboarding) {
+    return (
+      <OnboardingFlow
+        onComplete={handleOnboardingComplete}
+        onSkip={() => setShowOnboarding(false)}
+      />
+    );
+  }
+
+  // 별자리 인트로 애니메이션
+  if (showStarIntro && currentSign) {
+    return <StarIntro signId={currentSign} onComplete={handleStarIntroComplete} />;
+  }
+
+  // 생년월일 미입력
+  if (!currentSign || !currentBirthDate) {
+    return (
+      <div className="max-w-2xl mx-auto mt-8">
+        <BirthDateForm onSubmit={handleBirthDateSubmit} />
+      </div>
+    );
+  }
+
+  // 맞춤 결과 생성
+  const today = new Date();
+  const horoscope = generateDailyHoroscope(currentSign, today, 'ko');
+
+  const categoryScores: Record<HoroscopeCategory, 1 | 2 | 3 | 4 | 5> = {
+    overall: horoscope.overall.score,
+    love: horoscope.love.score,
+    career: horoscope.career.score,
+    health: horoscope.health.score,
+    money: horoscope.money.score,
+  };
+
+  const categoryTexts: Record<HoroscopeCategory, string> = {
+    overall: horoscope.overall.text.ko,
+    love: horoscope.love.text.ko,
+    career: horoscope.career.text.ko,
+    health: horoscope.health.text.ko,
+    money: horoscope.money.text.ko,
+  };
+
+  const totalScore = Object.values(categoryScores).reduce((a, b) => a + b, 0);
+  const overallPercent = Math.round((totalScore / 25) * 100);
+
+  const extendedLucky = generateExtendedLuckyElements(currentSign, today);
+  const tarot = generateDailyTarot(currentSign, today);
+  const timeFortunes = generateTimeFortune(currentSign, today);
+  const ranking = getTodayFullRanking(today);
+  const weeklyTrend = getWeeklyTrend(currentSign, today);
+  const affirmation = generateDailyAffirmation(currentSign, today);
+  const compatibilityHighlight = generateCompatibilityHighlight(currentSign, today);
+  const biorhythm = getBiorhythmWeek(currentBirthDate);
+
+  // 시즌 메시지
+  const seasonalMessage = getTodaySeasonalMessage(today);
+
+  // 마이크로 스토리
+  const microStory = generateDailyMicroStory(currentSign, today);
+  const tomorrowTeaser = getTomorrowTeaser(currentSign, today);
+
+  // 콘텐츠 해금 상태
+  const contentOptions = {
+    hasBirthDate: true,
+    currentStreak: visitStreak,
+    completedActions,
+    unlockedIds: unlockedContentIds,
+  };
+
+  const contentStatuses: Record<string, ContentLockStatus> = {
+    'basic-fortune': getContentStatus('basic-fortune', contentOptions),
+    'tarot-card': getContentStatus('tarot-card', contentOptions),
+    'biorhythm': getContentStatus('biorhythm', contentOptions),
+    'chat-fortune': getContentStatus('chat-fortune', contentOptions),
+    'weekly-report': getContentStatus('weekly-report', contentOptions),
+  };
+
+  // 어제 점수
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayHoroscope = generateDailyHoroscope(currentSign, yesterday, 'ko');
+  const yesterdayTotal =
+    yesterdayHoroscope.overall.score +
+    yesterdayHoroscope.love.score +
+    yesterdayHoroscope.career.score +
+    yesterdayHoroscope.health.score +
+    yesterdayHoroscope.money.score;
+  const yesterdayPercent = Math.round((yesterdayTotal / 25) * 100);
+
+  return (
+    <div className="max-w-2xl mx-auto mt-6">
+      {/* 새 보상 알림 */}
+      {newRewardMessage && (
+        <div className="glass-card p-4 mb-4 text-center animate-scale-in bg-gradient-to-r from-yellow-500/10 to-amber-500/10 border-yellow-500/30">
+          <p className="text-white text-sm font-medium">{newRewardMessage}</p>
+        </div>
+      )}
+
+      {/* 일일 체크인 */}
+      <div className="mb-4">
+        <DailyCheckIn
+          streak={visitStreak}
+          todayCheckedIn={todayCheckedIn}
+          onCheckIn={handleCheckIn}
+        />
+      </div>
+
+      {/* 시즌 이벤트 메시지 */}
+      {seasonalMessage && (
+        <div className="glass-card p-4 mb-4 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border-indigo-500/20">
+          <p className="text-white/80 text-sm leading-relaxed">{seasonalMessage}</p>
+        </div>
+      )}
+
+      {/* 재방문 환영 */}
+      {visitStreak > 0 && (
+        <WelcomeBack
+          signId={currentSign}
+          visitStreak={visitStreak}
+          yesterdayScore={yesterdayPercent}
+          todayScore={overallPercent}
+        />
+      )}
+
+      {/* 맞춤 결과 대시보드 */}
+      <PersonalizedResult
+        signId={currentSign}
+        overallPercent={overallPercent}
+        categoryScores={categoryScores}
+        categoryTexts={categoryTexts}
+        affirmation={affirmation}
+        timeFortunes={timeFortunes}
+        extendedLucky={extendedLucky}
+        tarot={tarot}
+        biorhythm={biorhythm}
+        weeklyTrend={weeklyTrend}
+        ranking={ranking}
+        compatibilityHighlight={compatibilityHighlight}
+        contentStatuses={contentStatuses}
+        microStory={microStory}
+        tomorrowTeaser={tomorrowTeaser}
+      />
+
+      {/* 별의 도사 채팅 */}
+      {contentStatuses['chat-fortune'] === 'unlocked' && (
+        <div className="mt-6">
+          <FortuneChatBot
+            signId={currentSign}
+            overallScore={overallPercent}
+          />
+        </div>
+      )}
+
+      {/* 스트릭 대시보드 */}
+      {visitStreak >= 3 && (
+        <div className="mt-6">
+          <StreakDashboard
+            streak={visitStreak}
+            longestStreak={longestStreak}
+            earnedBadges={earnedBadges}
+          />
+        </div>
+      )}
+
+      {/* 마이크로 스토리 */}
+      <div className="mt-6 glass-card p-5">
+        <h3 className="text-lg font-semibold text-white mb-3 text-center">오늘의 별자리 이야기</h3>
+        <p className="text-white/90 font-medium text-sm mb-2">{microStory.title}</p>
+        <p className="text-white/70 text-sm leading-relaxed mb-3">{microStory.content}</p>
+        <p className="text-amber-300/80 text-sm italic mb-3">&ldquo;{microStory.moral}&rdquo;</p>
+        <div className="border-t border-white/10 pt-3">
+          <p className="text-white/40 text-xs text-center">
+            📖 {tomorrowTeaser}
+          </p>
+        </div>
+      </div>
+
+      {/* 다른 생년월일로 보기 */}
+      <div className="text-center mt-8 mb-4">
+        <button
+          onClick={handleReset}
+          className="px-5 py-2 rounded-full text-sm font-medium
+                     bg-white/10 hover:bg-white/20 text-white/70 hover:text-white
+                     transition-colors"
+        >
+          다른 생년월일로 보기
+        </button>
+      </div>
+    </div>
+  );
+}

@@ -1,6 +1,6 @@
 /**
  * 운세 메인 페이지
- * 12별자리 선택 그리드 + 오늘의 운세 순위 TOP 3
+ * 서버 렌더링(SEO) + 클라이언트 맞춤 운세 대시보드
  */
 
 import { Metadata } from 'next';
@@ -8,11 +8,12 @@ import Link from 'next/link';
 import { getTodayTopSigns, generateDailyHoroscope } from '@/lib/horoscope-generator';
 import { zodiacData } from '@/data/zodiac-info';
 import { getSiteUrl } from '@/lib/site-url';
+import HoroscopeClientApp from '@/components/horoscope/HoroscopeClientApp';
 import type { ZodiacSignId } from '@/types';
 
 const baseUrl = getSiteUrl();
 const url = `${baseUrl}/horoscope`;
-const description = '12별자리의 오늘 운세를 확인하세요. 매일 업데이트되는 정확한 운세 정보를 제공합니다.';
+const description = '생년월일을 입력하면 맞춤형 운세를 확인할 수 있습니다. 타로, 바이오리듬, 시간대별 운세까지 매일 업데이트됩니다.';
 
 export const metadata: Metadata = {
   title: '오늘의 운세',
@@ -46,18 +47,21 @@ export default async function HoroscopePage() {
   return (
     <div className="min-h-screen py-8 px-4">
       <div className="max-w-6xl mx-auto">
-        {/* 페이지 제목 */}
-        <div className="text-center mb-12">
+        {/* 페이지 제목 (SEO) */}
+        <div className="text-center mb-8">
           <h1 className="text-4xl font-serif font-bold text-white mb-4">
             오늘의 운세
           </h1>
           <p className="text-white/70 text-lg">
-            12별자리의 오늘 운세를 확인하세요. 매일 업데이트되는 정확한 운세 정보를 제공합니다.
+            생년월일을 입력하고 나만의 맞춤 운세를 확인하세요
           </p>
         </div>
 
-        {/* 오늘의 운세 순위 TOP 3 */}
-        <section className="mb-16">
+        {/* 맞춤형 운세 클라이언트 영역 */}
+        <HoroscopeClientApp />
+
+        {/* 오늘의 운세 순위 TOP 3 (서버 렌더링 SEO) */}
+        <section className="mt-16 mb-16">
           <h2 className="text-2xl font-serif font-semibold text-white mb-6 text-center">
             오늘의 운세 순위 TOP 3
           </h2>
