@@ -4,7 +4,7 @@ import Link from 'next/link';
 import ZodiacCard from '@/components/ui/ZodiacCard';
 import FavoritesSection from '@/components/ui/FavoritesSection';
 import { AdSenseUnit, AdSenseInFeed } from '@/components/ads';
-import { getAdSensePublisherId } from '@/lib/adsense-config';
+import { isAdSenseEnabled } from '@/lib/adsense-config';
 import { type ZodiacSignId } from '@/types/zodiac';
 
 const zodiacSigns: ZodiacSignId[] = [
@@ -47,10 +47,9 @@ export default function HomePage() {
       <FavoritesSection className="py-8 px-4 max-w-6xl mx-auto" />
 
       {/* Hero 아래 배너 광고 */}
-      {getAdSensePublisherId() && (
+      {isAdSenseEnabled() && (
         <div className="py-4 px-4 max-w-6xl mx-auto">
           <AdSenseUnit
-            adSlot={`${getAdSensePublisherId()}/home-hero-banner`}
             adFormat="auto"
             responsive={true}
             className="w-full"
@@ -129,12 +128,9 @@ export default function HomePage() {
           </div>
 
           {/* Features 섹션 아래 인-피드 광고 */}
-          {getAdSensePublisherId() && (
+          {isAdSenseEnabled() && (
             <div className="mt-8">
-              <AdSenseInFeed
-                adSlot={`${getAdSensePublisherId()}/home-features-feed`}
-                className="w-full"
-              />
+              <AdSenseInFeed className="w-full" />
             </div>
           )}
         </div>

@@ -17,7 +17,7 @@ import CelebritySection from '@/components/zodiac/CelebritySection';
 import MythologySection from '@/components/zodiac/MythologySection';
 import ShareButton from '@/components/ui/ShareButton';
 import { AdSenseInArticle } from '@/components/ads';
-import { getAdSensePublisherId } from '@/lib/adsense-config';
+import { isAdSenseEnabled } from '@/lib/adsense-config';
 import { getSiteUrl } from '@/lib/site-url';
 import Breadcrumbs from '@/components/seo/Breadcrumbs';
 import JsonLd from '@/components/seo/JsonLd';
@@ -223,12 +223,9 @@ export default async function ZodiacDetailPage({ params }: PageProps) {
         </div>
 
         {/* 콘텐츠 중간 인-아티클 광고 */}
-        {getAdSensePublisherId() && (
+        {isAdSenseEnabled() && (
           <div className="mt-8">
-            <AdSenseInArticle
-              adSlot={`${getAdSensePublisherId()}/zodiac-detail-in-article`}
-              className="w-full"
-            />
+            <AdSenseInArticle className="w-full" />
           </div>
         )}
 

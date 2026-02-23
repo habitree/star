@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import CompatibilityForm from '@/components/compatibility/CompatibilityForm';
 import { AdSenseUnit } from '@/components/ads';
-import { getAdSensePublisherId } from '@/lib/adsense-config';
+import { isAdSenseEnabled } from '@/lib/adsense-config';
 import { getSiteUrl } from '@/lib/site-url';
 
 const baseUrl = getSiteUrl();
@@ -48,10 +48,9 @@ export default async function CompatibilityPage() {
         <CompatibilityForm />
 
         {/* 폼 아래 배너 광고 */}
-        {getAdSensePublisherId() && (
+        {isAdSenseEnabled() && (
           <div className="mt-8">
             <AdSenseUnit
-              adSlot={`${getAdSensePublisherId()}/compatibility-form-banner`}
               adFormat="auto"
               responsive={true}
               className="w-full"

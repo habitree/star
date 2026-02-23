@@ -10,7 +10,7 @@ import { zodiacData } from '@/data/zodiac-info';
 import ScoreBar from '@/components/ui/ScoreBar';
 import ShareButton from '@/components/ui/ShareButton';
 import { AdSenseUnit, AdSenseInArticle } from '@/components/ads';
-import { getAdSensePublisherId } from '@/lib/adsense-config';
+import { isAdSenseEnabled } from '@/lib/adsense-config';
 import { getSiteUrl } from '@/lib/site-url';
 import Breadcrumbs from '@/components/seo/Breadcrumbs';
 import JsonLd from '@/components/seo/JsonLd';
@@ -159,10 +159,9 @@ export default async function SignDailyHoroscopePage({
         </div>
 
         {/* 콘텐츠 상단 배너 광고 */}
-        {getAdSensePublisherId() && (
+        {isAdSenseEnabled() && (
           <div className="mb-8">
             <AdSenseUnit
-              adSlot={`${getAdSensePublisherId()}/horoscope-daily-top`}
               adFormat="auto"
               responsive={true}
               className="w-full"
@@ -217,12 +216,9 @@ export default async function SignDailyHoroscopePage({
                 </div>
 
                 {/* 카테고리 사이 인-아티클 광고 (중간에 한 번만) */}
-                {index === Math.floor(categories.length / 2) - 1 && getAdSensePublisherId() && (
+                {index === Math.floor(categories.length / 2) - 1 && isAdSenseEnabled() && (
                   <div className="my-6">
-                    <AdSenseInArticle
-                      adSlot={`${getAdSensePublisherId()}/horoscope-daily-in-article`}
-                      className="w-full"
-                    />
+                    <AdSenseInArticle className="w-full" />
                   </div>
                 )}
               </div>
@@ -318,10 +314,9 @@ export default async function SignDailyHoroscopePage({
         </section>
 
         {/* 콘텐츠 하단 배너 광고 */}
-        {getAdSensePublisherId() && (
+        {isAdSenseEnabled() && (
           <div className="mb-8">
             <AdSenseUnit
-              adSlot={`${getAdSensePublisherId()}/horoscope-daily-bottom`}
               adFormat="auto"
               responsive={true}
               className="w-full"

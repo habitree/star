@@ -5,7 +5,7 @@ import type { BirthChartInput, BirthChartResult as BirthChartResultType } from '
 import BirthChartForm from '@/components/birth-chart/BirthChartForm';
 import BirthChartResult from '@/components/birth-chart/BirthChartResult';
 import { AdSenseUnit } from '@/components/ads';
-import { getAdSensePublisherId } from '@/lib/adsense-config';
+import { isAdSenseEnabled } from '@/lib/adsense-config';
 
 export default function BirthChartPage() {
   const [result, setResult] = useState<BirthChartResultType | null>(null);
@@ -199,10 +199,9 @@ export default function BirthChartPage() {
             <BirthChartResult result={result} />
 
             {/* 결과 아래 배너 광고 */}
-            {getAdSensePublisherId() && (
+            {isAdSenseEnabled() && (
               <div className="mt-8">
                 <AdSenseUnit
-                  adSlot={`${getAdSensePublisherId()}/birth-chart-result-banner`}
                   adFormat="auto"
                   responsive={true}
                   className="w-full"

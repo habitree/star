@@ -428,16 +428,75 @@ export function generateMonthlyHoroscope(
     const category = selectRandom(categories, random);
     const isPositive = random() > 0.3; // 70% 확률로 긍정적
 
+    // 카테고리별 + 긍정/부정 세분화된 주요 날짜 설명
+    const positiveDescByCategory: Record<HoroscopeCategory, LocalizedText[]> = {
+      overall: [
+        { ko: '좋은 기회가 찾아오는 날', en: 'A day when good opportunities come', zh: '好机会到来的一天', ja: '良い機会が訪れる日', es: 'Un día cuando llegan buenas oportunidades' },
+        { ko: '행운이 함께하는 날', en: 'A day with luck', zh: '幸运伴随的一天', ja: '幸運が一緒の日', es: 'Un día con suerte' },
+        { ko: '중요한 결정을 내리기 좋은 날', en: 'A good day to make important decisions', zh: '适合做重要决定的一天', ja: '重要な決定を下すのに良い日', es: 'Un buen día para tomar decisiones importantes' },
+        { ko: '에너지가 최고조에 달하는 날', en: 'A day when energy peaks', zh: '能量达到顶峰的一天', ja: 'エネルギーが最高潮に達する日', es: 'Un día cuando la energía alcanza su punto máximo' },
+        { ko: '모든 일이 순조롭게 흘러가는 날', en: 'A day when everything flows smoothly', zh: '一切顺利的一天', ja: 'すべてが順調に流れる日', es: 'Un día cuando todo fluye sin problemas' },
+      ],
+      love: [
+        { ko: '로맨틱한 만남이 기대되는 날', en: 'A day when romantic encounters are expected', zh: '期待浪漫邂逅的一天', ja: 'ロマンチックな出会いが期待される日', es: 'Un día cuando se esperan encuentros románticos' },
+        { ko: '연인과의 관계가 깊어지는 날', en: 'A day when relationships deepen', zh: '与恋人关系加深的一天', ja: '恋人との関係が深まる日', es: 'Un día cuando las relaciones se profundizan' },
+        { ko: '고백이나 프로포즈에 좋은 날', en: 'A good day for confession or proposal', zh: '适合告白或求婚的一天', ja: '告白やプロポーズに良い日', es: 'Un buen día para confesarse o proponer' },
+        { ko: '사랑의 행운이 찾아오는 날', en: 'A day when love luck arrives', zh: '爱情好运到来的一天', ja: '恋愛の幸運が訪れる日', es: 'Un día cuando llega la suerte en el amor' },
+        { ko: '마음이 통하는 대화가 이루어지는 날', en: 'A day for heartfelt conversations', zh: '心灵相通的对话实现的一天', ja: '心が通じ合う会話が実現する日', es: 'Un día para conversaciones sinceras' },
+      ],
+      career: [
+        { ko: '업무에서 큰 성과를 거두는 날', en: 'A day of great achievement at work', zh: '工作中取得大成就的一天', ja: '仕事で大きな成果を収める日', es: 'Un día de gran logro en el trabajo' },
+        { ko: '승진이나 인정의 기회가 오는 날', en: 'A day when promotion or recognition comes', zh: '升职或被认可的机会来临的一天', ja: '昇進や認められるチャンスが来る日', es: 'Un día cuando llegan oportunidades de ascenso' },
+        { ko: '새로운 프로젝트를 시작하기 좋은 날', en: 'A good day to start new projects', zh: '适合开始新项目的一天', ja: '新しいプロジェクトを始めるのに良い日', es: 'Un buen día para iniciar nuevos proyectos' },
+        { ko: '비즈니스 미팅에서 좋은 결과가 기대되는 날', en: 'A day when good results are expected from business meetings', zh: '商务会议有望取得好结果的一天', ja: 'ビジネスミーティングで良い結果が期待される日', es: 'Un día cuando se esperan buenos resultados en reuniones de negocios' },
+        { ko: '아이디어가 빛나고 창의력이 폭발하는 날', en: 'A day when ideas shine and creativity explodes', zh: '创意闪耀、创造力爆发的一天', ja: 'アイデアが輝き創造力が爆発する日', es: 'Un día cuando las ideas brillan y la creatividad explota' },
+      ],
+      health: [
+        { ko: '새로운 운동을 시작하기 좋은 날', en: 'A good day to start new exercise', zh: '适合开始新运动的一天', ja: '新しい運動を始めるのに良い日', es: 'Un buen día para comenzar nuevo ejercicio' },
+        { ko: '활력이 넘치고 컨디션이 최고인 날', en: 'A day full of vitality with peak condition', zh: '充满活力、状态最佳的一天', ja: '活力に満ち体調が最高の日', es: 'Un día lleno de vitalidad con condición óptima' },
+        { ko: '건강 습관 전환에 최적의 날', en: 'An optimal day for changing health habits', zh: '改变健康习惯的最佳一天', ja: '健康習慣の転換に最適な日', es: 'Un día óptimo para cambiar hábitos de salud' },
+        { ko: '심신이 안정되고 회복력이 높은 날', en: 'A day of mental and physical stability with high recovery', zh: '身心稳定、恢复力强的一天', ja: '心身が安定し回復力が高い日', es: 'Un día de estabilidad mental y física con alta recuperación' },
+      ],
+      money: [
+        { ko: '재물운이 크게 상승하는 날', en: 'A day of greatly rising financial fortune', zh: '财运大幅上升的一天', ja: '金運が大きく上昇する日', es: 'Un día de gran aumento en la fortuna financiera' },
+        { ko: '투자 결정에 좋은 날', en: 'A good day for investment decisions', zh: '适合做投资决定的一天', ja: '投資の決定に良い日', es: 'Un buen día para decisiones de inversión' },
+        { ko: '예상치 못한 수입이 생기는 날', en: 'A day when unexpected income arrives', zh: '有意外收入的一天', ja: '予想外の収入がある日', es: 'Un día cuando llegan ingresos inesperados' },
+        { ko: '금전적 협상에서 유리한 결과를 얻는 날', en: 'A day for favorable results in financial negotiations', zh: '在金钱谈判中获得有利结果的一天', ja: '金銭的な交渉で有利な結果を得る日', es: 'Un día para resultados favorables en negociaciones financieras' },
+        { ko: '쇼핑이나 거래에서 좋은 딜을 만나는 날', en: 'A day for finding good deals in shopping or trading', zh: '购物或交易中遇到好价格的一天', ja: 'ショッピングや取引で良いディールに出会う日', es: 'Un día para encontrar buenas ofertas en compras o negocios' },
+      ],
+    };
+    const negativeDescByCategory: Record<HoroscopeCategory, LocalizedText[]> = {
+      overall: [
+        { ko: '주의가 필요한 날', en: 'A day that requires caution', zh: '需要注意的一天', ja: '注意が必要な日', es: 'Un día que requiere precaución' },
+        { ko: '신중함이 필요한 날', en: 'A day that requires prudence', zh: '需要谨慎的一天', ja: '慎重さが必要な日', es: 'Un día que requiere prudencia' },
+        { ko: '에너지가 낮아 휴식이 필요한 날', en: 'A low energy day requiring rest', zh: '能量低需要休息的一天', ja: 'エネルギーが低く休息が必要な日', es: 'Un día de baja energía que requiere descanso' },
+        { ko: '예상치 못한 변수가 생길 수 있는 날', en: 'A day when unexpected variables may arise', zh: '可能出现意想不到变数的一天', ja: '予想外の変数が生じうる日', es: 'Un día cuando pueden surgir variables inesperadas' },
+      ],
+      love: [
+        { ko: '연인과의 갈등에 주의해야 하는 날', en: 'A day to watch for conflicts with your partner', zh: '需要注意与恋人冲突的一天', ja: '恋人との葛藤に注意すべき日', es: 'Un día para cuidar conflictos con tu pareja' },
+        { ko: '감정적 결정을 피해야 하는 날', en: 'A day to avoid emotional decisions', zh: '应避免感性决定的一天', ja: '感情的な決定を避けるべき日', es: 'Un día para evitar decisiones emocionales' },
+        { ko: '오해가 생기기 쉬운 날', en: 'A day when misunderstandings arise easily', zh: '容易产生误解的一天', ja: '誤解が生じやすい日', es: 'Un día cuando los malentendidos surgen fácilmente' },
+      ],
+      career: [
+        { ko: '업무 실수에 주의해야 하는 날', en: 'A day to watch for work mistakes', zh: '需要注意工作失误的一天', ja: '仕事のミスに注意すべき日', es: 'Un día para cuidar errores en el trabajo' },
+        { ko: '동료와의 갈등이 생길 수 있는 날', en: 'A day when conflicts with colleagues may arise', zh: '可能与同事发生冲突的一天', ja: '同僚との衝突が生じうる日', es: 'Un día cuando pueden surgir conflictos con colegas' },
+        { ko: '중요한 결정을 미루는 것이 좋은 날', en: 'A day better for postponing important decisions', zh: '最好推迟重要决定的一天', ja: '重要な決定を延期した方が良い日', es: 'Un día mejor para posponer decisiones importantes' },
+      ],
+      health: [
+        { ko: '체력 소모가 큰 날이므로 무리하지 마세요', en: 'A physically demanding day, so do not overexert', zh: '体力消耗大的一天，不要勉强', ja: '体力消耗が大きい日なので無理しないでください', es: 'Un día de gran desgaste físico, no te excedas' },
+        { ko: '면역력이 약해지기 쉬운 날', en: 'A day when immunity weakens easily', zh: '免疫力容易下降的一天', ja: '免疫力が弱まりやすい日', es: 'Un día cuando la inmunidad se debilita fácilmente' },
+        { ko: '스트레스 관리에 주의가 필요한 날', en: 'A day requiring attention to stress management', zh: '需要注意压力管理的一天', ja: 'ストレス管理に注意が必要な日', es: 'Un día que requiere atención al manejo del estrés' },
+      ],
+      money: [
+        { ko: '충동 구매를 조심해야 하는 날', en: 'A day to beware of impulse buying', zh: '需要小心冲动购物的一天', ja: '衝動買いに気をつけるべき日', es: 'Un día para cuidar las compras impulsivas' },
+        { ko: '투자 결정을 미루는 것이 좋은 날', en: 'A day better for postponing investment decisions', zh: '最好推迟投资决定的一天', ja: '投資の決定を延期した方が良い日', es: 'Un día mejor para posponer decisiones de inversión' },
+        { ko: '예상치 못한 지출이 발생할 수 있는 날', en: 'A day when unexpected expenses may occur', zh: '可能有意外支出的一天', ja: '予想外の支出が発生しうる日', es: 'Un día cuando pueden ocurrir gastos inesperados' },
+        { ko: '금전 관련 계약 시 꼼꼼한 확인이 필요한 날', en: 'A day requiring careful review of financial contracts', zh: '签订金钱相关合同时需要仔细确认的一天', ja: '金銭関連の契約時に細かい確認が必要な日', es: 'Un día que requiere revisión cuidadosa de contratos financieros' },
+      ],
+    };
     const keyDateDescriptions: LocalizedText[] = isPositive
-      ? [
-          { ko: '좋은 기회가 찾아오는 날', en: 'A day when good opportunities come', zh: '好机会到来的一天', ja: '良い機会が訪れる日', es: 'Un día cuando llegan buenas oportunidades' },
-          { ko: '행운이 함께하는 날', en: 'A day with luck', zh: '幸运伴随的一天', ja: '幸運が一緒の日', es: 'Un día con suerte' },
-          { ko: '중요한 결정을 내리기 좋은 날', en: 'A good day to make important decisions', zh: '适合做重要决定的一天', ja: '重要な決定を下すのに良い日', es: 'Un buen día para tomar decisiones importantes' },
-        ]
-      : [
-          { ko: '주의가 필요한 날', en: 'A day that requires caution', zh: '需要注意的一天', ja: '注意が必要な日', es: 'Un día que requiere precaución' },
-          { ko: '신중함이 필요한 날', en: 'A day that requires prudence', zh: '需要谨慎的一天', ja: '慎重さが必要な日', es: 'Un día que requiere prudencia' },
-        ];
+      ? positiveDescByCategory[category]
+      : negativeDescByCategory[category];
 
     keyDates.push({
       date: toISODateString(keyDate),

@@ -1,5 +1,35 @@
-# Google AdSense / 검색엔진 크롤러 접근 허용
+# Google 검색엔진 크롤러
+User-agent: Googlebot
+Allow: /
+
+# Google AdSense 크롤러 (광고 매칭용) - 반드시 허용
+User-agent: Mediapartners-Google
+Allow: /
+
+# Google AdsBot (광고 품질 검사용)
+User-agent: AdsBot-Google
+Allow: /
+
+# Google AdsBot 모바일
+User-agent: AdsBot-Google-Mobile
+Allow: /
+
+# Google 이미지 봇
+User-agent: Googlebot-Image
+Allow: /
+
+# Bing 검색엔진
+User-agent: Bingbot
+Allow: /
+
+# 네이버 검색엔진
+User-agent: Yeti
+Allow: /
+
+# 일반 검색엔진 크롤러
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /_next/static/
 
 Sitemap: https://luckytoday.one/sitemap.xml

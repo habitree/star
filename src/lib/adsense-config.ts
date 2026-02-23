@@ -1,42 +1,45 @@
 /**
  * Google AdSense 설정 관리
+ * Publisher ID: ca-pub-4166976105261105
  */
 
-// Publisher ID 가져오기
-export const getAdSensePublisherId = (): string | undefined => {
-  return process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID;
+const PUBLISHER_ID = 'ca-pub-4166976105261105';
+
+/** Publisher ID 가져오기 */
+export const getAdSensePublisherId = (): string => {
+  return process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID || PUBLISHER_ID;
 };
 
-// AdSense 활성화 여부 확인
+/** AdSense 활성화 여부 확인 */
 export const isAdSenseEnabled = (): boolean => {
-  const publisherId = getAdSensePublisherId();
-  
-  // Publisher ID가 없으면 비활성화
-  if (!publisherId) {
-    return false;
-  }
-
-  // 개발 환경에서도 광고를 표시할 수 있도록 설정
-  // 필요시 아래 주석을 해제하여 개발 환경에서 비활성화
-  // if (process.env.NODE_ENV === 'development') {
-  //   return false;
-  // }
-
-  return true;
+  return !!getAdSensePublisherId();
 };
 
-// 광고 표시 조건 확인
+/** 광고 표시 조건 확인 */
 export const shouldShowAds = (): boolean => {
   return isAdSenseEnabled();
 };
 
-// 광고 슬롯 ID 생성 헬퍼
-export const createAdSlotId = (slotName: string): string => {
-  const publisherId = getAdSensePublisherId();
-  if (!publisherId) {
-    return '';
-  }
-  // AdSense 슬롯 ID 형식: publisherId/slotName
-  return `${publisherId}/${slotName}`;
+/** adsbygoogle 스크립트 로드 대기 */
+export const waitForAdSense = (): Promise<void> => {
+  return new Promise((resolve) => {
+    if (typeof window === 'undefined') {
+      resolve();
+      return;
+    }
+    // 이미 로드된 경우
+    if ((window as any).adsbygoogle) {
+      resolve();
+      return;
+    }
+    // 스크립트 로드 대기 (최대 5초)
+    let elapsed = 0;
+    const interval = setInterval(() => {
+      elapsed += 100;
+      if ((window as any).adsbygoogle || elapsed >= 5000) {
+        clearInterval(interval);
+        resolve();
+      }
+    }, 100);
+  });
 };
-
