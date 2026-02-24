@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { AdSenseUnit } from '@/components/ads';
+import { isAdSenseEnabled } from '@/lib/adsense-config';
 import { getSiteUrl } from '@/lib/site-url';
 
 const baseUrl = getSiteUrl();
@@ -102,6 +104,13 @@ export default function AboutPage() {
               전문가와 상담하시기 바랍니다.
             </p>
           </div>
+
+          {/* AdSense */}
+          {isAdSenseEnabled() && (
+            <div className="mt-4">
+              <AdSenseUnit adFormat="auto" responsive />
+            </div>
+          )}
 
           {/* CTA */}
           <div className="text-center py-8">

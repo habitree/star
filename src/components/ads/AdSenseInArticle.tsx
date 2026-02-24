@@ -71,7 +71,7 @@ export default function AdSenseInArticle({
     <div
       ref={adRef}
       className={`adsense-in-article ${className}`}
-      style={{ minHeight: '250px', margin: '2rem 0' }}
+      style={{ minHeight: '280px', margin: '2rem 0' }}
     />
   );
 }

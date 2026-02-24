@@ -55,9 +55,23 @@ export default function FavoritesSection({ className = '' }: FavoritesSectionPro
     return () => unsubscribe();
   }, [mounted]);
 
-  // 즐겨찾기가 없으면 렌더링하지 않음
-  if (!mounted || favorites.length === 0) {
-    return null;
+  if (!mounted) return null;
+
+  // 즐겨찾기가 없으면 안내 표시
+  if (favorites.length === 0) {
+    return (
+      <section className={`${className}`}>
+        <div className="glass-card p-6 text-center">
+          <span className="text-3xl mb-3 inline-block">&#x2B50;</span>
+          <p className="text-white/70 text-sm mb-3">
+            자주 보는 별자리를 즐겨찾기에 추가해보세요
+          </p>
+          <Link href="/zodiac" className="text-zodiac-primary text-sm hover:underline transition-colors">
+            별자리 목록 보기 &rarr;
+          </Link>
+        </div>
+      </section>
+    );
   }
 
   return (
@@ -102,7 +116,7 @@ export default function FavoritesSection({ className = '' }: FavoritesSectionPro
               </Link>
 
               {/* 즐겨찾기 해제 버튼 */}
-              <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="absolute top-1 right-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                 <FavoriteButton signId={fav.signId} size="sm" />
               </div>
             </div>

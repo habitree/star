@@ -53,6 +53,13 @@ const config: Config = {
         'twinkle': 'twinkle 3s ease-in-out infinite alternate',
         'float': 'float 6s ease-in-out infinite',
         'glow-pulse': 'glow-pulse 3s ease-in-out infinite',
+        'slide-up': 'slideUp 0.4s ease-out',
+      },
+      keyframes: {
+        slideUp: {
+          '0%': { transform: 'translateY(100%)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
       },
       backgroundImage: {
         'gradient-fire': 'linear-gradient(135deg, #ef4444 0%, #fca5a5 100%)',

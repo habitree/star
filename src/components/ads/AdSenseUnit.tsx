@@ -77,7 +77,7 @@ export default function AdSenseUnit({
     <div
       ref={adRef}
       className={`adsense-container ${className}`}
-      style={{ minHeight: '100px' }}
+      style={{ minHeight: '250px' }}
     />
   );
 }

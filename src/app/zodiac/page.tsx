@@ -2,6 +2,9 @@ import { Metadata } from 'next';
 import { zodiacSigns } from '@/data/zodiac-signs';
 import { type Element, type ZodiacSign } from '@/types/zodiac';
 import ZodiacCard from '@/components/ui/ZodiacCard';
+import Breadcrumbs from '@/components/seo/Breadcrumbs';
+import { AdSenseUnit } from '@/components/ads';
+import { isAdSenseEnabled } from '@/lib/adsense-config';
 import { getSiteUrl } from '@/lib/site-url';
 
 const baseUrl = getSiteUrl();
@@ -74,6 +77,14 @@ export default async function ZodiacListPage() {
   return (
     <div className="min-h-screen py-12 px-4">
       <div className="max-w-6xl mx-auto">
+        <Breadcrumbs
+          baseUrl={baseUrl}
+          items={[
+            { label: '홈', href: '/' },
+            { label: '별자리', href: '/zodiac' },
+          ]}
+          className="mb-6"
+        />
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="font-display text-4xl md:text-5xl font-bold mb-4">
@@ -116,6 +127,13 @@ export default async function ZodiacListPage() {
             </section>
           ))}
         </div>
+
+        {/* AdSense */}
+        {isAdSenseEnabled() && (
+          <div className="mt-12">
+            <AdSenseUnit adFormat="auto" responsive />
+          </div>
+        )}
       </div>
     </div>
   );

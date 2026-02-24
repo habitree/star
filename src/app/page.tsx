@@ -1,10 +1,12 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ZodiacCard from '@/components/ui/ZodiacCard';
 import FavoritesSection from '@/components/ui/FavoritesSection';
 import { AdSenseUnit, AdSenseInFeed } from '@/components/ads';
 import { isAdSenseEnabled } from '@/lib/adsense-config';
+import { useUserStore } from '@/stores/user-store';
 import { type ZodiacSignId } from '@/types/zodiac';
 
 const zodiacSigns: ZodiacSignId[] = [
@@ -23,6 +25,20 @@ const zodiacSigns: ZodiacSignId[] = [
 ];
 
 export default function HomePage() {
+  const [showOnboardingPrompt, setShowOnboardingPrompt] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+
+  useEffect(() => {
+    // 3초 후 비침습적 온보딩 프롬프트 표시
+    const timer = setTimeout(() => {
+      const state = useUserStore.getState();
+      if (!state.birthDate && !state.onboardingCompleted) {
+        setShowOnboardingPrompt(true);
+      }
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="min-h-screen">
       {/* Cosmic Hero Section */}
@@ -48,6 +64,16 @@ export default function HomePage() {
           <p className="text-lg md:text-2xl text-white/80 max-w-2xl mx-auto mb-12 font-light leading-relaxed">
             12별자리의 오늘의 운세, 별자리 궁합, 나만의 출생 차트를 통해 별들이 들려주는 신비로운 이야기를 들어보세요.
           </p>
+
+          {/* Primary CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/horoscope" className="btn-primary text-center px-8 py-4 text-lg">
+              오늘의 운세 보기
+            </Link>
+            <Link href="/zodiac" className="btn-secondary text-center px-8 py-4 text-lg">
+              내 별자리 찾기
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -147,6 +173,33 @@ export default function HomePage() {
           )}
         </div>
       </section>
+
+      {/* 비침습적 온보딩 프롬프트 (신규 사용자, 3초 후 표시) */}
+      {showOnboardingPrompt && !dismissed && (
+        <div className="fixed bottom-4 left-4 right-4 z-50 max-w-md mx-auto animate-slide-up">
+          <div className="glass-card p-5 border-zodiac-primary/30 bg-gradient-to-r from-zodiac-primary/20 to-purple-500/20 shadow-2xl">
+            <button
+              onClick={() => setDismissed(true)}
+              className="absolute top-2 right-3 text-white/40 hover:text-white text-lg"
+              aria-label="닫기"
+            >
+              &times;
+            </button>
+            <p className="text-white font-medium text-sm mb-2">
+              생년월일을 입력하면 맞춤 운세를 받을 수 있어요
+            </p>
+            <p className="text-white/60 text-xs mb-3">
+              나만의 별자리 운세, 바이오리듬, 타로까지 무료로 확인하세요
+            </p>
+            <Link
+              href="/horoscope"
+              className="inline-block px-5 py-2 rounded-full text-sm font-medium bg-zodiac-primary hover:bg-zodiac-primary/80 text-white transition-colors"
+            >
+              맞춤 운세 시작하기
+            </Link>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

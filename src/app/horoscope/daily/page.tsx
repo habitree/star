@@ -8,6 +8,8 @@ import Link from 'next/link';
 import { getAllDailyHoroscopes } from '@/lib/horoscope-generator';
 import { zodiacData } from '@/data/zodiac-info';
 import ScoreBar from '@/components/ui/ScoreBar';
+import { AdSenseUnit } from '@/components/ads';
+import { isAdSenseEnabled } from '@/lib/adsense-config';
 import { getSiteUrl } from '@/lib/site-url';
 import type { DailyHoroscope } from '@/types';
 
@@ -149,6 +151,13 @@ export default async function DailyHoroscopePage() {
             </div>
           ))}
         </div>
+
+        {/* AdSense */}
+        {isAdSenseEnabled() && (
+          <div className="mt-8">
+            <AdSenseUnit adFormat="auto" responsive />
+          </div>
+        )}
 
         {/* 운세 메인 페이지 링크 */}
         <div className="text-center mt-12">

@@ -150,7 +150,7 @@ export default function ZodiacCard({ sign, size = 'md', showFavorite = true }: Z
 
       {/* Favorite Button */}
       {showFavorite && (
-        <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+        <div className="absolute top-1 right-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity z-10">
           <FavoriteButton signId={sign} size="sm" />
         </div>
       )}

@@ -9,7 +9,7 @@ import type { HoroscopeCategory } from './horoscope';
 export type EmotionState = 'positive' | 'neutral' | 'negative';
 
 /** 스트릭 마일스톤 */
-export type StreakMilestone = 3 | 7 | 14 | 30 | 100;
+export type StreakMilestone = 3 | 7 | 14 | 30 | 45 | 60 | 75 | 90 | 100;
 
 /** 배지 정보 */
 export interface Badge {

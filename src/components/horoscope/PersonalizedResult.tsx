@@ -56,6 +56,7 @@ interface PersonalizedResultProps {
   ranking: FortuneRankingEntry[];
   compatibilityHighlight: { bestMatch: ZodiacSignId; score: number; message: string };
   contentStatuses?: Record<string, ContentLockStatus>;
+  visitStreak?: number;
   microStory?: MicroStoryData;
   tomorrowTeaser?: string;
 }
@@ -107,7 +108,7 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
   const getStatus = (id: string): ContentLockStatus =>
     contentStatuses?.[id] ?? 'unlocked';
 
-  const streak = 0; // Will be overridden by parent context when needed
+  const streak = props.visitStreak ?? 0;
 
   return (
     <div className="space-y-6 relative" style={cssVars}>

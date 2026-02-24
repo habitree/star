@@ -274,47 +274,42 @@ export const useUserStore = create<UserState>()(
         set({ birthDate: null, birthSign: null });
       },
 
+      // recordHoroscopeView는 날짜만 기록 (streak은 performCheckIn에서만 관리)
       recordHoroscopeView: () => {
         const today = new Date().toISOString().split('T')[0];
-        const { lastHoroscopeViewDate, visitStreak, longestStreak } = get();
+        const state = get();
 
-        if (lastHoroscopeViewDate === today) return; // 오늘 이미 기록됨
+        if (state.lastHoroscopeViewDate === today) return;
 
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        const yesterdayStr = yesterday.toISOString().split('T')[0];
-
-        const newStreak = lastHoroscopeViewDate === yesterdayStr
-          ? visitStreak + 1
-          : 1;
-
-        set({
-          lastHoroscopeViewDate: today,
-          visitStreak: newStreak,
-          longestStreak: Math.max(longestStreak, newStreak),
-        });
+        set({ lastHoroscopeViewDate: today });
       },
 
-      // 참여도/리텐션 액션
+      // 참여도/리텐션 액션 — streak의 유일한 업데이트 소스
       performCheckIn: () => {
         const today = new Date().toISOString().split('T')[0];
-        const { lastCheckInDate, visitStreak, longestStreak } = get();
+        // 항상 최신 상태를 읽어 race condition 방지
+        const state = useUserStore.getState();
 
-        if (lastCheckInDate === today) return;
+        if (state.lastCheckInDate === today) return;
 
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
         const yesterdayStr = yesterday.toISOString().split('T')[0];
 
-        const newStreak = lastCheckInDate === yesterdayStr
-          ? visitStreak + 1
-          : (visitStreak > 0 ? visitStreak : 1);
+        // 어제 체크인했거나 어제 운세를 봤으면 연속 방문으로 인정
+        const wasActiveYesterday =
+          state.lastCheckInDate === yesterdayStr ||
+          state.lastHoroscopeViewDate === yesterdayStr;
+
+        const newStreak = wasActiveYesterday
+          ? state.visitStreak + 1
+          : 1;
 
         set({
           todayCheckedIn: true,
           lastCheckInDate: today,
           visitStreak: newStreak,
-          longestStreak: Math.max(longestStreak, newStreak),
+          longestStreak: Math.max(state.longestStreak, newStreak),
         });
       },
 
@@ -352,7 +347,54 @@ export const useUserStore = create<UserState>()(
     }),
     {
       name: 'zodiac-user-store',
-      storage: createJSONStorage(() => localStorage),
+      version: 2,
+      storage: createJSONStorage(() => ({
+        getItem: (name: string) => {
+          try { return localStorage.getItem(name); }
+          catch { return null; }
+        },
+        setItem: (name: string, value: string) => {
+          try {
+            localStorage.setItem(name, value);
+          } catch {
+            // localStorage 용량 초과 시 히스토리 정리 후 재시도
+            try {
+              const parsed = JSON.parse(value);
+              if (parsed?.state?.history) {
+                parsed.state.history = parsed.state.history.slice(0, 20);
+              }
+              localStorage.setItem(name, JSON.stringify(parsed));
+            } catch {
+              // 최종 실패: 이벤트 로그 정리 후 재시도
+              try {
+                localStorage.removeItem('zodiac-engagement-events');
+                localStorage.setItem(name, value);
+              } catch {
+                // 복구 불가 — 데이터 유실 방지를 위해 무시
+              }
+            }
+          }
+        },
+        removeItem: (name: string) => {
+          try { localStorage.removeItem(name); } catch { /* ignore */ }
+        },
+      })),
+      migrate: (persistedState: unknown, version: number) => {
+        const state = persistedState as Record<string, unknown>;
+        if (version < 2) {
+          // v1 → v2: 리텐션 필드 기본값 보장
+          state.longestStreak = state.longestStreak ?? 0;
+          state.earnedBadges = state.earnedBadges ?? [];
+          state.unlockedContentIds = state.unlockedContentIds ?? [];
+          state.completedActions = state.completedActions ?? [];
+          state.onboardingCompleted = state.onboardingCompleted ?? false;
+          state.onboardingStep = state.onboardingStep ?? 'welcome';
+          state.todayCheckedIn = state.todayCheckedIn ?? false;
+          state.lastCheckInDate = state.lastCheckInDate ?? null;
+          state.lastChatDate = state.lastChatDate ?? null;
+        }
+        return state as unknown as UserState;
+      },
       partialize: (state) => ({
         favorites: state.favorites,
         history: state.history,

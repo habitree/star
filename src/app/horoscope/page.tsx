@@ -9,6 +9,9 @@ import { getTodayTopSigns, generateDailyHoroscope } from '@/lib/horoscope-genera
 import { zodiacData } from '@/data/zodiac-info';
 import { getSiteUrl } from '@/lib/site-url';
 import HoroscopeClientApp from '@/components/horoscope/HoroscopeClientApp';
+import Breadcrumbs from '@/components/seo/Breadcrumbs';
+import { AdSenseUnit } from '@/components/ads';
+import { isAdSenseEnabled } from '@/lib/adsense-config';
 import type { ZodiacSignId } from '@/types';
 
 const baseUrl = getSiteUrl();
@@ -47,6 +50,14 @@ export default async function HoroscopePage() {
   return (
     <div className="min-h-screen py-8 px-4">
       <div className="max-w-6xl mx-auto">
+        <Breadcrumbs
+          baseUrl={baseUrl}
+          items={[
+            { label: '홈', href: '/' },
+            { label: '오늘의 운세', href: '/horoscope' },
+          ]}
+          className="mb-6"
+        />
         {/* 페이지 제목 (SEO) */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-serif font-bold text-white mb-4">
@@ -187,6 +198,13 @@ export default async function HoroscopePage() {
             일일 운세 보기
           </Link>
         </div>
+
+        {/* AdSense */}
+        {isAdSenseEnabled() && (
+          <div className="mt-12">
+            <AdSenseUnit adFormat="auto" responsive />
+          </div>
+        )}
       </div>
     </div>
   );

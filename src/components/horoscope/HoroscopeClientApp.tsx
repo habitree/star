@@ -16,7 +16,7 @@ import { getBiorhythmWeek } from '@/lib/biorhythm';
 import { getNewlyEarnedReward } from '@/lib/streak-rewards';
 import { getContentStatus } from '@/lib/content-unlock';
 import { startSession, trackEvent } from '@/lib/engagement-tracker';
-import { getTodaySeasonalMessage } from '@/lib/seasonal-scheduler';
+import { getActiveEvents } from '@/lib/seasonal-scheduler';
 import { generateDailyMicroStory, getTomorrowTeaser } from '@/lib/micro-story';
 import { generateEmotionResponse } from '@/lib/emotion-response';
 import BirthDateForm from './BirthDateForm';
@@ -124,11 +124,12 @@ export default function HoroscopeClientApp() {
     }
   };
 
-  // 하이드레이션 전
+  // 하이드레이션 전 — 로딩 스피너 (BirthDateForm flash 방지)
   if (!hydrated) {
     return (
-      <div className="max-w-2xl mx-auto mt-8">
-        <BirthDateForm onSubmit={handleBirthDateSubmit} />
+      <div className="max-w-2xl mx-auto mt-8 flex flex-col items-center justify-center py-20">
+        <div className="w-10 h-10 border-2 border-white/20 border-t-zodiac-primary rounded-full animate-spin" />
+        <p className="mt-4 text-white/40 text-sm">운세를 불러오는 중...</p>
       </div>
     );
   }
@@ -201,8 +202,8 @@ export default function HoroscopeClientApp() {
   const compatibilityHighlight = generateCompatibilityHighlight(currentSign, today);
   const biorhythm = getBiorhythmWeek(currentBirthDate);
 
-  // 시즌 메시지
-  const seasonalMessage = getTodaySeasonalMessage(today);
+  // 시즌 이벤트 (다중 이벤트 지원)
+  const activeEvents = getActiveEvents(today);
 
   // 마이크로 스토리
   const microStory = generateDailyMicroStory(currentSign, today);
@@ -260,10 +261,15 @@ export default function HoroscopeClientApp() {
         />
       </div>
 
-      {/* 시즌 이벤트 메시지 */}
-      {seasonalMessage && (
-        <div className="glass-card p-4 mb-4 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border-indigo-500/20">
-          <p className="text-white/80 text-sm leading-relaxed">{seasonalMessage}</p>
+      {/* 시즌 이벤트 배너 (다중 표시) */}
+      {activeEvents.length > 0 && (
+        <div className="space-y-2 mb-4">
+          {activeEvents.slice(0, 3).map((event, i) => (
+            <div key={`${event.type}-${i}`} className="glass-card p-4 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border-indigo-500/20">
+              <p className="text-white/90 text-xs font-semibold mb-1">{event.name}</p>
+              <p className="text-white/70 text-sm leading-relaxed">{event.message}</p>
+            </div>
+          ))}
         </div>
       )}
 
@@ -297,6 +303,7 @@ export default function HoroscopeClientApp() {
         ranking={ranking}
         compatibilityHighlight={compatibilityHighlight}
         contentStatuses={contentStatuses}
+        visitStreak={visitStreak}
         microStory={microStory}
         tomorrowTeaser={tomorrowTeaser}
       />

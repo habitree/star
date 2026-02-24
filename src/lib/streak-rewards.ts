@@ -35,6 +35,34 @@ export const streakBadges: Record<StreakMilestone, Badge> = {
     icon: '🌙',
     requiredStreak: 30,
   },
+  45: {
+    id: 'streak-45',
+    name: '성운의 여행자',
+    description: '45일 연속! 성운 너머의 비밀이 열립니다. 별자리 심층 분석이 해금되었습니다.',
+    icon: '🌌',
+    requiredStreak: 45,
+  },
+  60: {
+    id: 'streak-60',
+    name: '은하수의 탐험가',
+    description: '60일 연속! 은하수를 건너는 여정이 계속됩니다. 행성 배치 리딩이 해금되었습니다.',
+    icon: '🪐',
+    requiredStreak: 60,
+  },
+  75: {
+    id: 'streak-75',
+    name: '별자리의 수호자',
+    description: '75일 연속! 별자리가 당신을 수호자로 인정합니다. 수호 별자리 리딩이 해금되었습니다.',
+    icon: '🛡️',
+    requiredStreak: 75,
+  },
+  90: {
+    id: 'streak-90',
+    name: '우주의 예언자',
+    description: '90일 연속! 우주의 흐름이 당신에게 속삭입니다. 분기 예측 리딩이 해금되었습니다.',
+    icon: '🌠',
+    requiredStreak: 90,
+  },
   100: {
     id: 'streak-100',
     name: '별의 현자',
@@ -71,6 +99,30 @@ export const streakRewards: StreakReward[] = [
     message: '전설적이에요! 🌙 30일 연속! 월간 종합 리딩이 해금되었습니다.',
   },
   {
+    milestone: 45,
+    badge: streakBadges[45],
+    unlockContent: 'deep-sign-analysis',
+    message: '놀라워요! 🌌 45일 연속! 별자리 심층 분석이 해금되었습니다.',
+  },
+  {
+    milestone: 60,
+    badge: streakBadges[60],
+    unlockContent: 'planet-reading',
+    message: '대단해요! 🪐 60일 연속! 행성 배치 리딩이 해금되었습니다.',
+  },
+  {
+    milestone: 75,
+    badge: streakBadges[75],
+    unlockContent: 'guardian-reading',
+    message: '경이로워요! 🛡️ 75일 연속! 수호 별자리 리딩이 해금되었습니다.',
+  },
+  {
+    milestone: 90,
+    badge: streakBadges[90],
+    unlockContent: 'quarterly-forecast',
+    message: '전설적이에요! 🌠 90일 연속! 분기 예측 리딩이 해금되었습니다.',
+  },
+  {
     milestone: 100,
     badge: streakBadges[100],
     unlockContent: 'hidden-content',
@@ -80,7 +132,7 @@ export const streakRewards: StreakReward[] = [
 
 /** 현재 스트릭에 해당하는 배지들 */
 export function getEarnedBadges(streak: number): Badge[] {
-  const milestones: StreakMilestone[] = [3, 7, 14, 30, 100];
+  const milestones: StreakMilestone[] = [3, 7, 14, 30, 45, 60, 75, 90, 100];
   return milestones
     .filter(m => streak >= m)
     .map(m => streakBadges[m]);
@@ -91,7 +143,7 @@ export function getDaysToNextMilestone(streak: number): {
   nextMilestone: StreakMilestone;
   daysRemaining: number;
 } | null {
-  const milestones: StreakMilestone[] = [3, 7, 14, 30, 100];
+  const milestones: StreakMilestone[] = [3, 7, 14, 30, 45, 60, 75, 90, 100];
   for (const milestone of milestones) {
     if (streak < milestone) {
       return {
@@ -123,6 +175,10 @@ export function getStreakLevel(streak: number): {
   color: string;
 } {
   if (streak >= 100) return { level: '별의 현자', icon: '👑', color: 'text-yellow-400' };
+  if (streak >= 90) return { level: '우주의 예언자', icon: '🌠', color: 'text-amber-400' };
+  if (streak >= 75) return { level: '별자리의 수호자', icon: '🛡️', color: 'text-rose-400' };
+  if (streak >= 60) return { level: '은하수의 탐험가', icon: '🪐', color: 'text-orange-400' };
+  if (streak >= 45) return { level: '성운의 여행자', icon: '🌌', color: 'text-indigo-400' };
   if (streak >= 30) return { level: '별의 동반자', icon: '🌙', color: 'text-purple-400' };
   if (streak >= 14) return { level: '우주의 탐구자', icon: '🔮', color: 'text-blue-400' };
   if (streak >= 7) return { level: '별빛 수집가', icon: '⭐', color: 'text-cyan-400' };

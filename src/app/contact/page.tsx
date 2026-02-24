@@ -1,4 +1,6 @@
 import { Metadata } from 'next';
+import { AdSenseUnit } from '@/components/ads';
+import { isAdSenseEnabled } from '@/lib/adsense-config';
 import { getSiteUrl } from '@/lib/site-url';
 
 const baseUrl = getSiteUrl();
@@ -97,6 +99,12 @@ export default function ContactPage() {
               </li>
             </ul>
           </div>
+          {/* AdSense */}
+          {isAdSenseEnabled() && (
+            <div className="mt-4">
+              <AdSenseUnit adFormat="auto" responsive />
+            </div>
+          )}
         </div>
       </div>
     </div>
