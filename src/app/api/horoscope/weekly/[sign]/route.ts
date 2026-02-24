@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { generateWeeklyHoroscope } from '@/lib/horoscope-generator';
+import { checkRateLimit } from '@/lib/rate-limiter';
 import {
   ApiError,
   ErrorCode,
@@ -27,6 +28,9 @@ export async function GET(
   { params }: { params: Promise<{ sign: string }> }
 ): Promise<NextResponse> {
   const startTime = Date.now();
+
+  const rateLimitResponse = checkRateLimit(request);
+  if (rateLimitResponse) return rateLimitResponse;
 
   try {
     const { sign } = await params;

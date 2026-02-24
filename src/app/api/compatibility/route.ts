@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { checkRateLimit } from '@/lib/rate-limiter';
 import { getCompatibilityData, getCompatibilityGrade, getGradeLabel } from '@/data/compatibility-data';
 import { zodiacSigns } from '@/data/zodiac-signs';
 import type { ZodiacSignId, CompatibilityResult, LocalizedText } from '@/types';
@@ -152,6 +153,9 @@ function getModalityDescription(modality1: string, modality2: string, locale: st
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse<ApiResponse<CompatibilityResult>>> {
+  const rateLimitResponse = checkRateLimit(request);
+  if (rateLimitResponse) return rateLimitResponse as NextResponse<ApiResponse<CompatibilityResult>>;
+
   try {
     const body: CompatibilityRequest = await request.json();
     const { sign1, sign2, locale = 'ko' } = body;
@@ -264,6 +268,9 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
 }
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
+  const rateLimitResponse = checkRateLimit(request);
+  if (rateLimitResponse) return rateLimitResponse;
+
   const { searchParams } = new URL(request.url);
   const sign1 = searchParams.get('sign1');
   const sign2 = searchParams.get('sign2');

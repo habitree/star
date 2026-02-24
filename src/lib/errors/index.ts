@@ -207,16 +207,40 @@ export function validateSign(sign: string): void {
   }
 }
 
-// 날짜 유효성 검사
+// 날짜 유효성 검사 (YYYY-MM-DD 형식 + 합리적 범위)
 export function validateDate(dateStr: string): Date {
-  const date = new Date(dateStr);
-  if (isNaN(date.getTime())) {
+  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!dateRegex.test(dateStr)) {
     throw new ApiError(
       ErrorCode.INVALID_DATE,
       `Invalid date format: ${dateStr}. Use YYYY-MM-DD format.`,
       { providedDate: dateStr, expectedFormat: 'YYYY-MM-DD' }
     );
   }
+
+  const date = new Date(dateStr + 'T00:00:00');
+  if (isNaN(date.getTime())) {
+    throw new ApiError(
+      ErrorCode.INVALID_DATE,
+      `Invalid date: ${dateStr}.`,
+      { providedDate: dateStr }
+    );
+  }
+
+  // 범위: 1900-01-01 ~ 내일
+  const minDate = new Date('1900-01-01T00:00:00');
+  const maxDate = new Date();
+  maxDate.setDate(maxDate.getDate() + 1);
+  maxDate.setHours(23, 59, 59, 999);
+
+  if (date < minDate || date > maxDate) {
+    throw new ApiError(
+      ErrorCode.INVALID_DATE,
+      `Date out of range: ${dateStr}. Must be between 1900-01-01 and tomorrow.`,
+      { providedDate: dateStr, validRange: { min: '1900-01-01', max: 'tomorrow' } }
+    );
+  }
+
   return date;
 }
 

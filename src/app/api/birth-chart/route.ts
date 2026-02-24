@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { calculateBirthChart } from '@/lib/astro-calculator';
+import { checkRateLimit } from '@/lib/rate-limiter';
 import type { BirthChartInput, BirthChartResult } from '@/types';
 
 /**
@@ -7,6 +8,9 @@ import type { BirthChartInput, BirthChartResult } from '@/types';
  * POST /api/birth-chart
  */
 export async function POST(request: NextRequest) {
+  const rateLimitResponse = checkRateLimit(request);
+  if (rateLimitResponse) return rateLimitResponse;
+
   try {
     const body = await request.json();
 
