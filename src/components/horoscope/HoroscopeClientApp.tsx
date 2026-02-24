@@ -27,7 +27,7 @@ import DailyCheckIn from './DailyCheckIn';
 import StarIntro from './StarIntro';
 import FortuneChatBot from './FortuneChatBot';
 import StreakDashboard from './StreakDashboard';
-import type { ZodiacSignId, HoroscopeCategory } from '@/types';
+import type { ZodiacSignId, HoroscopeCategory, DetailedCategoryHoroscope, SubIndicator } from '@/types';
 import type { ContentLockStatus } from '@/types/engagement';
 
 export default function HoroscopeClientApp() {
@@ -161,6 +161,8 @@ export default function HoroscopeClientApp() {
   const today = new Date();
   const horoscope = generateDailyHoroscope(currentSign, today, 'ko');
 
+  const categories: HoroscopeCategory[] = ['overall', 'love', 'career', 'health', 'money'];
+
   const categoryScores: Record<HoroscopeCategory, 1 | 2 | 3 | 4 | 5> = {
     overall: horoscope.overall.score,
     love: horoscope.love.score,
@@ -177,8 +179,18 @@ export default function HoroscopeClientApp() {
     money: horoscope.money.text.ko,
   };
 
-  const totalScore = Object.values(categoryScores).reduce((a, b) => a + b, 0);
-  const overallPercent = Math.round((totalScore / 25) * 100);
+  // 세밀 점수 추출 (DetailedCategoryHoroscope)
+  const categoryDetailedScores = {} as Record<HoroscopeCategory, number>;
+  const categorySubIndicators = {} as Record<HoroscopeCategory, SubIndicator[]>;
+  for (const cat of categories) {
+    const catData = horoscope[cat] as DetailedCategoryHoroscope;
+    categoryDetailedScores[cat] = catData.detailedScore ?? (catData.score / 5) * 100;
+    categorySubIndicators[cat] = catData.subIndicators ?? [];
+  }
+
+  // overallPercent를 detailedScore 평균으로 계산
+  const detailedAvg = Object.values(categoryDetailedScores).reduce((a, b) => a + b, 0) / categories.length;
+  const overallPercent = Math.round(detailedAvg);
 
   const extendedLucky = generateExtendedLuckyElements(currentSign, today);
   const tarot = generateDailyTarot(currentSign, today);
@@ -212,17 +224,23 @@ export default function HoroscopeClientApp() {
     'weekly-report': getContentStatus('weekly-report', contentOptions),
   };
 
-  // 어제 점수
+  // 어제 점수 (세밀 점수 기반)
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
   const yesterdayHoroscope = generateDailyHoroscope(currentSign, yesterday, 'ko');
-  const yesterdayTotal =
-    yesterdayHoroscope.overall.score +
-    yesterdayHoroscope.love.score +
-    yesterdayHoroscope.career.score +
-    yesterdayHoroscope.health.score +
-    yesterdayHoroscope.money.score;
-  const yesterdayPercent = Math.round((yesterdayTotal / 25) * 100);
+  const yesterdayCategoryScores = {} as Record<HoroscopeCategory, number>;
+  let yesterdayDetailedTotal = 0;
+  for (const cat of categories) {
+    const catData = yesterdayHoroscope[cat] as DetailedCategoryHoroscope;
+    const dScore = catData.detailedScore ?? (catData.score / 5) * 100;
+    yesterdayCategoryScores[cat] = dScore;
+    yesterdayDetailedTotal += dScore;
+  }
+  const yesterdayPercent = Math.round(yesterdayDetailedTotal / categories.length);
+
+  // 순위에서 percentileRank 추출
+  const myRankEntry = ranking.find(e => e.signId === currentSign);
+  const percentileRank = myRankEntry?.percentile;
 
   return (
     <div className="max-w-2xl mx-auto mt-6">
@@ -265,6 +283,11 @@ export default function HoroscopeClientApp() {
         overallPercent={overallPercent}
         categoryScores={categoryScores}
         categoryTexts={categoryTexts}
+        categoryDetailedScores={categoryDetailedScores}
+        categorySubIndicators={categorySubIndicators}
+        yesterdayPercent={yesterdayPercent}
+        yesterdayCategoryScores={yesterdayCategoryScores}
+        percentileRank={percentileRank}
         affirmation={affirmation}
         timeFortunes={timeFortunes}
         extendedLucky={extendedLucky}

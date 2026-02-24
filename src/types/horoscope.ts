@@ -97,6 +97,22 @@ export interface HoroscopeRequestParams {
   locale?: string;
 }
 
+// 세밀 점수 (0-100)
+export type DetailedScore = number;
+
+// 서브지표
+export interface SubIndicator {
+  key: string;
+  label: string;
+  score: number; // 0-100
+}
+
+// 세밀 카테고리별 운세 정보 (하위호환)
+export interface DetailedCategoryHoroscope extends CategoryHoroscope {
+  detailedScore: DetailedScore;
+  subIndicators: SubIndicator[];
+}
+
 // 운세 응답 타입
 export interface HoroscopeResponse<T> {
   success: boolean;

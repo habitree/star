@@ -19,7 +19,7 @@ import LockedContent from './LockedContent';
 import ParticleEffect from './ParticleEffect';
 import TypingReveal from './TypingReveal';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
-import type { ZodiacSignId, HoroscopeCategory } from '@/types';
+import type { ZodiacSignId, HoroscopeCategory, SubIndicator } from '@/types';
 import type {
   ExtendedLuckyElements,
   TarotCard as TarotCardType,
@@ -42,6 +42,11 @@ interface PersonalizedResultProps {
   overallPercent: number;
   categoryScores: Record<HoroscopeCategory, 1 | 2 | 3 | 4 | 5>;
   categoryTexts: Record<HoroscopeCategory, string>;
+  categoryDetailedScores?: Record<HoroscopeCategory, number>;
+  categorySubIndicators?: Record<HoroscopeCategory, SubIndicator[]>;
+  yesterdayPercent?: number;
+  yesterdayCategoryScores?: Record<HoroscopeCategory, number>;
+  percentileRank?: number;
   affirmation: string;
   timeFortunes: TimeBasedFortuneType[];
   extendedLucky: ExtendedLuckyElements;
@@ -85,6 +90,8 @@ function RevealSection({ children, className = '', delay = 0 }: {
 export default function PersonalizedResult(props: PersonalizedResultProps) {
   const {
     signId, overallPercent, categoryScores, categoryTexts,
+    categoryDetailedScores, categorySubIndicators,
+    yesterdayPercent, yesterdayCategoryScores, percentileRank,
     affirmation, timeFortunes, extendedLucky, tarot,
     biorhythm, weeklyTrend, ranking, compatibilityHighlight,
     contentStatuses,
@@ -133,7 +140,13 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
 
       {/* ② 종합 점수 게이지 */}
       <RevealSection delay={100}>
-        <OverallScoreGauge overallPercent={overallPercent} categoryScores={categoryScores} />
+        <OverallScoreGauge
+          overallPercent={overallPercent}
+          categoryScores={categoryScores}
+          categoryDetailedScores={categoryDetailedScores}
+          yesterdayPercent={yesterdayPercent}
+          percentileRank={percentileRank}
+        />
       </RevealSection>
 
       {/* ③ 오늘의 확언 */}
@@ -163,18 +176,36 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
       <RevealSection>
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-white text-center">카테고리별 운세</h3>
-          {categoryMeta.map(({ key, label, icon }) => (
-            <div key={key} className="glass-card p-5">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-lg">{icon}</span>
-                <span className="text-white font-medium text-sm">{label}</span>
+          {categoryMeta.map(({ key, label, icon }) => {
+            const dScore = categoryDetailedScores?.[key];
+            const subs = categorySubIndicators?.[key];
+            const yesterdayDScore = yesterdayCategoryScores?.[key];
+            const delta = dScore != null && yesterdayDScore != null ? dScore - yesterdayDScore : null;
+
+            return (
+              <div key={key} className="glass-card p-5">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-lg">{icon}</span>
+                  <span className="text-white font-medium text-sm">{label}</span>
+                  {delta != null && delta !== 0 && (
+                    <span className={`text-xs font-medium ml-auto ${delta > 0 ? 'score-up' : 'score-down'}`}>
+                      {delta > 0 ? '▲' : '▼'}{Math.abs(delta)}
+                    </span>
+                  )}
+                </div>
+                <div className="mb-3">
+                  <ScoreBar
+                    score={categoryScores[key]}
+                    variant="detailed"
+                    showValue
+                    detailedScore={dScore}
+                    subIndicators={subs}
+                  />
+                </div>
+                <p className="text-white/75 text-sm leading-relaxed">{categoryTexts[key]}</p>
               </div>
-              <div className="mb-3">
-                <ScoreBar score={categoryScores[key]} variant="stars" showValue />
-              </div>
-              <p className="text-white/75 text-sm leading-relaxed">{categoryTexts[key]}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </RevealSection>
 

@@ -23,7 +23,7 @@ import { isAdSenseEnabled } from '@/lib/adsense-config';
 import { getSiteUrl } from '@/lib/site-url';
 import Breadcrumbs from '@/components/seo/Breadcrumbs';
 import JsonLd from '@/components/seo/JsonLd';
-import type { ZodiacSignId, HoroscopeCategory } from '@/types';
+import type { ZodiacSignId, HoroscopeCategory, DetailedCategoryHoroscope } from '@/types';
 
 // 유효한 별자리 목록
 const validSigns: ZodiacSignId[] = [
@@ -242,11 +242,22 @@ export default async function SignDailyHoroscopePage({
               <div key={f.period} className="p-4 bg-white/5 rounded-xl">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-white font-medium">{f.label} <span className="text-xs text-white/40">{f.timeRange}</span></span>
-                  <div className="flex gap-0.5">
-                    {[1, 2, 3, 4, 5].map(s => (
-                      <span key={s} className={`text-sm ${s <= f.score ? 'star-filled' : 'star-empty'}`}>★</span>
-                    ))}
+                  <div className="flex items-center gap-2">
+                    <div className="flex gap-0.5">
+                      {[1, 2, 3, 4, 5].map(s => (
+                        <span key={s} className={`text-sm ${s <= f.score ? 'star-filled' : 'star-empty'}`}>★</span>
+                      ))}
+                    </div>
+                    <span className="text-xs font-bold text-white/60 px-1.5 py-0.5 rounded bg-white/10 tabular-nums">
+                      {f.detailedScore}점
+                    </span>
                   </div>
+                </div>
+                <div className="h-1 rounded-full bg-white/10 overflow-hidden mb-2">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-500"
+                    style={{ width: `${f.detailedScore}%` }}
+                  />
                 </div>
                 <p className="text-white/75 text-sm leading-relaxed">{f.description}</p>
                 <p className="text-xs text-white/40 mt-1">💡 {f.tip}</p>
@@ -258,7 +269,8 @@ export default async function SignDailyHoroscopePage({
         {/* 카테고리별 운세 */}
         <div className="space-y-6 mb-8">
           {categories.map((category, index) => {
-            const categoryData = dailyHoroscope[category];
+            const categoryData = dailyHoroscope[category] as DetailedCategoryHoroscope;
+            const dScore = categoryData.detailedScore;
             return (
               <div key={category}>
                 <div className="glass-card p-6">
@@ -267,11 +279,22 @@ export default async function SignDailyHoroscopePage({
                     <h3 className="text-lg font-semibold text-white">
                       {categoryLabels[category]}
                     </h3>
+                    {dScore != null && (
+                      <span className="text-sm font-bold text-white/60 ml-auto tabular-nums">
+                        {dScore}점
+                      </span>
+                    )}
                   </div>
 
                   {/* 점수 바 */}
                   <div className="mb-4">
-                    <ScoreBar score={categoryData.score} variant="stars" showValue />
+                    <ScoreBar
+                      score={categoryData.score}
+                      variant="detailed"
+                      showValue
+                      detailedScore={dScore}
+                      subIndicators={categoryData.subIndicators}
+                    />
                   </div>
 
                   {/* 운세 텍스트 */}

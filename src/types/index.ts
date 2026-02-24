@@ -23,6 +23,9 @@ export type { LocalizedString as LocalizedNames } from './zodiac';
 export type {
   HoroscopeCategory,
   HoroscopeScore,
+  DetailedScore,
+  SubIndicator,
+  DetailedCategoryHoroscope,
   LocalizedText,
   CategoryHoroscope,
   DailyHoroscope,

@@ -50,20 +50,40 @@ export default function TimeBasedFortune({ fortunes }: TimeBasedFortuneProps) {
 
       {/* 내용 */}
       {activeFortune && (
-        <div className="animate-fade-in-up">
+        <div
+          className="animate-fade-in-up rounded-xl p-4"
+          style={{
+            backgroundColor: `rgba(168, 85, 247, ${Math.min(0.15, activeFortune.detailedScore / 800)})`,
+          }}
+        >
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs text-white/40">{activeFortune.timeRange}</span>
-            <div className="flex gap-0.5">
-              {[1, 2, 3, 4, 5].map(s => (
-                <span
-                  key={s}
-                  className={`text-sm ${s <= activeFortune.score ? 'star-filled' : 'star-empty'}`}
-                >
-                  ★
-                </span>
-              ))}
+            <div className="flex items-center gap-2">
+              <div className="flex gap-0.5">
+                {[1, 2, 3, 4, 5].map(s => (
+                  <span
+                    key={s}
+                    className={`text-sm ${s <= activeFortune.score ? 'star-filled' : 'star-empty'}`}
+                  >
+                    ★
+                  </span>
+                ))}
+              </div>
+              {/* 점수 배지 */}
+              <span className="text-xs font-bold text-white/80 px-1.5 py-0.5 rounded bg-white/10 tabular-nums">
+                {activeFortune.detailedScore}점
+              </span>
             </div>
           </div>
+
+          {/* 퍼센트 바 */}
+          <div className="h-1 rounded-full bg-white/10 overflow-hidden mb-3">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-500"
+              style={{ width: `${activeFortune.detailedScore}%` }}
+            />
+          </div>
+
           <p className="text-white/85 text-sm leading-relaxed mb-3">
             {activeFortune.description}
           </p>

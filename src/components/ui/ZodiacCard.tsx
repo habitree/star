@@ -124,23 +124,27 @@ export default function ZodiacCard({ sign, size = 'md', showFavorite = true }: Z
   const classes = sizeClasses[size];
 
   return (
-    <div className="relative group">
+    <div className="relative group perspective-1000">
       <Link href={`/zodiac/${sign}`}>
         <div
           className={`
             glass-card-hover ${classes.container}
-            element-${data.element}
+            background-gradient-${data.element} relative overflow-hidden
             flex flex-col items-center text-center
-            cursor-pointer
+            cursor-pointer transform-gpu transition-all duration-300
+            hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(255,255,255,0.2)]
           `}
         >
-          <div className="mb-2 group-hover:scale-110 transition-transform duration-300">
+          {/* subtle glow overlay based on element */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+
+          <div className="mb-3 group-hover:scale-110 group-hover:drop-shadow-glow-primary transition-all duration-300 relative z-10 w-full flex justify-center">
             <ZodiacIcon sign={sign} size={iconSizeMap[size]} animated />
           </div>
-          <h3 className={`font-semibold ${classes.name} text-white mb-1`}>
+          <h3 className={`font-semibold ${classes.name} text-white mb-1 relative z-10 tracking-wide`}>
             {data.name}
           </h3>
-          <p className={`${classes.date} text-white/50`}>{data.dateRange}</p>
+          <p className={`${classes.date} text-white/60 font-medium relative z-10`}>{data.dateRange}</p>
         </div>
       </Link>
 

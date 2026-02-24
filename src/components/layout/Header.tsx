@@ -28,24 +28,25 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-lg bg-zodiac-dark/80 border-b border-white/10">
+    <header className="sticky top-0 z-50 backdrop-blur-xl bg-zodiac-dark/60 border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)]">
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-zodiac-primary/50 to-transparent" />
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <span className="text-2xl">&#x2B50;</span>
-            <span className="font-display text-xl font-bold text-gradient group-hover:opacity-80 transition-opacity">
+            <span className="text-2xl transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 drop-shadow-glow-primary">✨</span>
+            <span className="font-display text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-zodiac-light group-hover:from-zodiac-primary group-hover:to-zodiac-secondary transition-all">
               별자리 운세
             </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden md:flex items-center gap-2">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`nav-link ${isActive(item.href) ? 'active' : ''}`}
+                className={`nav-link text-sm font-medium tracking-wide ${isActive(item.href) ? 'active! text-zodiac-primary drop-shadow-[0_0_8px_rgba(139,92,246,0.5)]' : 'text-white/60 hover:text-white'}`}
               >
                 {item.label}
               </Link>
@@ -131,11 +132,10 @@ export default function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`px-4 py-3 rounded-lg transition-colors ${
-                    isActive(item.href)
+                  className={`px-4 py-3 rounded-lg transition-colors ${isActive(item.href)
                       ? 'bg-white/10 text-white'
                       : 'text-white/70 hover:bg-white/5 hover:text-white'
-                  }`}
+                    }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.label}
@@ -145,11 +145,10 @@ export default function Header() {
                 user ? (
                   <Link
                     href="/profile"
-                    className={`px-4 py-3 rounded-lg transition-colors ${
-                      pathname === '/profile'
+                    className={`px-4 py-3 rounded-lg transition-colors ${pathname === '/profile'
                         ? 'bg-white/10 text-white'
                         : 'text-white/70 hover:bg-white/5 hover:text-white'
-                    }`}
+                      }`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     프로필

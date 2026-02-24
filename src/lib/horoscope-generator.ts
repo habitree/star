@@ -13,6 +13,8 @@ import type {
   HoroscopeCategory,
   MonthlyKeyDate,
   ZodiacSignId,
+  DetailedCategoryHoroscope,
+  SubIndicator,
 } from '@/types';
 import type {
   ExtendedLuckyElements,
@@ -120,11 +122,10 @@ function selectRandom<T>(array: T[], random: () => number): T {
 }
 
 /**
- * 1-5 점수 생성
+ * 1-5 점수 생성 (레거시, 하위호환용)
  */
 function generateScore(random: () => number): HoroscopeScore {
-  // 가중치를 적용하여 중간 점수가 더 많이 나오도록 함
-  const weights = [0.1, 0.2, 0.4, 0.2, 0.1]; // 1, 2, 3, 4, 5 점수 확률
+  const weights = [0.1, 0.2, 0.4, 0.2, 0.1];
   const rand = random();
   let cumulative = 0;
 
@@ -136,6 +137,154 @@ function generateScore(random: () => number): HoroscopeScore {
   }
 
   return 3;
+}
+
+// ─── 세밀 점수 시스템 ─────────────────────────
+
+/** 원소별 표준편차 */
+const elementSigma: Record<string, number> = {
+  fire: 22, earth: 12, air: 18, water: 16,
+};
+
+/** 별자리별 카테고리 편향 (±5~10점) */
+const signCategoryBias: Record<ZodiacSignId, Partial<Record<HoroscopeCategory, number>>> = {
+  aries:       { career: 5, health: 3 },
+  taurus:      { money: 7, health: 3 },
+  gemini:      { career: 4, love: -3 },
+  cancer:      { love: 6, health: -2 },
+  leo:         { career: 8, overall: 3 },
+  virgo:       { health: 7, career: 3 },
+  libra:       { love: 5, overall: 2 },
+  scorpio:     { love: 4, money: 3 },
+  sagittarius: { overall: 5, career: -3 },
+  capricorn:   { career: 7, money: 5 },
+  aquarius:    { overall: 4, career: 3 },
+  pisces:      { love: 8, health: -3 },
+};
+
+/** 별자리별 피크 요일 (0=일, 1=월, ..., 6=토) */
+const signPeakDay: Record<ZodiacSignId, number> = {
+  aries: 2,       // 화(화성)
+  taurus: 5,      // 금(금성)
+  gemini: 3,      // 수(수성)
+  cancer: 1,      // 월(달)
+  leo: 0,         // 일(태양)
+  virgo: 3,       // 수(수성)
+  libra: 5,       // 금(금성)
+  scorpio: 2,     // 화(화성)
+  sagittarius: 4, // 목(목성)
+  capricorn: 6,   // 토(토성)
+  aquarius: 6,    // 토(토성)
+  pisces: 4,      // 목(목성)
+};
+
+/**
+ * Box-Muller 변환으로 가우시안 난수 생성
+ */
+function gaussianRandom(random: () => number, mean: number, sigma: number): number {
+  const u1 = random();
+  const u2 = random();
+  const z = Math.sqrt(-2 * Math.log(Math.max(u1, 0.0001))) * Math.cos(2 * Math.PI * u2);
+  return mean + z * sigma;
+}
+
+/**
+ * 요일별 편향 계산
+ */
+function getDayBias(signId: ZodiacSignId, date: Date): number {
+  const dayOfWeek = date.getDay();
+  const peakDay = signPeakDay[signId];
+  const distance = Math.min(
+    Math.abs(dayOfWeek - peakDay),
+    7 - Math.abs(dayOfWeek - peakDay)
+  );
+
+  if (distance === 0) return 6;   // 피크일
+  if (distance === 1) return 2;   // 인접일
+  if (distance >= 3) return -4;   // 반대일
+  return 0;
+}
+
+/**
+ * 세밀 점수 생성 (0-100)
+ */
+function generateDetailedScore(
+  random: () => number,
+  signId: ZodiacSignId,
+  category: HoroscopeCategory,
+  date: Date
+): number {
+  const element = getSignElement(signId);
+  const sigma = elementSigma[element] || 16;
+
+  // 가우시안 기반 점수 (평균 58, 약간 낙관적)
+  let score = gaussianRandom(random, 58, sigma);
+
+  // 별자리별 카테고리 편향
+  const bias = signCategoryBias[signId][category] || 0;
+  score += bias;
+
+  // 요일별 편향
+  score += getDayBias(signId, date);
+
+  // 0-100 범위 클램프
+  return Math.max(0, Math.min(100, Math.round(score)));
+}
+
+/**
+ * 세밀 점수 → 별 등급 (비균등 임계값)
+ */
+function detailedToStarRating(detailedScore: number): HoroscopeScore {
+  if (detailedScore < 30) return 1;  // ~8%
+  if (detailedScore < 50) return 2;  // ~20%
+  if (detailedScore < 70) return 3;  // ~35%
+  if (detailedScore < 85) return 4;  // ~25%
+  return 5;                           // ~12%
+}
+
+/** 카테고리별 서브지표 정의 */
+const subIndicatorDefs: Record<HoroscopeCategory, { key: string; label: string }[]> = {
+  overall: [
+    { key: 'energy', label: '에너지' },
+    { key: 'intuition', label: '직감' },
+    { key: 'luck', label: '행운' },
+  ],
+  love: [
+    { key: 'charm', label: '매력도' },
+    { key: 'communication', label: '소통' },
+    { key: 'romance', label: '로맨스' },
+  ],
+  career: [
+    { key: 'focus', label: '집중력' },
+    { key: 'leadership', label: '리더십' },
+    { key: 'creativity', label: '창의성' },
+  ],
+  health: [
+    { key: 'vitality', label: '활력' },
+    { key: 'stress', label: '스트레스' },
+    { key: 'sleep', label: '수면' },
+  ],
+  money: [
+    { key: 'income', label: '수입운' },
+    { key: 'spending', label: '지출주의' },
+    { key: 'investment', label: '투자운' },
+  ],
+};
+
+/**
+ * 서브지표 생성 (부모 점수 ±15 범위)
+ */
+function generateSubIndicators(
+  random: () => number,
+  category: HoroscopeCategory,
+  parentScore: number
+): SubIndicator[] {
+  const defs = subIndicatorDefs[category];
+  return defs.map(({ key, label }) => {
+    const offset = (random() - 0.5) * 30; // ±15
+    const score = Math.max(0, Math.min(100, Math.round(parentScore + offset)));
+    return { key, label, score };
+  });
 }
 
 /**
@@ -207,20 +356,29 @@ function selectTemplate(
 }
 
 /**
- * 카테고리별 운세 생성
+ * 카테고리별 운세 생성 (DetailedCategoryHoroscope 반환, 하위호환)
  */
 function generateCategoryHoroscope(
   signId: ZodiacSignId,
   date: Date,
   category: HoroscopeCategory
-): CategoryHoroscope {
+): DetailedCategoryHoroscope {
   const seed = generateSeed(signId, date, category);
   const random = seededRandom(seed);
-  const score = generateScore(random);
+
+  // 세밀 점수 생성
+  const detailedScore = generateDetailedScore(random, signId, category, date);
+
+  // 별 등급 파생
+  const score = detailedToStarRating(detailedScore);
+
+  // 서브지표 생성
+  const subIndicators = generateSubIndicators(random, category, detailedScore);
+
   // 원소 기반 템플릿 사용
   const text = selectTemplate(category, score, random, signId);
 
-  return { score, text };
+  return { score, text, detailedScore, subIndicators };
 }
 
 /**
@@ -674,7 +832,7 @@ export function generateDailyTarot(
 }
 
 /**
- * 시간대별 운세 생성
+ * 시간대별 운세 생성 (피크/밸리 차별화)
  */
 export function generateTimeFortune(
   signId: ZodiacSignId,
@@ -686,10 +844,24 @@ export function generateTimeFortune(
     { period: 'evening', label: '저녁', timeRange: '18:00 - 24:00' },
   ];
 
-  return periods.map(({ period, label, timeRange }) => {
+  // 피크/밸리 시간대 결정 (매일 변경)
+  const daySeed = generateSeed(signId, date, 'time_peak');
+  const dayRandom = seededRandom(daySeed);
+  const peakIdx = Math.floor(dayRandom() * 3);
+  const valleyIdx = (peakIdx + 1 + Math.floor(dayRandom() * 2)) % 3;
+
+  return periods.map(({ period, label, timeRange }, idx) => {
     const seed = generateSeed(signId, date, `time_${period}`);
     const random = seededRandom(seed);
-    const score = generateScore(random);
+
+    // 세밀 점수 생성
+    let detailedScore = generateDetailedScore(random, signId, 'overall', date);
+
+    // 피크/밸리 시간대 차별화 (±12점)
+    if (idx === peakIdx) detailedScore = Math.min(100, detailedScore + 12);
+    else if (idx === valleyIdx) detailedScore = Math.max(0, detailedScore - 12);
+
+    const score = detailedToStarRating(detailedScore);
     const level = getTemplateLevel(score);
 
     const morningDescs: Record<'high' | 'medium' | 'low', string[]> = {
@@ -756,14 +928,16 @@ export function generateTimeFortune(
     const description = selectRandom(descMap[period][level], random);
     const tip = selectRandom(tipMap[period], random);
 
-    return { period, label, timeRange, description, score, tip };
+    return { period, label, timeRange, description, score, tip, detailedScore };
   });
 }
 
 /**
- * 오늘의 12별자리 전체 순위 반환
+ * 오늘의 12별자리 전체 순위 반환 (세밀 점수 기반)
  */
 export function getTodayFullRanking(date: Date = new Date()): FortuneRankingEntry[] {
+  const categories: HoroscopeCategory[] = ['overall', 'love', 'career', 'health', 'money'];
+
   const rankings = allSignIds.map((signId) => {
     const horoscope = generateDailyHoroscope(signId, date);
     const totalScore =
@@ -773,22 +947,41 @@ export function getTodayFullRanking(date: Date = new Date()): FortuneRankingEntr
       horoscope.health.score +
       horoscope.money.score;
 
+    // 세밀 총점 (0-500)
+    let fineScore = 0;
+    for (const cat of categories) {
+      const catData = horoscope[cat] as DetailedCategoryHoroscope;
+      fineScore += catData.detailedScore ?? (catData.score / 5) * 100;
+    }
+
     return {
       rank: 0,
       signId,
       totalScore,
       overallScore: horoscope.overall.score,
+      fineScore: Math.round(fineScore),
+      percentile: 0,
+      scoreDelta: undefined as number | undefined,
     };
   });
 
-  rankings.sort((a, b) => b.totalScore - a.totalScore);
-  rankings.forEach((entry, idx) => { entry.rank = idx + 1; });
+  // fineScore 기반 정렬 (사실상 동점 제거)
+  rankings.sort((a, b) => b.fineScore - a.fineScore);
+  rankings.forEach((entry, idx) => {
+    entry.rank = idx + 1;
+    entry.percentile = Math.round(((idx) / 12) * 100); // 상위 X%
+  });
+
+  // 순위간 격차 계산
+  for (let i = 1; i < rankings.length; i++) {
+    rankings[i].scoreDelta = rankings[i - 1].fineScore - rankings[i].fineScore;
+  }
 
   return rankings;
 }
 
 /**
- * 주간 종합 점수 트렌드 (7일)
+ * 주간 종합 점수 트렌드 (7일) — 정규화 + 최고/최저 마커
  */
 export function getWeeklyTrend(
   signId: ZodiacSignId,
@@ -796,6 +989,7 @@ export function getWeeklyTrend(
 ): FortuneTrendPoint[] {
   const dayLabels = ['일', '월', '화', '수', '목', '금', '토'];
   const todayStr = toISODateString(date);
+  const categories: HoroscopeCategory[] = ['overall', 'love', 'career', 'health', 'money'];
   const result: FortuneTrendPoint[] = [];
 
   for (let offset = -3; offset <= 3; offset++) {
@@ -809,13 +1003,32 @@ export function getWeeklyTrend(
       horoscope.health.score +
       horoscope.money.score;
 
+    // 세밀 총점 기반 정규화 (0-100)
+    let fineTotal = 0;
+    for (const cat of categories) {
+      const catData = horoscope[cat] as DetailedCategoryHoroscope;
+      fineTotal += catData.detailedScore ?? (catData.score / 5) * 100;
+    }
+    const normalizedScore = Math.round(fineTotal / 5); // 0-500 → 0-100
+
     result.push({
       date: toISODateString(d),
       dayLabel: dayLabels[d.getDay()],
       score: total,
       isToday: toISODateString(d) === todayStr,
+      normalizedScore,
     });
   }
+
+  // 최고/최저 마커
+  let minIdx = 0;
+  let maxIdx = 0;
+  for (let i = 1; i < result.length; i++) {
+    if (result[i].normalizedScore < result[minIdx].normalizedScore) minIdx = i;
+    if (result[i].normalizedScore > result[maxIdx].normalizedScore) maxIdx = i;
+  }
+  result[minIdx].isMin = true;
+  result[maxIdx].isMax = true;
 
   return result;
 }
@@ -833,8 +1046,15 @@ export function generateDailyAffirmation(
   return selectRandom(templates, random);
 }
 
+/** 별자리 한국어 이름 매핑 */
+const signKoreanNames: Record<ZodiacSignId, string> = {
+  aries: '양자리', taurus: '황소자리', gemini: '쌍둥이자리', cancer: '게자리',
+  leo: '사자자리', virgo: '처녀자리', libra: '천칭자리', scorpio: '전갈자리',
+  sagittarius: '사수자리', capricorn: '염소자리', aquarius: '물병자리', pisces: '물고기자리',
+};
+
 /**
- * 궁합 하이라이트 생성
+ * 궁합 하이라이트 생성 (일일 변동 + 상위 5개 중 랜덤 + 확장 메시지)
  */
 export function generateCompatibilityHighlight(
   signId: ZodiacSignId,
@@ -845,19 +1065,40 @@ export function generateCompatibilityHighlight(
 
   const scores = allSignIds
     .filter(s => s !== signId)
-    .map(s => ({ signId: s, score: calculateCompatibilityScore(signId, s) }))
+    .map(s => {
+      const baseScore = calculateCompatibilityScore(signId, s);
+      // 일일 변동 ±8점
+      const dailyVariation = Math.round((random() - 0.5) * 16);
+      return { signId: s, score: Math.max(0, Math.min(100, baseScore + dailyVariation)) };
+    })
     .sort((a, b) => b.score - a.score);
 
-  const bestMatch = scores[0];
+  // 상위 5개 중 랜덤 선택
+  const topCount = Math.min(5, scores.length);
+  const selected = scores[Math.floor(random() * topCount)];
+  const matchName = signKoreanNames[selected.signId];
+
   const messages = [
-    `오늘 ${bestMatch.signId === 'aries' ? '양자리' : bestMatch.signId === 'taurus' ? '황소자리' : bestMatch.signId === 'gemini' ? '쌍둥이자리' : bestMatch.signId === 'cancer' ? '게자리' : bestMatch.signId === 'leo' ? '사자자리' : bestMatch.signId === 'virgo' ? '처녀자리' : bestMatch.signId === 'libra' ? '천칭자리' : bestMatch.signId === 'scorpio' ? '전갈자리' : bestMatch.signId === 'sagittarius' ? '사수자리' : bestMatch.signId === 'capricorn' ? '염소자리' : bestMatch.signId === 'aquarius' ? '물병자리' : '물고기자리'}와의 인연이 특별히 빛나는 날입니다.`,
+    `오늘 ${matchName}와의 인연이 특별히 빛나는 날입니다.`,
     '서로의 에너지가 시너지를 만들어 놀라운 결과를 가져올 수 있어요.',
     '함께하면 어떤 어려움도 이겨낼 수 있는 환상의 조합입니다.',
+    `${matchName}와 함께라면 오늘 특별한 순간이 찾아올 거예요.`,
+    '두 별자리의 기운이 조화롭게 어우러지는 하루입니다.',
+    '서로에게 영감을 주고받을 수 있는 최적의 궁합이에요.',
+    `${matchName}의 에너지가 당신에게 긍정적인 변화를 가져다줄 수 있어요.`,
+    '오늘의 별자리 배치가 두 사람의 연결고리를 강화합니다.',
+    '함께 새로운 도전을 시작하기 좋은 날입니다.',
+    `${matchName}와의 대화에서 뜻밖의 행운이 찾아올 수 있어요.`,
+    '두 별자리의 원소가 완벽한 균형을 이루고 있습니다.',
+    '서로의 장점이 극대화되는 특별한 인연의 날이에요.',
+    `${matchName}에게서 오늘 중요한 힌트를 얻을 수 있습니다.`,
+    '우주의 기운이 두 사람을 연결하는 특별한 날입니다.',
+    '서로의 꿈과 목표를 공유하면 더 큰 시너지가 생겨요.',
   ];
 
   return {
-    bestMatch: bestMatch.signId,
-    score: bestMatch.score,
+    bestMatch: selected.signId,
+    score: selected.score,
     message: selectRandom(messages, random),
   };
 }

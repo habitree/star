@@ -44,6 +44,7 @@ export interface TimeBasedFortune {
   description: string;
   score: HoroscopeScore;
   tip: string;
+  detailedScore: number; // 0-100
 }
 
 /** 운세 순위 항목 */
@@ -52,6 +53,9 @@ export interface FortuneRankingEntry {
   signId: ZodiacSignId;
   totalScore: number;
   overallScore: HoroscopeScore;
+  fineScore: number;      // 0-500 세밀 총점
+  percentile: number;     // 상위 X%
+  scoreDelta?: number;    // 이전 순위 대비 점수 차이
 }
 
 /** 운세 트렌드 포인트 */
@@ -60,6 +64,9 @@ export interface FortuneTrendPoint {
   dayLabel: string;   // "월", "화" 등
   score: number;      // 총점
   isToday: boolean;
+  normalizedScore: number; // 0-100 정규화 점수
+  isMin?: boolean;    // 주간 최저
+  isMax?: boolean;    // 주간 최고
 }
 
 /** 맞춤형 운세 결과 */

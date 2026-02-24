@@ -77,16 +77,20 @@ export default function FavoritesSection({ className = '' }: FavoritesSectionPro
             <div
               key={fav.signId}
               className={`
-                glass-card p-3
-                element-${zodiac.element}
-                group relative
+                glass-card-hover p-4
+                background-gradient-${zodiac.element}
+                group relative overflow-hidden flex flex-col items-center justify-center
+                cursor-pointer transform-gpu transition-all duration-300
+                hover:-translate-y-1 hover:shadow-[0_4px_20px_-5px_rgba(255,255,255,0.1)]
               `}
             >
+              {/* Overlay glow */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <Link
                 href={`/zodiac/${fav.signId}`}
-                className="flex flex-col items-center text-center"
+                className="flex flex-col items-center text-center w-full relative z-10"
               >
-                <div className="mb-2 group-hover:scale-110 transition-transform duration-300">
+                <div className="mb-2 group-hover:scale-110 group-hover:drop-shadow-glow-primary transition-all duration-300">
                   <ZodiacIcon sign={fav.signId} size="sm" animated />
                 </div>
                 <h3 className="text-sm font-semibold text-white">

@@ -4,9 +4,9 @@
 
 @layer base {
   :root {
-    --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
-    --gradient-dark: linear-gradient(180deg, #0f0a1e 0%, #1e1b4b 100%);
-    --gradient-card: linear-gradient(145deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #c084fc 50%, #e879f9 100%);
+    --gradient-dark: radial-gradient(ellipse at top, #1b0f36 0%, #030014 100%);
+    --gradient-card: linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
   }
 
   html {
@@ -14,8 +14,9 @@
   }
 
   body {
-    @apply bg-zodiac-dark text-white antialiased;
+    @apply bg-zodiac-dark text-zodiac-light antialiased;
     background: var(--gradient-dark);
+    background-attachment: fixed;
     min-height: 100vh;
   }
 }
@@ -32,8 +33,8 @@
 
   /* 글래스모피즘 카드 */
   .glass-card {
-    @apply backdrop-blur-lg bg-white/10 border border-white/20 rounded-2xl;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    @apply backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl;
+    box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1);
   }
 
   .glass-card-hover {
@@ -41,8 +42,8 @@
   }
 
   .glass-card-hover:hover {
-    @apply bg-white/15 border-white/30 scale-[1.02];
-    box-shadow: 0 12px 40px rgba(99, 102, 241, 0.3);
+    @apply bg-white/10 border-white/20 scale-[1.02];
+    box-shadow: 0 8px 32px -4px rgba(139, 92, 246, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.2);
   }
 
   /* 원소별 카드 배경 */
@@ -111,6 +112,35 @@
 
   .star-empty {
     @apply text-white/20;
+  }
+
+  /* 반별 렌더링 */
+  .star-half-container {
+    @apply relative inline-block;
+  }
+
+  .star-half {
+    @apply absolute inset-0;
+    clip-path: inset(0 50% 0 0);
+  }
+
+  /* 서브지표 바 */
+  .sub-indicator-bar {
+    @apply h-1 rounded-full bg-white/10 overflow-hidden;
+  }
+
+  .sub-indicator-fill {
+    @apply h-full rounded-full bg-gradient-to-r from-purple-400/60 to-pink-400/60;
+    transition: width 0.5s ease-out;
+  }
+
+  /* 점수 변화 색상 */
+  .score-up {
+    @apply text-green-400;
+  }
+
+  .score-down {
+    @apply text-red-400;
   }
 
   /* 드롭다운 */
