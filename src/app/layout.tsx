@@ -102,7 +102,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
-        <Header />
+        <Header locale="ko" />
         <main className="flex-1">{children}</main>
         <Footer />
         <CookieConsent />

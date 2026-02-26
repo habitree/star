@@ -91,6 +91,7 @@ interface ZodiacCardProps {
   sign: ZodiacSignId;
   size?: 'sm' | 'md' | 'lg';
   showFavorite?: boolean;
+  locale?: string;
 }
 
 // Map card size to icon size
@@ -100,8 +101,9 @@ const iconSizeMap = {
   lg: 'lg' as const,
 };
 
-export default function ZodiacCard({ sign, size = 'md', showFavorite = true }: ZodiacCardProps) {
+export default function ZodiacCard({ sign, size = 'md', showFavorite = true, locale }: ZodiacCardProps) {
   const data = zodiacData[sign];
+  const href = locale ? `/${locale}/zodiac/${sign}` : `/zodiac/${sign}`;
 
   const sizeClasses = {
     sm: {
@@ -125,7 +127,7 @@ export default function ZodiacCard({ sign, size = 'md', showFavorite = true }: Z
 
   return (
     <div className="relative group perspective-1000">
-      <Link href={`/zodiac/${sign}`}>
+      <Link href={href}>
         <div
           className={`
             glass-card-hover ${classes.container}

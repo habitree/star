@@ -1,37 +1,61 @@
 import type { MetadataRoute } from 'next';
 import { ZODIAC_ORDER } from '@/lib/zodiac-utils';
+import { locales } from '@/i18n/config';
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://luckytoday.one';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
+  const entries: MetadataRoute.Sitemap = [];
 
-  const staticRoutes: MetadataRoute.Sitemap = [
-    { url: baseUrl, lastModified: now, changeFrequency: 'daily', priority: 1 },
-    { url: `${baseUrl}/horoscope`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
-    { url: `${baseUrl}/horoscope/daily`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
-    { url: `${baseUrl}/zodiac`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
-    { url: `${baseUrl}/compatibility`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${baseUrl}/birth-chart`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${baseUrl}/about`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
-    { url: `${baseUrl}/privacy`, lastModified: now, changeFrequency: 'monthly', priority: 0.3 },
-    { url: `${baseUrl}/terms`, lastModified: now, changeFrequency: 'monthly', priority: 0.3 },
-    { url: `${baseUrl}/contact`, lastModified: now, changeFrequency: 'monthly', priority: 0.4 },
-  ];
-
-  const dailySigns: MetadataRoute.Sitemap = ZODIAC_ORDER.map((sign) => ({
-    url: `${baseUrl}/horoscope/daily/${sign}`,
+  // 루트 리다이렉트 (기본 로케일로 리다이렉트)
+  entries.push({
+    url: baseUrl,
     lastModified: now,
-    changeFrequency: 'daily' as const,
-    priority: 0.8,
-  }));
+    changeFrequency: 'daily',
+    priority: 1,
+  });
 
-  const zodiacSigns: MetadataRoute.Sitemap = ZODIAC_ORDER.map((sign) => ({
-    url: `${baseUrl}/zodiac/${sign}`,
-    lastModified: now,
-    changeFrequency: 'weekly' as const,
-    priority: 0.8,
-  }));
+  for (const locale of locales) {
+    // 정적 라우트
+    const staticRoutes = [
+      { path: '', priority: 1.0, freq: 'daily' as const },
+      { path: '/horoscope', priority: 0.9, freq: 'daily' as const },
+      { path: '/horoscope/daily', priority: 0.9, freq: 'daily' as const },
+      { path: '/zodiac', priority: 0.9, freq: 'weekly' as const },
+      { path: '/compatibility', priority: 0.8, freq: 'weekly' as const },
+      { path: '/birth-chart', priority: 0.8, freq: 'weekly' as const },
+    ];
 
-  return [...staticRoutes, ...dailySigns, ...zodiacSigns];
+    for (const route of staticRoutes) {
+      entries.push({
+        url: `${baseUrl}/${locale}${route.path}`,
+        lastModified: now,
+        changeFrequency: route.freq,
+        priority: locale === 'ko' ? route.priority : route.priority * 0.9,
+      });
+    }
+
+    // 일일 운세 별자리별 페이지
+    for (const sign of ZODIAC_ORDER) {
+      entries.push({
+        url: `${baseUrl}/${locale}/horoscope/daily/${sign}`,
+        lastModified: now,
+        changeFrequency: 'daily',
+        priority: locale === 'ko' ? 0.8 : 0.7,
+      });
+    }
+
+    // 별자리 상세 페이지
+    for (const sign of ZODIAC_ORDER) {
+      entries.push({
+        url: `${baseUrl}/${locale}/zodiac/${sign}`,
+        lastModified: now,
+        changeFrequency: 'weekly',
+        priority: locale === 'ko' ? 0.8 : 0.7,
+      });
+    }
+  }
+
+  return entries;
 }

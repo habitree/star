@@ -170,3 +170,37 @@
 | 개발 진행 상황 | `docs/development_progress.md` | 완료/미완료 기능 목록 |
 | 다국어 키워드 | `docs/multilingual_keyword_strategy.md` | SEO 키워드 전략 |
 | 고도화 파트별 상세 | `docs/advancement/` | 파트 A-D 분리본 |
+| Q1 스프린트 플랜 | `docs/advancement/sprint_plan_2026_q1.md` | 2026 Q1 상세 스프린트 계획 |
+| 에이전트 팀 개요 | `docs/agents/team_overview.md` | 바이브 코딩 에이전트 팀 구성 |
+
+---
+
+## 8. 바이브 코딩 에이전트 팀
+
+> **운영 원칙**: 각 에이전트는 독립적 전문성을 갖되, 본 CLAUDE.md의 핵심 제약을 공유한다.
+
+### 팀 구성 (5개 전문 에이전트)
+
+| # | 에이전트 | 페르소나 | 판단 기준 | 주요 도메인 |
+|---|---------|---------|---------|----------|
+| 1 | `seo-agent` | 별빛 탐정 | "Google 크롤러 + 사용자 모두에게 명확한 가치?" | sitemap, generateMetadata, Schema.org, hreflang |
+| 2 | `retention-agent` | 별의 심리학자 | "Hook Model의 어느 링크를 강화?" | streak-rewards, engagement-tracker, HoroscopeClientApp |
+| 3 | `i18n-agent` | 별자리 번역가 | "번역이 아닌 현지화인가?" | next-intl, [locale] 라우트, messages/*.json |
+| 4 | `monetization-agent` | 별의 경제학자 | "UX 파괴 없이 지속 가능한 수익?" | Stripe, content-unlock, adsense-config |
+| 5 | `infra-agent` | 별의 건축가 | "Cloudflare Workers 제약(Edge 30ms) 준수?" | wrangler.toml, rate-limiter, error-tracking |
+
+### 에이전트 공통 금지 사항
+
+1. `content-pipeline.ts` 시드 패턴 훼손 금지 (핵심 자산)
+2. `user-store.ts` 우회하여 localStorage 직접 접근 금지
+3. `HoroscopeClientApp.tsx` 외부에 독립 engagement 로직 추가 금지
+4. Node.js 전용 API를 CF Workers 환경에서 사용 금지
+5. 타입 정의 없이 새 기능 구현 금지 (`types/` 먼저 정의)
+
+### 각 에이전트 상세 문서
+
+- [SEO 에이전트](docs/agents/01_seo_agent.md)
+- [리텐션 에이전트](docs/agents/02_retention_agent.md)
+- [i18n 에이전트](docs/agents/03_i18n_agent.md)
+- [수익화 에이전트](docs/agents/04_monetization_agent.md)
+- [인프라 에이전트](docs/agents/05_infra_agent.md)

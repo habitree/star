@@ -1,0 +1,124 @@
+{
+  "common": {
+    "appName": "별자리 운세",
+    "home": "홈",
+    "horoscope": "운세",
+    "zodiac": "별자리",
+    "compatibility": "궁합",
+    "birthChart": "출생 차트"
+  },
+  "nav": {
+    "logo": "별자리 운세",
+    "home": "홈",
+    "horoscope": "오늘의 운세",
+    "zodiac": "별자리",
+    "compatibility": "궁합",
+    "birthChart": "출생차트"
+  },
+  "home": {
+    "title": "오늘의 별자리 운세",
+    "subtitle": "12별자리의 오늘의 운세, 별자리 궁합, 출생 차트를 확인해보세요",
+    "selectSign": "별자리 선택",
+    "selectZodiac": "나의 별자리 선택",
+    "quickHoroscope": "빠른 운세 확인",
+    "quickHoroscopeDesc": "지금 바로 오늘의 운세와 별자리 궁합을 확인해보세요",
+    "viewHoroscope": "오늘의 운세 보기",
+    "checkCompatibility": "궁합 확인하기",
+    "feature1Title": "매일 업데이트",
+    "feature1Desc": "매일 새롭게 업데이트되는 정확한 운세 정보",
+    "feature2Title": "별자리 궁합",
+    "feature2Desc": "연인, 친구, 동료와의 궁합을 확인하세요",
+    "feature3Title": "출생 차트",
+    "feature3Desc": "정확한 출생 시간으로 나만의 차트 분석"
+  },
+  "horoscope": {
+    "daily": "일일 운세",
+    "weekly": "주간 운세",
+    "monthly": "월간 운세",
+    "overall": "종합운",
+    "love": "연애운",
+    "career": "직장운",
+    "health": "건강운",
+    "money": "금전운",
+    "luckyNumber": "행운의 숫자",
+    "luckyColor": "행운의 색"
+  },
+  "compatibility": {
+    "title": "별자리 궁합",
+    "selectFirst": "첫 번째 별자리",
+    "selectSecond": "두 번째 별자리",
+    "checkResult": "궁합 확인",
+    "score": "궁합 점수",
+    "loveCompat": "연애 궁합",
+    "friendCompat": "친구 궁합",
+    "workCompat": "업무 궁합"
+  },
+  "birthChart": {
+    "title": "출생 차트",
+    "description": "출생 시간과 장소를 입력하여 당신만의 Big Three(태양, 달, 상승궁)를 알아보세요.",
+    "form": {
+      "title": "출생 정보 입력",
+      "birthDate": "생년월일",
+      "birthTime": "출생 시간",
+      "birthPlace": "출생 장소",
+      "optional": "선택사항",
+      "timeHint": "정확한 시간을 모르면 비워두세요. 정오(12:00)로 계산됩니다.",
+      "searchCity": "도시 검색 (예: 서울, Seoul)",
+      "useCoordinates": "직접 좌표 입력",
+      "useCity": "도시로 선택",
+      "latitude": "위도",
+      "longitude": "경도",
+      "calculate": "차트 계산하기",
+      "calculating": "계산 중..."
+    },
+    "errors": {
+      "dateRequired": "생년월일을 입력해주세요.",
+      "dateInFuture": "미래 날짜는 입력할 수 없습니다.",
+      "locationRequired": "출생 장소를 선택해주세요.",
+      "invalidLatitude": "위도는 -90에서 90 사이여야 합니다.",
+      "invalidLongitude": "경도는 -180에서 180 사이여야 합니다."
+    },
+    "bigThree": {
+      "sun": "태양 별자리",
+      "moon": "달 별자리",
+      "rising": "상승궁 (ASC)"
+    },
+    "info": {
+      "whatIsBigThree": "Big Three란?",
+      "sunSign": "태양 별자리 (Sun Sign)",
+      "sunSignDesc": "당신의 핵심 자아와 정체성을 나타냅니다. 가장 널리 알려진 별자리입니다.",
+      "moonSign": "달 별자리 (Moon Sign)",
+      "moonSignDesc": "내면의 감정, 본능, 무의식적 반응을 나타냅니다.",
+      "risingSign": "상승궁 (Rising Sign)",
+      "risingSignDesc": "첫인상과 외부에 보이는 모습, 사회적 가면을 나타냅니다.",
+      "whyTimeMatters": "출생 시간이 왜 중요한가요?",
+      "timeExplanation": "달 별자리와 상승궁은 출생 시간에 따라 달라집니다. 달은 약 2.5일마다, 상승궁은 약 2시간마다 별자리가 바뀝니다. 정확한 출생 시간을 알면 더 정확한 차트를 얻을 수 있습니다."
+    },
+    "result": {
+      "summary": "차트 요약",
+      "dominantElement": "지배 원소",
+      "dominantModality": "지배 모달리티",
+      "birthInfo": "출생 정보",
+      "date": "날짜",
+      "time": "시간",
+      "latitude": "위도",
+      "longitude": "경도",
+      "calculateAgain": "다시 계산하기"
+    }
+  },
+  "footer": {
+    "logo": "별자리 운세",
+    "description": "12별자리의 오늘의 운세, 별자리 궁합, 출생 차트를 확인하세요. 매일 업데이트되는 정확한 운세 정보를 제공합니다.",
+    "quickLinks": "바로가기",
+    "services": "서비스",
+    "about": "소개",
+    "privacy": "개인정보처리방침",
+    "terms": "이용약관",
+    "contact": "문의하기",
+    "dailyHoroscope": "오늘의 운세",
+    "compatibility": "궁합",
+    "birthChart": "출생차트",
+    "zodiacSigns": "별자리",
+    "allRightsReserved": "모든 권리 보유."
+  }
+}

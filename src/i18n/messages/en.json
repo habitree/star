@@ -1,0 +1,124 @@
+{
+  "common": {
+    "appName": "Horoscope",
+    "home": "Home",
+    "horoscope": "Horoscope",
+    "zodiac": "Zodiac",
+    "compatibility": "Compatibility",
+    "birthChart": "Birth Chart"
+  },
+  "nav": {
+    "logo": "Horoscope",
+    "home": "Home",
+    "horoscope": "Daily Horoscope",
+    "zodiac": "Zodiac",
+    "compatibility": "Compatibility",
+    "birthChart": "Birth Chart"
+  },
+  "home": {
+    "title": "Today's Horoscope",
+    "subtitle": "Discover your daily horoscope, zodiac compatibility, and birth chart for all 12 signs",
+    "selectSign": "Select Sign",
+    "selectZodiac": "Select Your Sign",
+    "quickHoroscope": "Quick Horoscope Check",
+    "quickHoroscopeDesc": "Check your daily horoscope and zodiac compatibility right now",
+    "viewHoroscope": "View Daily Horoscope",
+    "checkCompatibility": "Check Compatibility",
+    "feature1Title": "Daily Updates",
+    "feature1Desc": "Accurate horoscope information updated daily",
+    "feature2Title": "Zodiac Compatibility",
+    "feature2Desc": "Check compatibility with your partner, friends, and colleagues",
+    "feature3Title": "Birth Chart",
+    "feature3Desc": "Analyze your unique chart with exact birth time"
+  },
+  "horoscope": {
+    "daily": "Daily Horoscope",
+    "weekly": "Weekly Horoscope",
+    "monthly": "Monthly Horoscope",
+    "overall": "Overall",
+    "love": "Love",
+    "career": "Career",
+    "health": "Health",
+    "money": "Money",
+    "luckyNumber": "Lucky Number",
+    "luckyColor": "Lucky Color"
+  },
+  "compatibility": {
+    "title": "Zodiac Compatibility",
+    "selectFirst": "First Sign",
+    "selectSecond": "Second Sign",
+    "checkResult": "Check Compatibility",
+    "score": "Compatibility Score",
+    "loveCompat": "Love Compatibility",
+    "friendCompat": "Friendship Compatibility",
+    "workCompat": "Work Compatibility"
+  },
+  "birthChart": {
+    "title": "Birth Chart",
+    "description": "Enter your birth time and place to discover your Big Three (Sun, Moon, and Rising signs).",
+    "form": {
+      "title": "Enter Birth Information",
+      "birthDate": "Birth Date",
+      "birthTime": "Birth Time",
+      "birthPlace": "Birth Place",
+      "optional": "optional",
+      "timeHint": "Leave blank if unknown. Noon (12:00) will be used.",
+      "searchCity": "Search city (e.g., Seoul, New York)",
+      "useCoordinates": "Enter coordinates",
+      "useCity": "Select city",
+      "latitude": "Latitude",
+      "longitude": "Longitude",
+      "calculate": "Calculate Chart",
+      "calculating": "Calculating..."
+    },
+    "errors": {
+      "dateRequired": "Please enter your birth date.",
+      "dateInFuture": "Future dates are not allowed.",
+      "locationRequired": "Please select your birth place.",
+      "invalidLatitude": "Latitude must be between -90 and 90.",
+      "invalidLongitude": "Longitude must be between -180 and 180."
+    },
+    "bigThree": {
+      "sun": "Sun Sign",
+      "moon": "Moon Sign",
+      "rising": "Rising Sign (ASC)"
+    },
+    "info": {
+      "whatIsBigThree": "What is the Big Three?",
+      "sunSign": "Sun Sign",
+      "sunSignDesc": "Represents your core self and identity. The most commonly known zodiac sign.",
+      "moonSign": "Moon Sign",
+      "moonSignDesc": "Represents your inner emotions, instincts, and subconscious reactions.",
+      "risingSign": "Rising Sign (Ascendant)",
+      "risingSignDesc": "Represents your first impression, outward appearance, and social mask.",
+      "whyTimeMatters": "Why does birth time matter?",
+      "timeExplanation": "Moon sign and rising sign change based on birth time. The Moon changes signs approximately every 2.5 days, while the rising sign changes every 2 hours. Knowing your exact birth time gives you a more accurate chart."
+    },
+    "result": {
+      "summary": "Chart Summary",
+      "dominantElement": "Dominant Element",
+      "dominantModality": "Dominant Modality",
+      "birthInfo": "Birth Information",
+      "date": "Date",
+      "time": "Time",
+      "latitude": "Latitude",
+      "longitude": "Longitude",
+      "calculateAgain": "Calculate Again"
+    }
+  },
+  "footer": {
+    "logo": "Horoscope",
+    "description": "Discover daily horoscope, zodiac compatibility, and birth charts for all 12 signs. Accurate horoscope updates every day.",
+    "quickLinks": "Quick Links",
+    "services": "Services",
+    "about": "About",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "contact": "Contact",
+    "dailyHoroscope": "Daily Horoscope",
+    "compatibility": "Compatibility",
+    "birthChart": "Birth Chart",
+    "zodiacSigns": "Zodiac Signs",
+    "allRightsReserved": "All rights reserved."
+  }
+}

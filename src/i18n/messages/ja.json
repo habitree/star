@@ -1,0 +1,124 @@
+{
+  "common": {
+    "appName": "星座占い",
+    "home": "ホーム",
+    "horoscope": "運勢",
+    "zodiac": "星座",
+    "compatibility": "相性",
+    "birthChart": "出生図"
+  },
+  "nav": {
+    "logo": "星座占い",
+    "home": "ホーム",
+    "horoscope": "今日の運勢",
+    "zodiac": "星座",
+    "compatibility": "相性",
+    "birthChart": "出生図"
+  },
+  "home": {
+    "title": "今日の星座占い",
+    "subtitle": "12星座の今日の運勢、星座の相性、出生チャートをチェック",
+    "selectSign": "星座を選択",
+    "selectZodiac": "あなたの星座を選択",
+    "quickHoroscope": "運勢をすぐにチェック",
+    "quickHoroscopeDesc": "今すぐ今日の運勢と星座の相性をチェック",
+    "viewHoroscope": "今日の運勢を見る",
+    "checkCompatibility": "相性をチェック",
+    "feature1Title": "毎日更新",
+    "feature1Desc": "毎日更新される正確な運勢情報",
+    "feature2Title": "星座相性",
+    "feature2Desc": "恋人、友人、同僚との相性をチェック",
+    "feature3Title": "出生図",
+    "feature3Desc": "正確な出生時刻であなただけのチャートを分析"
+  },
+  "horoscope": {
+    "daily": "毎日の運勢",
+    "weekly": "週間運勢",
+    "monthly": "月間運勢",
+    "overall": "総合運",
+    "love": "恋愛運",
+    "career": "仕事運",
+    "health": "健康運",
+    "money": "金運",
+    "luckyNumber": "ラッキーナンバー",
+    "luckyColor": "ラッキーカラー"
+  },
+  "compatibility": {
+    "title": "星座相性",
+    "selectFirst": "1つ目の星座",
+    "selectSecond": "2つ目の星座",
+    "checkResult": "相性を確認",
+    "score": "相性スコア",
+    "loveCompat": "恋愛相性",
+    "friendCompat": "友情相性",
+    "workCompat": "仕事相性"
+  },
+  "birthChart": {
+    "title": "出生図",
+    "description": "出生時刻と場所を入力して、あなたのビッグスリー（太陽、月、上昇星座）を調べましょう。",
+    "form": {
+      "title": "出生情報を入力",
+      "birthDate": "生年月日",
+      "birthTime": "出生時刻",
+      "birthPlace": "出生地",
+      "optional": "任意",
+      "timeHint": "不明な場合は空欄のままにしてください。正午（12:00）が使用されます。",
+      "searchCity": "都市を検索（例：ソウル、東京）",
+      "useCoordinates": "座標を入力",
+      "useCity": "都市を選択",
+      "latitude": "緯度",
+      "longitude": "経度",
+      "calculate": "チャートを計算",
+      "calculating": "計算中..."
+    },
+    "errors": {
+      "dateRequired": "生年月日を入力してください。",
+      "dateInFuture": "未来の日付は入力できません。",
+      "locationRequired": "出生地を選択してください。",
+      "invalidLatitude": "緯度は-90から90の間である必要があります。",
+      "invalidLongitude": "経度は-180から180の間である必要があります。"
+    },
+    "bigThree": {
+      "sun": "太陽星座",
+      "moon": "月星座",
+      "rising": "上昇星座（ASC）"
+    },
+    "info": {
+      "whatIsBigThree": "ビッグスリーとは？",
+      "sunSign": "太陽星座",
+      "sunSignDesc": "あなたの核となる自己とアイデンティティを表します。最も広く知られている星座です。",
+      "moonSign": "月星座",
+      "moonSignDesc": "内面の感情、本能、無意識の反応を表します。",
+      "risingSign": "上昇星座（アセンダント）",
+      "risingSignDesc": "第一印象、外見、社会的な仮面を表します。",
+      "whyTimeMatters": "なぜ出生時刻が重要なのですか？",
+      "timeExplanation": "月星座と上昇星座は出生時刻によって変わります。月は約2.5日ごとに星座が変わり、上昇星座は約2時間ごとに変わります。正確な出生時刻を知ることで、より正確なチャートが得られます。"
+    },
+    "result": {
+      "summary": "チャート概要",
+      "dominantElement": "支配元素",
+      "dominantModality": "支配モダリティ",
+      "birthInfo": "出生情報",
+      "date": "日付",
+      "time": "時刻",
+      "latitude": "緯度",
+      "longitude": "経度",
+      "calculateAgain": "再計算"
+    }
+  },
+  "footer": {
+    "logo": "星座占い",
+    "description": "12星座の今日の運勢、星座の相性、出生チャートをチェック。毎日更新される正確な占い情報をお届けします。",
+    "quickLinks": "クイックリンク",
+    "services": "サービス",
+    "about": "概要",
+    "privacy": "プライバシーポリシー",
+    "terms": "利用規約",
+    "contact": "お問い合わせ",
+    "dailyHoroscope": "今日の運勢",
+    "compatibility": "相性",
+    "birthChart": "出生図",
+    "zodiacSigns": "星座",
+    "allRightsReserved": "全著作権所有。"
+  }
+}
