@@ -22,7 +22,8 @@ export default function middleware(request: NextRequest) {
     pathname.startsWith('/favicon') ||
     pathname.startsWith('/sitemap') ||
     pathname.startsWith('/robots') ||
-    pathname.match(/\.(ico|png|jpg|jpeg|gif|svg|webp|css|js|woff|woff2|ttf)$/)
+    pathname === '/ads.txt' ||
+    pathname.match(/\.(ico|png|jpg|jpeg|gif|svg|webp|css|js|woff|woff2|ttf|txt)$/)
   ) {
     return NextResponse.next();
   }
@@ -34,6 +35,6 @@ export const config = {
   // 미들웨어가 실행될 경로 패턴
   matcher: [
     // 모든 경로에서 실행하되, 정적 파일 제외
-    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|ads.txt).*)',
   ],
 };
