@@ -1,16 +1,21 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { zodiacData } from '@/data/zodiac-info';
 import { isAdSenseEnabled } from '@/lib/adsense-config';
 import { AdSenseUnit, AdSenseInArticle } from '@/components/ads';
 import { getElementTheme, getElementCSSVars } from '@/lib/element-theme';
+import { getMonthCalendar } from '@/lib/horoscope-generator';
 import ScoreBar from '@/components/ui/ScoreBar';
 import OverallScoreGauge from './OverallScoreGauge';
 import TarotCard from './TarotCard';
 import BiorhythmChart from './BiorhythmChart';
 import FortuneRanking from './FortuneRanking';
 import FortuneTrend from './FortuneTrend';
+import FortuneCalendar from './FortuneCalendar';
+import DailyRhythm from './DailyRhythm';
+import SmartCTASection from './SmartCTASection';
 import LuckyElements from './LuckyElements';
 import TimeBasedFortune from './TimeBasedFortune';
 import FortuneComparison from './FortuneComparison';
@@ -26,7 +31,9 @@ import type {
   BiorhythmData,
   TimeBasedFortune as TimeBasedFortuneType,
   FortuneRankingEntry,
-  FortuneTrendPoint,
+  ExtendedTrendPoint,
+  CalendarDayData,
+  SmartCTA,
 } from '@/types/horoscope-extended';
 import type { ContentLockStatus } from '@/types/engagement';
 
@@ -52,13 +59,18 @@ interface PersonalizedResultProps {
   extendedLucky: ExtendedLuckyElements;
   tarot: TarotCardType;
   biorhythm: BiorhythmData[];
-  weeklyTrend: FortuneTrendPoint[];
+  extendedTrend: ExtendedTrendPoint[];
+  calendarData: CalendarDayData[];
+  calendarYear: number;
+  calendarMonth: number;
   ranking: FortuneRankingEntry[];
   compatibilityHighlight: { bestMatch: ZodiacSignId; score: number; message: string };
   contentStatuses?: Record<string, ContentLockStatus>;
   visitStreak?: number;
   microStory?: MicroStoryData;
   tomorrowTeaser?: string;
+  smartCTAs?: SmartCTA[];
+  visitedDates?: Set<string>;
 }
 
 const categoryMeta: { key: HoroscopeCategory; label: string; icon: string }[] = [
@@ -94,9 +106,21 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
     categoryDetailedScores, categorySubIndicators,
     yesterdayPercent, yesterdayCategoryScores, percentileRank,
     affirmation, timeFortunes, extendedLucky, tarot,
-    biorhythm, weeklyTrend, ranking, compatibilityHighlight,
-    contentStatuses,
+    biorhythm, extendedTrend, calendarData, calendarYear, calendarMonth,
+    ranking, compatibilityHighlight,
+    contentStatuses, smartCTAs = [], visitedDates = new Set<string>(),
   } = props;
+
+  const [calDisplay, setCalDisplay] = useState({ year: calendarYear, month: calendarMonth });
+  const [dynCalData, setDynCalData] = useState<CalendarDayData[]>(calendarData);
+
+  const handleMonthChange = (delta: number) => {
+    const d = new Date(calDisplay.year, calDisplay.month + delta, 1);
+    const newYear = d.getFullYear();
+    const newMonth = d.getMonth();
+    setCalDisplay({ year: newYear, month: newMonth });
+    setDynCalData(getMonthCalendar(signId, d, visitedDates));
+  };
 
   const info = zodiacData[signId];
   const bestMatchInfo = zodiacData[compatibilityHighlight.bestMatch];
@@ -137,6 +161,11 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
             {info.element === 'fire' ? '🔥 불의 원소' : info.element === 'earth' ? '🌿 땅의 원소' : info.element === 'air' ? '💨 바람의 원소' : '💧 물의 원소'}
           </span>
         </div>
+      </RevealSection>
+
+      {/* ① ‑b 일일 리듬 타임라인 */}
+      <RevealSection delay={80}>
+        <DailyRhythm timeFortunes={timeFortunes} />
       </RevealSection>
 
       {/* ② 종합 점수 게이지 */}
@@ -210,6 +239,13 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
         </div>
       </RevealSection>
 
+      {/* ⑥‑b 스마트 CTA */}
+      {smartCTAs.length > 0 && (
+        <RevealSection>
+          <SmartCTASection ctas={smartCTAs} />
+        </RevealSection>
+      )}
+
       {/* ⑦ 확장 행운 요소 */}
       <RevealSection>
         <LuckyElements lucky={extendedLucky} />
@@ -234,9 +270,20 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
         </LockedContent>
       </RevealSection>
 
-      {/* ⑪ 주간 트렌드 */}
+      {/* ⑪ 30일 트렌드 */}
       <RevealSection>
-        <FortuneTrend data={weeklyTrend} />
+        <FortuneTrend data={extendedTrend} />
+      </RevealSection>
+
+      {/* ⑪‑b 월간 운세 캘린더 */}
+      <RevealSection>
+        <FortuneCalendar
+          data={dynCalData}
+          year={calDisplay.year}
+          month={calDisplay.month}
+          onMonthChange={handleMonthChange}
+          visitStreak={props.visitStreak}
+        />
       </RevealSection>
 
       {/* ⑫ 별자리 순위 */}

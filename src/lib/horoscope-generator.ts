@@ -22,6 +22,9 @@ import type {
   TimeBasedFortune,
   FortuneRankingEntry,
   FortuneTrendPoint,
+  ExtendedTrendPoint,
+  CalendarDayData,
+  TrendCategory,
 } from '@/types/horoscope-extended';
 import { majorArcana } from '@/data/tarot-data';
 import { luckyDirections, luckyFoods, luckyActivities } from '@/data/lucky-elements-extended';
@@ -1101,4 +1104,97 @@ export function generateCompatibilityHighlight(
     score: selected.score,
     message: selectRandom(messages, random),
   };
+}
+
+/**
+ * 확장 트렌드 생성 (-30일 ~ +7일, 38개 포인트)
+ * 시드 기반 재계산으로 API 비용 없이 과거 점수 복원
+ */
+export function getExtendedTrend(
+  signId: ZodiacSignId,
+  date: Date = new Date(),
+  visitedDates: Set<string> = new Set()
+): ExtendedTrendPoint[] {
+  const dayLabels = ['일', '월', '화', '수', '목', '금', '토'];
+  const todayStr = toISODateString(date);
+  const categories: HoroscopeCategory[] = ['overall', 'love', 'career', 'health', 'money'];
+  const result: ExtendedTrendPoint[] = [];
+
+  for (let offset = -30; offset <= 7; offset++) {
+    const d = new Date(date);
+    d.setDate(d.getDate() + offset);
+    const dateStr = toISODateString(d);
+
+    const horoscope = generateDailyHoroscope(signId, d);
+
+    const catScores: Record<string, number> = {};
+    let fineTotal = 0;
+    for (const cat of categories) {
+      const catData = horoscope[cat] as DetailedCategoryHoroscope;
+      const score = catData.detailedScore ?? (catData.score / 5) * 100;
+      catScores[cat] = Math.round(score);
+      fineTotal += score;
+    }
+    const normalizedScore = Math.round(fineTotal / categories.length);
+
+    result.push({
+      date: dateStr,
+      dayLabel: dayLabels[d.getDay()],
+      normalizedScore,
+      isPast: offset < 0,
+      isFuture: offset > 0,
+      isToday: dateStr === todayStr,
+      isVisited: visitedDates.has(dateStr),
+      categoryScores: catScores as Record<TrendCategory, number>,
+      offset,
+    });
+  }
+
+  return result;
+}
+
+/**
+ * 월간 캘린더 데이터 생성
+ * 해당 월의 모든 날에 대한 점수 + 방문 여부
+ */
+export function getMonthCalendar(
+  signId: ZodiacSignId,
+  monthDate: Date = new Date(),
+  visitedDates: Set<string> = new Set()
+): CalendarDayData[] {
+  const year = monthDate.getFullYear();
+  const month = monthDate.getMonth();
+  const todayStr = toISODateString(new Date());
+  const categories: HoroscopeCategory[] = ['overall', 'love', 'career', 'health', 'money'];
+
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const result: CalendarDayData[] = [];
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const d = new Date(year, month, day);
+    const dateStr = toISODateString(d);
+
+    const horoscope = generateDailyHoroscope(signId, d);
+
+    const catScores: Record<string, number> = {};
+    let fineTotal = 0;
+    for (const cat of categories) {
+      const catData = horoscope[cat] as DetailedCategoryHoroscope;
+      const score = catData.detailedScore ?? (catData.score / 5) * 100;
+      catScores[cat] = Math.round(score);
+      fineTotal += score;
+    }
+
+    result.push({
+      date: dateStr,
+      day,
+      normalizedScore: Math.round(fineTotal / categories.length),
+      categoryScores: catScores as Record<TrendCategory, number>,
+      isToday: dateStr === todayStr,
+      isVisited: visitedDates.has(dateStr),
+      isCurrentMonth: true,
+    });
+  }
+
+  return result;
 }

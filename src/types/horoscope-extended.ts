@@ -95,3 +95,39 @@ export interface AffirmationTemplate {
   text: string;
   category: 'growth' | 'love' | 'success' | 'peace' | 'courage';
 }
+
+/** 트렌드 카테고리 */
+export type TrendCategory = 'overall' | 'love' | 'career' | 'health' | 'money';
+
+/** 확장 트렌드 포인트 (30일 과거 + 오늘 + 7일 미래) */
+export interface ExtendedTrendPoint {
+  date: string;           // YYYY-MM-DD
+  dayLabel: string;       // "월", "화" 등
+  normalizedScore: number; // 0-100
+  isPast: boolean;
+  isFuture: boolean;
+  isToday: boolean;
+  isVisited: boolean;     // 실제 방문한 날
+  categoryScores: Record<TrendCategory, number>; // 0-100
+  offset: number;         // 오늘 기준 상대 일수 (-30~+7)
+}
+
+/** 캘린더 하루 데이터 */
+export interface CalendarDayData {
+  date: string;           // YYYY-MM-DD
+  day: number;            // 날짜 숫자
+  normalizedScore: number; // 0-100
+  categoryScores: Record<TrendCategory, number>;
+  isToday: boolean;
+  isVisited: boolean;
+  isCurrentMonth: boolean;
+}
+
+/** 스마트 CTA */
+export interface SmartCTA {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  href: string;
+}

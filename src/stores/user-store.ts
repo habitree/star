@@ -16,10 +16,18 @@ export interface FavoriteSign {
 
 // 운세 히스토리 항목 타입
 export interface HoroscopeHistoryItem {
-  date: string; // ISO date string
+  date: string; // YYYY-MM-DD
   signId: ZodiacSignId;
   overallScore: number;
   type: 'daily' | 'weekly' | 'monthly';
+  categoryScores?: {
+    love: number;
+    career: number;
+    health: number;
+    money: number;
+    overall: number;
+  };
+  visited: boolean; // 실제 방문한 날
 }
 
 // 사용자 설정 타입
@@ -190,16 +198,28 @@ export const useUserStore = create<UserState>()(
 
       // 히스토리 액션
       addToHistory: (item) => {
+        const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
         const history = [...get().history];
+
+        // 같은 날 같은 별자리 중복 방지
+        const existingIdx = history.findIndex(
+          h => h.date === today && h.signId === item.signId
+        );
+        if (existingIdx !== -1) {
+          // 기존 항목 업데이트 (categoryScores 포함)
+          history[existingIdx] = { ...history[existingIdx], ...item, date: today };
+          set({ history });
+          return;
+        }
+
         const newItem: HoroscopeHistoryItem = {
           ...item,
-          date: new Date().toISOString(),
+          date: today,
+          visited: item.visited ?? true,
         };
 
-        // 최신 항목을 앞에 추가
         history.unshift(newItem);
 
-        // 최대 보관 수 초과 시 오래된 항목 제거
         if (history.length > MAX_HISTORY_ITEMS) {
           history.splice(MAX_HISTORY_ITEMS);
         }
@@ -347,7 +367,7 @@ export const useUserStore = create<UserState>()(
     }),
     {
       name: 'zodiac-user-store',
-      version: 2,
+      version: 3,
       storage: createJSONStorage(() => ({
         getItem: (name: string) => {
           try { return localStorage.getItem(name); }
@@ -382,7 +402,6 @@ export const useUserStore = create<UserState>()(
       migrate: (persistedState: unknown, version: number) => {
         const state = persistedState as Record<string, unknown>;
         if (version < 2) {
-          // v1 → v2: 리텐션 필드 기본값 보장
           state.longestStreak = state.longestStreak ?? 0;
           state.earnedBadges = state.earnedBadges ?? [];
           state.unlockedContentIds = state.unlockedContentIds ?? [];
@@ -392,6 +411,17 @@ export const useUserStore = create<UserState>()(
           state.todayCheckedIn = state.todayCheckedIn ?? false;
           state.lastCheckInDate = state.lastCheckInDate ?? null;
           state.lastChatDate = state.lastChatDate ?? null;
+        }
+        if (version < 3) {
+          // v2 → v3: history에 visited + 날짜 정규화
+          const history = state.history as HoroscopeHistoryItem[] ?? [];
+          state.history = history.map(item => ({
+            ...item,
+            date: typeof item.date === 'string'
+              ? item.date.split('T')[0] // ISO → YYYY-MM-DD
+              : item.date,
+            visited: true,
+          }));
         }
         return state as unknown as UserState;
       },

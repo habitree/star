@@ -8,10 +8,12 @@ import {
   generateDailyTarot,
   generateTimeFortune,
   getTodayFullRanking,
-  getWeeklyTrend,
+  getExtendedTrend,
+  getMonthCalendar,
   generateDailyAffirmation,
   generateCompatibilityHighlight,
 } from '@/lib/horoscope-generator';
+import { getSmartCTAs } from '@/lib/smart-cta';
 import { getBiorhythmWeek } from '@/lib/biorhythm';
 import { getNewlyEarnedReward } from '@/lib/streak-rewards';
 import { getContentStatus } from '@/lib/content-unlock';
@@ -29,6 +31,7 @@ import FortuneChatBot from './FortuneChatBot';
 import StreakDashboard from './StreakDashboard';
 import type { ZodiacSignId, HoroscopeCategory, DetailedCategoryHoroscope, SubIndicator } from '@/types';
 import type { ContentLockStatus } from '@/types/engagement';
+import type { SmartCTA, CalendarDayData } from '@/types/horoscope-extended';
 
 export default function HoroscopeClientApp() {
   const {
@@ -36,7 +39,8 @@ export default function HoroscopeClientApp() {
     visitStreak, longestStreak, earnedBadges,
     unlockedContentIds, completedActions,
     onboardingCompleted, todayCheckedIn, lastCheckInDate,
-    setBirthDate, recordHoroscopeView,
+    history,
+    setBirthDate, recordHoroscopeView, addToHistory,
     performCheckIn, addBadge, unlockContent, completeAction,
     completeOnboarding,
   } = useUserStore();
@@ -83,6 +87,41 @@ export default function HoroscopeClientApp() {
       setShowOnboarding(true);
     }
   }, [hydrated, birthDate, birthSign]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // 오늘 방문 기록 저장 (카테고리 점수 포함, 중복 방지는 store에서 처리)
+  useEffect(() => {
+    if (!hydrated || !currentSign) return;
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0];
+    const alreadySaved = useUserStore.getState().history.some(
+      h => h.date === todayStr && h.signId === currentSign
+    );
+    if (alreadySaved) return;
+
+    const horoscope = generateDailyHoroscope(currentSign, today, 'ko');
+    const cats = ['overall', 'love', 'career', 'health', 'money'] as const;
+    const scores: Record<string, number> = {};
+    let total = 0;
+    for (const cat of cats) {
+      const catData = horoscope[cat] as import('@/types').DetailedCategoryHoroscope;
+      const s = catData.detailedScore ?? (catData.score / 5) * 100;
+      scores[cat] = Math.round(s);
+      total += s;
+    }
+    addToHistory({
+      signId: currentSign,
+      overallScore: Math.round(total / cats.length),
+      type: 'daily',
+      visited: true,
+      categoryScores: {
+        overall: scores.overall,
+        love: scores.love,
+        career: scores.career,
+        health: scores.health,
+        money: scores.money,
+      },
+    });
+  }, [hydrated, currentSign]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleBirthDateSubmit = (date: string, signId: ZodiacSignId) => {
     setBirthDate(date, signId);
@@ -160,6 +199,7 @@ export default function HoroscopeClientApp() {
 
   // 맞춤 결과 생성
   const today = new Date();
+  const todayStr = today.toISOString().split('T')[0];
   const horoscope = generateDailyHoroscope(currentSign, today, 'ko');
 
   const categories: HoroscopeCategory[] = ['overall', 'love', 'career', 'health', 'money'];
@@ -197,10 +237,35 @@ export default function HoroscopeClientApp() {
   const tarot = generateDailyTarot(currentSign, today);
   const timeFortunes = generateTimeFortune(currentSign, today);
   const ranking = getTodayFullRanking(today);
-  const weeklyTrend = getWeeklyTrend(currentSign, today);
   const affirmation = generateDailyAffirmation(currentSign, today);
   const compatibilityHighlight = generateCompatibilityHighlight(currentSign, today);
   const biorhythm = getBiorhythmWeek(currentBirthDate);
+
+  // 방문한 날 Set 추출 (signId 일치 항목만)
+  const visitedDates = new Set(
+    history
+      .filter(h => h.signId === currentSign && h.visited)
+      .map(h => h.date)
+  );
+  // 오늘은 항상 방문한 날로 처리 (히스토리는 useEffect에서 저장)
+  visitedDates.add(todayStr);
+
+  // 확장 트렌드 (30일 과거 + 오늘 + 7일 미래)
+  const extendedTrend = getExtendedTrend(currentSign, today, visitedDates);
+
+  // 이번 달 캘린더 데이터
+  const calendarData = getMonthCalendar(currentSign, today, visitedDates);
+
+  // 스마트 CTA
+  const smartCTAs: SmartCTA[] = getSmartCTAs({
+    overallScore: overallPercent,
+    loveScore: categoryDetailedScores.love,
+    careerScore: categoryDetailedScores.career,
+    healthScore: categoryDetailedScores.health,
+    moneyScore: categoryDetailedScores.money,
+    hasViewedBirthChart: completedActions.includes('view-birth-chart'),
+    locale: 'ko',
+  });
 
   // 시즌 이벤트 (다중 이벤트 지원)
   const activeEvents = getActiveEvents(today);
@@ -299,13 +364,18 @@ export default function HoroscopeClientApp() {
         extendedLucky={extendedLucky}
         tarot={tarot}
         biorhythm={biorhythm}
-        weeklyTrend={weeklyTrend}
+        extendedTrend={extendedTrend}
+        calendarData={calendarData}
+        calendarYear={today.getFullYear()}
+        calendarMonth={today.getMonth()}
         ranking={ranking}
         compatibilityHighlight={compatibilityHighlight}
         contentStatuses={contentStatuses}
         visitStreak={visitStreak}
         microStory={microStory}
         tomorrowTeaser={tomorrowTeaser}
+        smartCTAs={smartCTAs}
+        visitedDates={visitedDates}
       />
 
       {/* 별의 도사 채팅 */}
