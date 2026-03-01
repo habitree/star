@@ -48,6 +48,12 @@ const sectionLabels = {
   checkAnother: '다른 궁합 확인',
 };
 
+const modalityLabels: Record<string, string> = {
+  cardinal: '시작형',
+  fixed: '고정형',
+  mutable: '변화형',
+};
+
 interface CompatibilityResultProps {
   result: CompatibilityResultType;
 }
@@ -201,9 +207,9 @@ export default function CompatibilityResult({ result }: CompatibilityResultProps
           <h3 className="text-lg font-bold text-white mb-4">{sectionLabels.modality}</h3>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
-              <span className="text-white/80 capitalize">{result.modalityCompatibility.modality1}</span>
+              <span className="text-white/80">{modalityLabels[result.modalityCompatibility.modality1] ?? result.modalityCompatibility.modality1}</span>
               <span className="text-white/50">+</span>
-              <span className="text-white/80 capitalize">{result.modalityCompatibility.modality2}</span>
+              <span className="text-white/80">{modalityLabels[result.modalityCompatibility.modality2] ?? result.modalityCompatibility.modality2}</span>
             </div>
             <ScoreGauge score={result.modalityCompatibility.score} size={60} strokeWidth={5} />
           </div>

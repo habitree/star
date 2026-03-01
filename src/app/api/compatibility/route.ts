@@ -217,14 +217,20 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
     const modalityScore = modality1 === modality2 ? 65 : 80;
 
     // 카테고리별 상세 정보 생성
+    const koLabels: Record<string, string> = { love: '연애', friendship: '우정', work: '업무' };
+    const enLabels: Record<string, string> = { love: 'Love', friendship: 'Friendship', work: 'Work' };
+    const zhLabels: Record<string, string> = { love: '爱情', friendship: '友情', work: '工作' };
+    const jaLabels: Record<string, string> = { love: '恋愛', friendship: '友情', work: '仕事' };
+    const esLabels: Record<string, string> = { love: 'amor', friendship: 'amistad', work: 'trabajo' };
+
     const createCategoryCompatibility = (score: number, category: string) => ({
       score,
       description: {
-        ko: `${category} 분야에서 ${score}점의 궁합을 보입니다.`,
-        en: `Shows ${score}% compatibility in ${category}.`,
-        zh: `在${category}方面显示${score}%的相性。`,
-        ja: `${category}分野で${score}%の相性を示しています。`,
-        es: `Muestra ${score}% de compatibilidad en ${category}.`,
+        ko: `${koLabels[category] || category} 궁합 ${score}점`,
+        en: `${enLabels[category] || category} compatibility ${score}%`,
+        zh: `${zhLabels[category] || category}相性 ${score}分`,
+        ja: `${jaLabels[category] || category}相性 ${score}点`,
+        es: `Compatibilidad de ${esLabels[category] || category} ${score}%`,
       },
       strengths: [] as LocalizedText[],
       challenges: [] as LocalizedText[],
