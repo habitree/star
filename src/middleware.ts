@@ -28,6 +28,16 @@ export default function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // 언어 독립적인 정적 페이지 (locale 리다이렉트 제외)
+  if (
+    pathname === '/about' ||
+    pathname === '/privacy' ||
+    pathname === '/terms' ||
+    pathname === '/contact'
+  ) {
+    return NextResponse.next();
+  }
+
   return intlMiddleware(request);
 }
 
