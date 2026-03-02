@@ -35,6 +35,9 @@ yarn-error.log*
 .open-next
 .dev.vars
 
+# 대용량 에셋 (Wikimedia Commons CDN으로 대체)
+public/images/tarot/
+
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
