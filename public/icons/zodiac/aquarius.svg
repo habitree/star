@@ -1,14 +1,36 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" id="aquarius-icon">
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="aquarius-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FFD700"/>
-      <stop offset="100%" stop-color="#06B6D4"/>
-    </linearGradient>
+    <filter id="star-glow-aquarius" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <radialGradient id="bg-grad-aquarius" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1a1040" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#050510" stop-opacity="0.98"/>
+    </radialGradient>
   </defs>
-  <g fill="none" stroke="url(#aquarius-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Top wave -->
-    <path d="M16 24 C20 20, 24 28, 28 24 C32 20, 36 28, 40 24 C44 20, 48 28, 48 24"/>
-    <!-- Bottom wave -->
-    <path d="M16 36 C20 32, 24 40, 28 36 C32 32, 36 40, 40 36 C44 32, 48 40, 48 36"/>
+  <!-- Background -->
+  <circle cx="100" cy="100" r="99" fill="url(#bg-grad-aquarius)" stroke="rgba(255,215,0,0.3)" stroke-width="1"/>
+  <!-- Background stars (tiny decorative) -->
+  <circle cx="30" cy="40" r="0.8" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="160" cy="30" r="0.7" fill="rgba(255,255,255,0.25)"/>
+  <circle cx="170" cy="150" r="0.9" fill="rgba(255,255,255,0.2)"/>
+  <circle cx="25" cy="155" r="0.6" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="180" cy="80" r="0.7" fill="rgba(255,255,255,0.2)"/>
+  <!-- Constellation lines -->
+  <g stroke="rgba(255,255,255,0.2)" stroke-width="0.8" stroke-linecap="round">
+    <line x1="90" y1="90" x2="120" y2="70"/>
+    <line x1="90" y1="90" x2="70" y2="120"/>
+    <line x1="90" y1="90" x2="140" y2="110"/>
+    <line x1="70" y1="120" x2="60" y2="100"/>
   </g>
+  <!-- Stars -->
+  <!-- Primary star: Sadalsuud -->
+  <circle cx="90" cy="90" r="4.5" fill="#FFD700" filter="url(#star-glow-aquarius)" opacity="0.9"/>
+  <!-- Secondary stars -->
+  <circle cx="120" cy="70" r="4" fill="rgba(255,215,0,0.8)"/>
+  <circle cx="70" cy="120" r="3" fill="rgba(255,215,0,0.8)"/>
+  <circle cx="140" cy="110" r="3" fill="rgba(255,215,0,0.8)"/>
+  <!-- Tertiary stars -->
+  <circle cx="60" cy="100" r="2.5" fill="rgba(255,255,255,0.6)"/>
 </svg>

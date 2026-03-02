@@ -1,16 +1,35 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" id="taurus-icon">
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="taurus-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#8B4513"/>
-      <stop offset="100%" stop-color="#2D5016"/>
-    </linearGradient>
+    <filter id="star-glow-taurus" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <radialGradient id="bg-grad-taurus" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1a1040" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#050510" stop-opacity="0.98"/>
+    </radialGradient>
   </defs>
-  <g fill="none" stroke="url(#taurus-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Circle (head) -->
-    <circle cx="32" cy="38" r="10"/>
-    <!-- Left horn -->
-    <path d="M22 38 C18 38, 16 32, 16 24 C16 18, 20 16, 24 18"/>
-    <!-- Right horn -->
-    <path d="M42 38 C46 38, 48 32, 48 24 C48 18, 44 16, 40 18"/>
+  <!-- Background -->
+  <circle cx="100" cy="100" r="99" fill="url(#bg-grad-taurus)" stroke="rgba(255,215,0,0.3)" stroke-width="1"/>
+  <!-- Background stars (tiny decorative) -->
+  <circle cx="30" cy="40" r="0.8" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="160" cy="30" r="0.7" fill="rgba(255,255,255,0.25)"/>
+  <circle cx="170" cy="150" r="0.9" fill="rgba(255,255,255,0.2)"/>
+  <circle cx="25" cy="155" r="0.6" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="180" cy="80" r="0.7" fill="rgba(255,255,255,0.2)"/>
+  <!-- Constellation lines -->
+  <g stroke="rgba(255,255,255,0.2)" stroke-width="0.8" stroke-linecap="round">
+    <line x1="80" y1="100" x2="105" y2="80"/>
+    <line x1="105" y1="80" x2="150" y2="60"/>
+    <line x1="80" y1="100" x2="50" y2="70"/>
   </g>
+  <!-- Stars -->
+  <!-- Primary star: Aldebaran -->
+  <circle cx="80" cy="100" r="5" fill="#FFD700" filter="url(#star-glow-taurus)"/>
+  <!-- Secondary stars -->
+  <circle cx="150" cy="60" r="3.5" fill="rgba(255,215,0,0.8)"/>
+  <circle cx="105" cy="80" r="2.5" fill="rgba(255,215,0,0.8)"/>
+  <circle cx="95" cy="95" r="2" fill="rgba(255,215,0,0.8)"/>
+  <!-- Tertiary stars -->
+  <circle cx="50" cy="70" r="2" fill="rgba(255,255,255,0.6)"/>
 </svg>

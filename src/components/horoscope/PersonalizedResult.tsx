@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import ZodiacIcon from '@/components/ui/ZodiacIcon';
 import { zodiacData } from '@/data/zodiac-info';
 import { isAdSenseEnabled } from '@/lib/adsense-config';
 import { AdSenseUnit, AdSenseInArticle } from '@/components/ads';
@@ -143,10 +144,10 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
       <RevealSection>
         <div className={`glass-card p-6 text-center element-${info.element} relative overflow-hidden`}>
           <div
-            className="text-6xl mb-2"
+            className="mb-2 flex justify-center"
             style={{ filter: `drop-shadow(0 0 20px ${theme.glowColor})` }}
           >
-            {info.symbol}
+            <ZodiacIcon sign={signId} size="xl" animated />
           </div>
           <h2 className="text-2xl font-serif font-bold text-white">
             <TypingReveal text={info.name} speed={80} />
@@ -296,9 +297,11 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
         <div className="glass-card p-6 text-center">
           <h3 className="text-lg font-semibold text-white mb-3">오늘의 궁합 하이라이트</h3>
           <div className="flex items-center justify-center gap-3 mb-3">
-            <span className="text-3xl" style={{ filter: `drop-shadow(0 0 10px ${theme.glowColor})` }}>{info.symbol}</span>
+            <div style={{ filter: `drop-shadow(0 0 10px ${theme.glowColor})` }}>
+              <ZodiacIcon sign={signId} size="md" />
+            </div>
             <span className="text-white/30">×</span>
-            <span className="text-3xl">{bestMatchInfo.symbol}</span>
+            <ZodiacIcon sign={compatibilityHighlight.bestMatch} size="md" />
           </div>
           <p className="text-white font-medium">{bestMatchInfo.name}</p>
           <p className={`text-sm ${theme.textClass} mb-2`}>궁합 점수: {compatibilityHighlight.score}점</p>

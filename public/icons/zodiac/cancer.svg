@@ -1,14 +1,36 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" id="cancer-icon">
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="cancer-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#003DA5"/>
-      <stop offset="100%" stop-color="#008B8B"/>
-    </linearGradient>
+    <filter id="star-glow-cancer" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <radialGradient id="bg-grad-cancer" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1a1040" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#050510" stop-opacity="0.98"/>
+    </radialGradient>
   </defs>
-  <g fill="none" stroke="url(#cancer-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Top curl (69 shape rotated) -->
-    <path d="M16 28 C16 20, 32 16, 44 20 C48 22, 48 28, 44 28 C40 28, 40 24, 44 24"/>
-    <!-- Bottom curl -->
-    <path d="M48 36 C48 44, 32 48, 20 44 C16 42, 16 36, 20 36 C24 36, 24 40, 20 40"/>
+  <!-- Background -->
+  <circle cx="100" cy="100" r="99" fill="url(#bg-grad-cancer)" stroke="rgba(255,215,0,0.3)" stroke-width="1"/>
+  <!-- Background stars (tiny decorative) -->
+  <circle cx="30" cy="40" r="0.8" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="160" cy="30" r="0.7" fill="rgba(255,255,255,0.25)"/>
+  <circle cx="170" cy="150" r="0.9" fill="rgba(255,255,255,0.2)"/>
+  <circle cx="25" cy="155" r="0.6" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="180" cy="80" r="0.7" fill="rgba(255,255,255,0.2)"/>
+  <!-- Constellation lines -->
+  <g stroke="rgba(255,255,255,0.2)" stroke-width="0.8" stroke-linecap="round">
+    <line x1="80" y1="90" x2="100" y2="80"/>
+    <line x1="100" y1="80" x2="115" y2="85"/>
+    <line x1="115" y1="85" x2="110" y2="110"/>
   </g>
+  <!-- Stars -->
+  <!-- Primary star: Al_Tarf -->
+  <circle cx="110" cy="110" r="3.5" fill="#FFD700" filter="url(#star-glow-cancer)"/>
+  <!-- Secondary stars -->
+  <circle cx="80" cy="90" r="3" fill="rgba(255,215,0,0.8)"/>
+  <circle cx="100" cy="80" r="3.5" fill="rgba(255,215,0,0.8)"/>
+  <!-- Tertiary stars -->
+  <circle cx="115" cy="85" r="2.5" fill="rgba(255,215,0,0.8)"/>
+  <circle cx="115" cy="85" r="2.5" fill="rgba(255,215,0,0.8)"/>
+  <circle cx="70" cy="120" r="2" fill="rgba(255,255,255,0.6)"/>
 </svg>

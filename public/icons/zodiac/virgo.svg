@@ -1,16 +1,36 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" id="virgo-icon">
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="virgo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#8B4513"/>
-      <stop offset="100%" stop-color="#2D5016"/>
-    </linearGradient>
+    <filter id="star-glow-virgo" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <radialGradient id="bg-grad-virgo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1a1040" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#050510" stop-opacity="0.98"/>
+    </radialGradient>
   </defs>
-  <g fill="none" stroke="url(#virgo-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <!-- M shape with loops -->
-    <path d="M16 44 L16 24 C16 20, 20 16, 24 20 L24 44"/>
-    <path d="M24 24 C24 20, 28 16, 32 20 L32 44"/>
-    <path d="M32 24 C32 20, 36 16, 40 20 L40 36"/>
-    <!-- Curved tail crossing -->
-    <path d="M40 36 C44 40, 48 36, 48 32 C48 28, 44 28, 42 32 C40 36, 44 44, 48 48"/>
+  <!-- Background -->
+  <circle cx="100" cy="100" r="99" fill="url(#bg-grad-virgo)" stroke="rgba(255,215,0,0.3)" stroke-width="1"/>
+  <!-- Background stars (tiny decorative) -->
+  <circle cx="30" cy="40" r="0.8" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="160" cy="30" r="0.7" fill="rgba(255,255,255,0.25)"/>
+  <circle cx="170" cy="150" r="0.9" fill="rgba(255,255,255,0.2)"/>
+  <circle cx="25" cy="155" r="0.6" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="180" cy="80" r="0.7" fill="rgba(255,255,255,0.2)"/>
+  <!-- Constellation lines -->
+  <g stroke="rgba(255,255,255,0.2)" stroke-width="0.8" stroke-linecap="round">
+    <line x1="70" y1="70" x2="90" y2="90"/>
+    <line x1="90" y1="90" x2="110" y2="130"/>
+    <line x1="90" y1="90" x2="140" y2="70"/>
+    <line x1="110" y1="130" x2="120" y2="100"/>
   </g>
+  <!-- Stars -->
+  <!-- Primary star: Spica -->
+  <circle cx="110" cy="130" r="5" fill="#FFD700" filter="url(#star-glow-virgo)"/>
+  <!-- Secondary stars -->
+  <circle cx="90" cy="90" r="3.5" fill="rgba(255,215,0,0.8)"/>
+  <circle cx="140" cy="70" r="3" fill="rgba(255,215,0,0.8)"/>
+  <!-- Tertiary stars -->
+  <circle cx="70" cy="70" r="3" fill="rgba(255,215,0,0.8)"/>
+  <circle cx="120" cy="100" r="2.5" fill="rgba(255,215,0,0.8)"/>
 </svg>

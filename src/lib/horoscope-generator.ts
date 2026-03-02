@@ -827,6 +827,7 @@ export function generateDailyTarot(
     id: card.id,
     name: card.name,
     symbol: card.symbol,
+    imageUrl: card.imageUrl,
     meaning: isReversed ? card.reversed : card.meaning,
     reversed: card.reversed,
     advice: card.advice,

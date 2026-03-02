@@ -1,16 +1,36 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" id="sagittarius-icon">
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="sagittarius-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#D32F2F"/>
-      <stop offset="100%" stop-color="#FF6F00"/>
-    </linearGradient>
+    <filter id="star-glow-sagittarius" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <radialGradient id="bg-grad-sagittarius" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1a1040" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#050510" stop-opacity="0.98"/>
+    </radialGradient>
   </defs>
-  <g fill="none" stroke="url(#sagittarius-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Main arrow diagonal -->
-    <line x1="16" y1="48" x2="48" y2="16"/>
-    <!-- Arrow head -->
-    <path d="M36 16 L48 16 L48 28"/>
-    <!-- Cross line -->
-    <line x1="24" y1="28" x2="36" y2="40"/>
+  <!-- Background -->
+  <circle cx="100" cy="100" r="99" fill="url(#bg-grad-sagittarius)" stroke="rgba(255,215,0,0.3)" stroke-width="1"/>
+  <!-- Background stars (tiny decorative) -->
+  <circle cx="30" cy="40" r="0.8" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="160" cy="30" r="0.7" fill="rgba(255,255,255,0.25)"/>
+  <circle cx="170" cy="150" r="0.9" fill="rgba(255,255,255,0.2)"/>
+  <circle cx="25" cy="155" r="0.6" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="180" cy="80" r="0.7" fill="rgba(255,255,255,0.2)"/>
+  <!-- Constellation lines -->
+  <g stroke="rgba(255,255,255,0.2)" stroke-width="0.8" stroke-linecap="round">
+    <line x1="100" y1="90" x2="105" y2="110"/>
+    <line x1="105" y1="110" x2="120" y2="140"/>
+    <line x1="120" y1="140" x2="90" y2="120"/>
   </g>
+  <!-- Stars -->
+  <!-- Primary star: Kaus_Australis -->
+  <circle cx="120" cy="140" r="4.5" fill="#FFD700" filter="url(#star-glow-sagittarius)" opacity="0.9"/>
+  <!-- Secondary stars -->
+  <circle cx="100" cy="90" r="4" fill="rgba(255,215,0,0.8)"/>
+  <circle cx="90" cy="120" r="3.5" fill="rgba(255,215,0,0.8)"/>
+  <circle cx="105" cy="110" r="3" fill="rgba(255,215,0,0.8)"/>
+  <!-- Tertiary stars -->
+  <circle cx="70" cy="150" r="2.5" fill="rgba(255,255,255,0.6)"/>
+  <circle cx="80" cy="165" r="2" fill="rgba(255,255,255,0.6)"/>
 </svg>

@@ -1,16 +1,36 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" id="pisces-icon">
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="pisces-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#003DA5"/>
-      <stop offset="100%" stop-color="#008B8B"/>
-    </linearGradient>
+    <filter id="star-glow-pisces" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <radialGradient id="bg-grad-pisces" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1a1040" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#050510" stop-opacity="0.98"/>
+    </radialGradient>
   </defs>
-  <g fill="none" stroke="url(#pisces-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Left fish curve ))  -->
-    <path d="M20 16 C12 24, 12 40, 20 48"/>
-    <!-- Right fish curve (( -->
-    <path d="M44 16 C52 24, 52 40, 44 48"/>
-    <!-- Horizontal connecting line -->
-    <line x1="16" y1="32" x2="48" y2="32"/>
+  <!-- Background -->
+  <circle cx="100" cy="100" r="99" fill="url(#bg-grad-pisces)" stroke="rgba(255,215,0,0.3)" stroke-width="1"/>
+  <!-- Background stars (tiny decorative) -->
+  <circle cx="30" cy="40" r="0.8" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="160" cy="30" r="0.7" fill="rgba(255,255,255,0.25)"/>
+  <circle cx="170" cy="150" r="0.9" fill="rgba(255,255,255,0.2)"/>
+  <circle cx="25" cy="155" r="0.6" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="180" cy="80" r="0.7" fill="rgba(255,255,255,0.2)"/>
+  <!-- Constellation lines -->
+  <g stroke="rgba(255,255,255,0.2)" stroke-width="0.8" stroke-linecap="round">
+    <line x1="100" y1="80" x2="115" y2="65"/>
+    <line x1="100" y1="80" x2="70" y2="110"/>
+    <line x1="100" y1="80" x2="130" y2="120"/>
+    <line x1="130" y1="120" x2="145" y2="90"/>
   </g>
+  <!-- Stars -->
+  <!-- Primary star: Eta_Psc -->
+  <circle cx="100" cy="80" r="3.5" fill="#FFD700" filter="url(#star-glow-pisces)" opacity="0.9"/>
+  <!-- Secondary stars -->
+  <circle cx="130" cy="120" r="3.5" fill="rgba(255,215,0,0.8)"/>
+  <circle cx="70" cy="110" r="3" fill="rgba(255,215,0,0.8)"/>
+  <!-- Tertiary stars -->
+  <circle cx="115" cy="65" r="2.5" fill="rgba(255,255,255,0.6)"/>
+  <circle cx="145" cy="90" r="2" fill="rgba(255,255,255,0.6)"/>
 </svg>

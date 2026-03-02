@@ -29,7 +29,8 @@ export interface BiorhythmData {
 export interface TarotCard {
   id: number;         // 0-21 (메이저 아르카나)
   name: string;       // 한국어 이름
-  symbol: string;     // 이모지 심볼
+  symbol: string;     // 이모지 심볼 (폴백)
+  imageUrl: string;   // RWS 실제 이미지 경로
   meaning: string;    // 정방향 의미
   reversed: string;   // 역방향 의미
   advice: string;     // 조언 메시지
