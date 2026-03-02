@@ -5,7 +5,8 @@
 
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { getTodayTopSigns, generateDailyHoroscope } from '@/lib/horoscope-generator';
+import { getTodayTopSigns, generateDailyHoroscope, setTemplateData } from '@/lib/horoscope-generator';
+import { loadTemplates } from '@/lib/template-loader';
 import { zodiacData } from '@/data/zodiac-info';
 import { getSiteUrl } from '@/lib/site-url';
 import HoroscopeClientApp from '@/components/horoscope/HoroscopeClientApp';
@@ -31,6 +32,8 @@ export const metadata: Metadata = {
 };
 
 export default async function HoroscopePage() {
+  setTemplateData(await loadTemplates());
+
   // 오늘의 TOP 3 가져오기
   const topSigns = getTodayTopSigns(new Date(), 3);
 

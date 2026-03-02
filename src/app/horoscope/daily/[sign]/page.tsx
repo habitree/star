@@ -14,7 +14,9 @@ import {
   generateTimeFortune,
   generateDailyTarot,
   generateCompatibilityHighlight,
+  setTemplateData,
 } from '@/lib/horoscope-generator';
+import { loadTemplates } from '@/lib/template-loader';
 import { zodiacData } from '@/data/zodiac-info';
 import ScoreBar from '@/components/ui/ScoreBar';
 import ShareButton from '@/components/ui/ShareButton';
@@ -96,6 +98,8 @@ export default async function SignDailyHoroscopePage({
 
   const signId = sign as ZodiacSignId;
   const signData = zodiacData[signId];
+
+  setTemplateData(await loadTemplates());
 
   // 일일 운세 생성
   const today = new Date();

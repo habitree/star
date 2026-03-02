@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>환경변수 설정 가이드 — 별자리 운세 서비스</title>
+  <style>
+    /* ── Reset & Base ─────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d1117;
+      --bg2:       #161b22;
+      --bg3:       #21262d;
+      --border:    #30363d;
+      --text:      #e6edf3;
+      --text-sub:  #8b949e;
+      --purple:    #7c3aed;
+      --purple-l:  #a78bfa;
+      --blue:      #1d4ed8;
+      --blue-l:    #60a5fa;
+      --green:     #16a34a;
+      --green-l:   #4ade80;
+      --orange:    #d97706;
+      --orange-l:  #fbbf24;
+      --red:       #dc2626;
+      --red-l:     #f87171;
+      --teal:      #0891b2;
+      --teal-l:    #22d3ee;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem 1rem;
+    }
+
+    a { color: var(--blue-l); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    code, pre {
+      font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    }
+
+    /* ── Layout ───────────────────────────────────── */
+    .container { max-width: 960px; margin: 0 auto; }
+
+    /* ── Header ───────────────────────────────────── */
+    .site-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .site-header .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      color: #fff;
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      padding: .25rem .75rem;
+      border-radius: 9999px;
+      margin-bottom: 1rem;
+    }
+    .site-header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--purple-l), var(--blue-l));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: .5rem;
+    }
+    .site-header p { color: var(--text-sub); font-size: .95rem; }
+
+    /* ── Section ──────────────────────────────────── */
+    section { margin-bottom: 2.5rem; }
+    section > h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    section > h2::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 1.1em;
+      background: linear-gradient(180deg, var(--purple), var(--blue));
+      border-radius: 2px;
+    }
+
+    /* ── Bundle size card ─────────────────────────── */
+    .bundle-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .bundle-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      text-align: center;
+    }
+    .bundle-card .label { font-size: .8rem; color: var(--text-sub); margin-bottom: .4rem; }
+    .bundle-card .value { font-size: 1.8rem; font-weight: 800; }
+    .bundle-card .value.bad  { color: var(--red-l); }
+    .bundle-card .value.good { color: var(--green-l); }
+    .bundle-card .sub  { font-size: .75rem; color: var(--text-sub); margin-top: .2rem; }
+    .arrow { display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--text-sub); }
+
+    /* ── Env table ────────────────────────────────── */
+    .env-table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .env-table thead {
+      background: var(--bg3);
+    }
+    .env-table th {
+      text-align: left;
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--text-sub);
+      letter-spacing: .05em;
+      padding: .75rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .env-table tbody tr {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      transition: background .15s;
+    }
+    .env-table tbody tr:last-child { border-bottom: none; }
+    .env-table tbody tr:hover { background: var(--bg3); }
+    .env-table td { padding: .85rem 1rem; vertical-align: top; }
+
+    .key-cell {
+      font-family: 'Cascadia Code', 'Fira Code', monospace;
+      font-size: .82rem;
+      white-space: nowrap;
+    }
+    .key-cell .copy-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-sub);
+      cursor: pointer;
+      font-size: .7rem;
+      padding: .1rem .4rem;
+      margin-left: .4rem;
+      transition: all .15s;
+    }
+    .key-cell .copy-btn:hover {
+      background: var(--bg3);
+      color: var(--text);
+    }
+
+    .desc-cell { font-size: .85rem; color: var(--text); }
+    .desc-cell .note { font-size: .78rem; color: var(--text-sub); margin-top: .25rem; }
+
+    .badge-tag {
+      display: inline-block;
+      font-size: .7rem;
+      font-weight: 700;
+      padding: .15rem .5rem;
+      border-radius: 6px;
+      margin-right: .3rem;
+      white-space: nowrap;
+    }
+    .tag-required { background: #7c3aed22; color: var(--purple-l); border: 1px solid #7c3aed55; }
+    .tag-optional { background: #d9770622; color: var(--orange-l); border: 1px solid #d9770655; }
+    .tag-secret   { background: #dc262622; color: var(--red-l);    border: 1px solid #dc262655; }
+    .tag-public   { background: #16a34a22; color: var(--green-l);  border: 1px solid #16a34a55; }
+    .tag-server   { background: #0891b222; color: var(--teal-l);   border: 1px solid #0891b255; }
+
+    .env-value {
+      display: inline-block;
+      font-family: monospace;
+      font-size: .78rem;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: .15rem .5rem;
+      color: var(--orange-l);
+      margin-top: .3rem;
+    }
+
+    /* ── Step cards ───────────────────────────────── */
+    .steps { display: flex; flex-direction: column; gap: 1rem; }
+    .step-card {
+      display: flex;
+      gap: 1.25rem;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      align-items: flex-start;
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: .85rem;
+      color: #fff;
+    }
+    .step-content h3 {
+      font-size: .95rem;
+      font-weight: 700;
+      margin-bottom: .4rem;
+      color: var(--text);
+    }
+    .step-content p {
+      font-size: .85rem;
+      color: var(--text-sub);
+      margin-bottom: .5rem;
+    }
+
+    /* ── Code block ───────────────────────────────── */
+    .code-block {
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: .5rem 0;
+    }
+    .code-block .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg3);
+      padding: .4rem .75rem;
+      font-size: .75rem;
+      color: var(--text-sub);
+    }
+    .code-block pre {
+      padding: .85rem 1rem;
+      font-size: .82rem;
+      line-height: 1.7;
+      overflow-x: auto;
+      color: var(--text);
+    }
+    .code-block pre .comment  { color: #6e7681; }
+    .code-block pre .key      { color: #79c0ff; }
+    .code-block pre .value    { color: var(--orange-l); }
+    .code-block pre .cmd      { color: var(--green-l); }
+    .code-block pre .flag     { color: var(--purple-l); }
+
+    /* ── Info box ─────────────────────────────────── */
+    .info-box {
+      display: flex;
+      gap: .75rem;
+      background: #0891b211;
+      border: 1px solid #0891b244;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin: .75rem 0;
+      font-size: .85rem;
+      color: var(--teal-l);
+    }
+    .warn-box {
+      display: flex;
+      gap: .75rem;
+      background: #d9770611;
+      border: 1px solid #d9770644;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin: .75rem 0;
+      font-size: .85rem;
+      color: var(--orange-l);
+    }
+    .danger-box {
+      display: flex;
+      gap: .75rem;
+      background: #dc262611;
+      border: 1px solid #dc262644;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin: .75rem 0;
+      font-size: .85rem;
+      color: var(--red-l);
+    }
+
+    /* ── Platform tabs ────────────────────────────── */
+    .tabs { display: flex; gap: .5rem; margin-bottom: .75rem; flex-wrap: wrap; }
+    .tab-btn {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-sub);
+      cursor: pointer;
+      font-size: .82rem;
+      font-weight: 600;
+      padding: .4rem .85rem;
+      transition: all .15s;
+    }
+    .tab-btn.active, .tab-btn:hover {
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      border-color: transparent;
+      color: #fff;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* ── Footer ───────────────────────────────────── */
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      font-size: .8rem;
+      color: var(--text-sub);
+    }
+
+    /* ── Responsive ───────────────────────────────── */
+    @media (max-width: 640px) {
+      .env-table { font-size: .8rem; }
+      .env-table td, .env-table th { padding: .6rem .75rem; }
+      .bundle-cards { grid-template-columns: 1fr 1fr; }
+      .arrow { display: none; }
+      body { padding: 1rem .75rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ── Header ──────────────────────────────────────── -->
+  <header class="site-header">
+    <div class="badge">INFRA AGENT — 별의 건축가</div>
+    <h1>환경변수 설정 가이드</h1>
+    <p>별자리 운세 서비스 · Supabase 데이터 외부화 · Cloudflare Workers 배포</p>
+  </header>
+
+  <!-- ── Bundle 크기 결과 ─────────────────────────────── -->
+  <section>
+    <h2>Worker 번들 크기 개선 결과</h2>
+    <div class="bundle-cards">
+      <div class="bundle-card">
+        <div class="label">변경 전 (gzip)</div>
+        <div class="value bad">~4 MB</div>
+        <div class="sub">Workers 무료 한도 초과</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="bundle-card">
+        <div class="label">변경 후 (gzip)</div>
+        <div class="value good">1.03 MB</div>
+        <div class="sub">Workers 무료 한도 ✓ 충족</div>
+      </div>
+      <div class="bundle-card">
+        <div class="label">원인 파일</div>
+        <div class="value" style="font-size:1rem;color:var(--orange-l)">sign-templates</div>
+        <div class="sub">2.94 MB → Supabase 외부화</div>
+      </div>
+    </div>
+    <div class="info-box">
+      ℹ️ sign-templates / element-templates는 이제 빌드 번들에 포함되지 않습니다.
+      런타임에 Supabase에서 로드되며, Workers module-level 캐시로 반복 fetch를 방지합니다.
+    </div>
+  </section>
+
+  <!-- ── 전체 환경변수 목록 ────────────────────────────── -->
+  <section>
+    <h2>전체 환경변수 목록</h2>
+    <table class="env-table">
+      <thead>
+        <tr>
+          <th>환경변수 키</th>
+          <th>설명 / 용도</th>
+          <th>범위</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- ── Supabase 그룹 ──── -->
+        <tr>
+          <td class="key-cell">
+            NEXT_PUBLIC_SUPABASE_URL
+            <button class="copy-btn" onclick="copyKey(this, 'NEXT_PUBLIC_SUPABASE_URL')">복사</button>
+            <br>
+            <span class="env-value">https://xxxx.supabase.co</span>
+          </td>
+          <td class="desc-cell">
+            <span class="badge-tag tag-required">필수</span>
+            <span class="badge-tag tag-public">PUBLIC</span>
+            Supabase 프로젝트 URL
+            <div class="note">
+              Settings → API → Project URL<br>
+              <code>NEXT_PUBLIC_</code> 접두사이므로 브라우저에서도 접근 가능하지만,
+              템플릿 데이터는 서버에서만 로드합니다.
+            </div>
+          </td>
+          <td class="desc-cell" style="white-space:nowrap">
+            .env.local<br>CF Workers<br>Vercel (필요 시)
+          </td>
+        </tr>
+
+        <tr>
+          <td class="key-cell">
+            NEXT_PUBLIC_SUPABASE_ANON_KEY
+            <button class="copy-btn" onclick="copyKey(this, 'NEXT_PUBLIC_SUPABASE_ANON_KEY')">복사</button>
+            <br>
+            <span class="env-value">eyJhbGciOiJIUzI1NiIs...</span>
+          </td>
+          <td class="desc-cell">
+            <span class="badge-tag tag-required">필수</span>
+            <span class="badge-tag tag-public">PUBLIC</span>
+            Supabase 공개 키 (anon / public)
+            <div class="note">
+              Settings → API → Project API keys → anon key<br>
+              RLS가 활성화된 경우 공개 읽기만 허용됩니다.
+              SUPABASE_SERVICE_ROLE_KEY가 없을 때 쓰기 폴백으로도 사용됩니다.
+            </div>
+          </td>
+          <td class="desc-cell" style="white-space:nowrap">
+            .env.local<br>CF Workers
+          </td>
+        </tr>
+
+        <tr>
+          <td class="key-cell">
+            SUPABASE_SERVICE_ROLE_KEY
+            <button class="copy-btn" onclick="copyKey(this, 'SUPABASE_SERVICE_ROLE_KEY')">복사</button>
+            <br>
+            <span class="env-value">eyJhbGciOiJIUzI1NiIs...</span>
+          </td>
+          <td class="desc-cell">
+            <span class="badge-tag tag-required">필수</span>
+            <span class="badge-tag tag-secret">SECRET</span>
+            <span class="badge-tag tag-server">서버 전용</span>
+            Supabase 서비스 역할 키 (관리자 권한)
+            <div class="note">
+              Settings → API → Project API keys → service_role key<br>
+              ⚠️ 절대 클라이언트(브라우저)에 노출하면 안 됩니다.<br>
+              upload-templates.ts 스크립트와 서버 사이드 읽기에 사용됩니다.
+            </div>
+          </td>
+          <td class="desc-cell" style="white-space:nowrap">
+            .env.local<br>CF Workers Secret
+          </td>
+        </tr>
+
+        <!-- ── 기존 변수 그룹 ──── -->
+        <tr>
+          <td class="key-cell">
+            NEXT_PUBLIC_ADSENSE_PUBLISHER_ID
+            <button class="copy-btn" onclick="copyKey(this, 'NEXT_PUBLIC_ADSENSE_PUBLISHER_ID')">복사</button>
+            <br>
+            <span class="env-value">ca-pub-XXXXXXXXXXXXXXXX</span>
+          </td>
+          <td class="desc-cell">
+            <span class="badge-tag tag-optional">선택</span>
+            <span class="badge-tag tag-public">PUBLIC</span>
+            Google AdSense 게시자 ID
+            <div class="note">
+              미설정 시 광고 비활성화 (adsense-config.ts에서 체크)
+            </div>
+          </td>
+          <td class="desc-cell" style="white-space:nowrap">
+            .env.local<br>CF Workers
+          </td>
+        </tr>
+
+        <tr>
+          <td class="key-cell">
+            CLOUDFLARE_API_TOKEN
+            <button class="copy-btn" onclick="copyKey(this, 'CLOUDFLARE_API_TOKEN')">복사</button>
+          </td>
+          <td class="desc-cell">
+            <span class="badge-tag tag-optional">선택</span>
+            <span class="badge-tag tag-secret">SECRET</span>
+            Cloudflare API 토큰
+            <div class="note">
+              wrangler deploy 자동화 시 사용.
+              로컬에서는 <code>npx wrangler login</code>으로 대체 가능합니다.
+            </div>
+          </td>
+          <td class="desc-cell" style="white-space:nowrap">
+            .env.local (로컬)<br>CI/CD 환경변수
+          </td>
+        </tr>
+
+        <tr>
+          <td class="key-cell">
+            CLOUDFLARE_ACCOUNT_ID
+            <button class="copy-btn" onclick="copyKey(this, 'CLOUDFLARE_ACCOUNT_ID')">복사</button>
+          </td>
+          <td class="desc-cell">
+            <span class="badge-tag tag-optional">선택</span>
+            Cloudflare 계정 ID
+            <div class="note">
+              wrangler.toml의 account_id 또는 환경변수로 설정.
+              Cloudflare Dashboard → 우측 사이드바에서 확인
+            </div>
+          </td>
+          <td class="desc-cell" style="white-space:nowrap">
+            .env.local (로컬)
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── .env.local 파일 예시 ────────────────────────── -->
+  <section>
+    <h2>.env.local 파일 설정</h2>
+    <div class="warn-box">
+      ⚠️ .env.local은 <strong>절대 git commit하지 마세요</strong>.
+      .gitignore에 포함되어 있는지 확인하세요.
+    </div>
+    <div class="code-block">
+      <div class="code-header">
+        <span>.env.local</span>
+        <span>프로젝트 루트에 위치</span>
+      </div>
+      <pre><span class="comment"># ── Supabase (Worker 번들 크기 감소 — 템플릿 데이터 외부화) ──</span>
+<span class="key">NEXT_PUBLIC_SUPABASE_URL</span>=<span class="value">https://xxxxxxxxxxxx.supabase.co</span>
+<span class="key">NEXT_PUBLIC_SUPABASE_ANON_KEY</span>=<span class="value">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</span>
+<span class="key">SUPABASE_SERVICE_ROLE_KEY</span>=<span class="value">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</span>
+
+<span class="comment"># ── Google AdSense ────────────────────────────────────────────</span>
+<span class="key">NEXT_PUBLIC_ADSENSE_PUBLISHER_ID</span>=<span class="value">ca-pub-XXXXXXXXXXXXXXXX</span>
+
+<span class="comment"># ── Cloudflare (로컬 배포 자동화용, 선택) ─────────────────────</span>
+<span class="key">CLOUDFLARE_API_TOKEN</span>=<span class="value">your_cloudflare_api_token</span>
+<span class="key">CLOUDFLARE_ACCOUNT_ID</span>=<span class="value">your_cloudflare_account_id</span>
+</pre>
+    </div>
+  </section>
+
+  <!-- ── Cloudflare Workers 설정 ──────────────────────── -->
+  <section>
+    <h2>Cloudflare Workers 환경변수 설정</h2>
+    <p style="font-size:.85rem;color:var(--text-sub);margin-bottom:1rem">
+      .env.local은 로컬 개발용입니다. 배포된 Worker에는 별도로 환경변수를 설정해야 합니다.
+    </p>
+
+    <div class="tabs" id="cf-tabs">
+      <button class="tab-btn active" onclick="switchTab('wrangler-cli')">wrangler CLI (권장)</button>
+      <button class="tab-btn" onclick="switchTab('dashboard')">Cloudflare Dashboard</button>
+      <button class="tab-btn" onclick="switchTab('wrangler-toml')">wrangler.toml (비권장)</button>
+    </div>
+
+    <div id="wrangler-cli" class="tab-content active">
+      <div class="info-box">
+        ℹ️ Secret 명령어는 값을 암호화하여 저장합니다. 터미널에서 값을 입력 프롬프트로 받습니다.
+      </div>
+      <div class="code-block">
+        <div class="code-header"><span>Terminal</span><span>bash</span></div>
+        <pre><span class="comment"># Supabase URL (plain var)</span>
+<span class="cmd">npx wrangler</span> <span class="flag">secret put</span> NEXT_PUBLIC_SUPABASE_URL
+
+<span class="comment"># Supabase Anon Key</span>
+<span class="cmd">npx wrangler</span> <span class="flag">secret put</span> NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+<span class="comment"># Supabase Service Role Key (⚠️ 가장 민감한 키)</span>
+<span class="cmd">npx wrangler</span> <span class="flag">secret put</span> SUPABASE_SERVICE_ROLE_KEY
+
+<span class="comment"># (선택) AdSense</span>
+<span class="cmd">npx wrangler</span> <span class="flag">secret put</span> NEXT_PUBLIC_ADSENSE_PUBLISHER_ID
+
+<span class="comment"># 설정된 secret 목록 확인</span>
+<span class="cmd">npx wrangler</span> <span class="flag">secret list</span></pre>
+      </div>
+    </div>
+
+    <div id="dashboard" class="tab-content">
+      <div class="steps">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>Cloudflare Dashboard 접속</h3>
+            <p><a href="https://dash.cloudflare.com" target="_blank">dash.cloudflare.com</a> → Workers &amp; Pages</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>Worker 선택</h3>
+            <p>Workers &amp; Pages 목록에서 <strong>star</strong> Worker 클릭</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>Settings → Variables and Secrets</h3>
+            <p>상단 탭에서 Settings → Variables and Secrets 메뉴 이동</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h3>환경변수 추가</h3>
+            <p>Add variable 클릭 → 키/값 입력 → Encrypt 체크박스로 Secret 설정</p>
+            <div class="warn-box">⚠️ SUPABASE_SERVICE_ROLE_KEY는 반드시 Encrypt(암호화) 체크</div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h3>Save and Deploy</h3>
+            <p>저장 후 Worker가 자동으로 재배포됩니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="wrangler-toml" class="tab-content">
+      <div class="danger-box">
+        🚫 <strong>wrangler.toml에 실제 키 값을 직접 입력하지 마세요.</strong>
+        이 파일은 git에 커밋되므로 보안 사고의 원인이 됩니다.
+        플레이스홀더 주석만 포함되어 있으며 실제 값은 절대 입력하지 않습니다.
+      </div>
+      <div class="code-block">
+        <div class="code-header"><span>wrangler.toml</span><span>현재 상태 (안전)</span></div>
+        <pre><span class="comment"># 환경 변수 (프로덕션)</span>
+<span class="comment"># 실제 값은 Cloudflare Dashboard에서 설정하거나 wrangler secret put 명령으로 설정</span>
+<span class="comment"># [vars]</span>
+<span class="comment"># NEXT_PUBLIC_SUPABASE_URL = "https://xxx.supabase.co"</span>
+<span class="comment"># NEXT_PUBLIC_SUPABASE_ANON_KEY = "xxx"</span>
+<span class="comment"># SUPABASE_SERVICE_ROLE_KEY = "xxx"  (wrangler secret put SUPABASE_SERVICE_ROLE_KEY 권장)</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 배포 절차 ────────────────────────────────────── -->
+  <section>
+    <h2>전체 배포 절차</h2>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Supabase 테이블 생성</h3>
+          <p>Supabase SQL Editor에서 마이그레이션 파일 실행</p>
+          <div class="code-block">
+            <div class="code-header"><span>SQL Editor</span></div>
+            <pre><span class="comment">-- 001_create_template_tables.sql 내용 붙여넣기 실행</span>
+<span class="comment">-- 002_rls_policies.sql 내용 붙여넣기 실행</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>.env.local에 환경변수 추가</h3>
+          <p>NEXT_PUBLIC_SUPABASE_URL, ANON_KEY, SERVICE_ROLE_KEY 입력</p>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>템플릿 데이터 Supabase 업로드</h3>
+          <div class="code-block">
+            <div class="code-header"><span>Terminal</span></div>
+            <pre><span class="cmd">npm run</span> <span class="flag">upload-templates</span>
+<span class="comment"># → sign_templates 12개, element_templates 4개 upsert</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>Cloudflare Workers에 Secret 설정</h3>
+          <div class="code-block">
+            <div class="code-header"><span>Terminal</span></div>
+            <pre><span class="cmd">npx wrangler secret put</span> NEXT_PUBLIC_SUPABASE_URL
+<span class="cmd">npx wrangler secret put</span> NEXT_PUBLIC_SUPABASE_ANON_KEY
+<span class="cmd">npx wrangler secret put</span> SUPABASE_SERVICE_ROLE_KEY</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h3>빌드 &amp; 배포</h3>
+          <div class="code-block">
+            <div class="code-header"><span>Terminal</span></div>
+            <pre><span class="cmd">npm run</span> <span class="flag">build</span>        <span class="comment"># Next.js SSG 빌드</span>
+<span class="cmd">npm run</span> <span class="flag">cf:deploy</span>    <span class="comment"># CF Workers 빌드 + 배포</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <h3>배포 검증</h3>
+          <div class="code-block">
+            <div class="code-header"><span>Terminal</span></div>
+            <pre><span class="comment"># Worker 번들 gzip 크기 확인 (~1 MB 내외)</span>
+<span class="cmd">gzip -c</span> .open-next/server-functions/default/handler.mjs | wc -c
+
+<span class="comment"># API 정상 응답 확인</span>
+<span class="cmd">curl</span> https://star.cdhri.workers.dev/api/horoscope/daily/aries</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 데이터 업데이트 ─────────────────────────────── -->
+  <section>
+    <h2>템플릿 데이터 업데이트 방법</h2>
+    <div class="info-box">
+      ℹ️ <code>src/data/sign-templates/*.ts</code> 또는 <code>src/data/element-templates.ts</code>를
+      수정한 경우, Supabase를 재업로드하면 됩니다. Worker 재배포는 선택사항입니다.
+    </div>
+    <div class="code-block">
+      <div class="code-header"><span>Terminal</span></div>
+      <pre><span class="comment"># 1. 데이터 파일 수정 후</span>
+<span class="cmd">npm run</span> <span class="flag">upload-templates</span>   <span class="comment"># Supabase upsert</span>
+
+<span class="comment"># 2. Workers 캐시는 instance 재시작 시 자동 갱신됨</span>
+<span class="comment">#    즉시 반영이 필요한 경우 배포 재실행</span>
+<span class="cmd">npm run</span> <span class="flag">cf:deploy</span></pre>
+    </div>
+  </section>
+
+  <!-- ── Footer ──────────────────────────────────────── -->
+  <footer>
+    <p>별자리 운세 서비스 · 인프라 에이전트 문서 · 2026-03-02</p>
+    <p style="margin-top:.5rem">
+      관련 파일:
+      <code>src/lib/supabase.ts</code> ·
+      <code>src/lib/template-loader.ts</code> ·
+      <code>scripts/upload-templates.ts</code>
+    </p>
+  </footer>
+
+</div>
+
+<!-- ── Scripts ──────────────────────────────────────── -->
+<script>
+  function switchTab(id) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  function copyKey(btn, key) {
+    navigator.clipboard.writeText(key).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = '✓';
+      btn.style.color = 'var(--green-l)';
+      setTimeout(() => {
+        btn.textContent = orig;
+        btn.style.color = '';
+      }, 1500);
+    });
+  }
+</script>
+</body>
+</html>

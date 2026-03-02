@@ -13,7 +13,9 @@ import {
   generateTimeFortune,
   generateDailyTarot,
   generateCompatibilityHighlight,
+  setTemplateData,
 } from '@/lib/horoscope-generator';
+import { loadTemplates } from '@/lib/template-loader';
 import { zodiacData } from '@/data/zodiac-info';
 import { zodiacSigns } from '@/data/zodiac-signs';
 import ScoreBar from '@/components/ui/ScoreBar';
@@ -110,6 +112,9 @@ export default async function LocaleSignDailyHoroscopePage({
   const signData = zodiacData[signId];
   const signMeta = zodiacSigns.find((s) => s.id === signId);
   const signName = signMeta?.names[safeLocale] ?? signMeta?.names.ko ?? signData.name;
+
+  // 템플릿 데이터 초기화 (Supabase 미설정 시 generic 템플릿 폴백)
+  setTemplateData(await loadTemplates());
 
   const today = new Date();
   const dailyHoroscope = generateDailyHoroscope(signId, today, safeLocale);

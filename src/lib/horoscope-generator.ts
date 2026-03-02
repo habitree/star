@@ -42,11 +42,31 @@ import {
   dayNames,
   elementLuckyColors,
 } from '@/data/horoscope-templates';
-import { elementTemplates, type Element } from '@/data/element-templates';
-import { signTemplates } from '@/data/sign-templates';
+import type { ElementTemplates, Element } from '@/data/element-templates';
+import type { SignTemplates } from '@/data/sign-templates/types';
 import { zodiacSigns } from '@/data/zodiac-signs';
 import { getPlanetForSign, isPlanetAffectingCategory } from '@/data/planet-influences';
 import { toISODateString, getWeekStart, getWeekEnd } from '@/lib/utils';
+
+// ─── 런타임 주입 템플릿 데이터 ───────────────────────────────
+// setTemplateData()로 주입. 주입 전에는 빈 객체 → generic 템플릿으로 폴백
+let _signTemplates: Record<string, SignTemplates> = {};
+let _elementTemplates: Record<string, ElementTemplates> = {};
+
+/** setTemplateData 인자 타입 */
+export interface TemplateData {
+  signTemplates: Record<string, SignTemplates>;
+  elementTemplates: Record<string, ElementTemplates>;
+}
+
+/**
+ * Supabase에서 로드한 템플릿 데이터를 주입합니다.
+ * API routes와 SSG 페이지에서 generator 함수 호출 전 반드시 실행하세요.
+ */
+export function setTemplateData(data: TemplateData): void {
+  _signTemplates = data.signTemplates;
+  _elementTemplates = data.elementTemplates;
+}
 
 // 별자리 ID를 숫자로 변환 (시드 생성용)
 const signIdToNumber: Record<ZodiacSignId, number> = {
@@ -305,6 +325,7 @@ function selectGenericTemplate(
 
 /**
  * 원소 기반 카테고리별 운세 텍스트 선택
+ * _elementTemplates 미주입 시 generic 템플릿으로 폴백
  */
 function selectElementTemplate(
   signId: ZodiacSignId,
@@ -314,12 +335,16 @@ function selectElementTemplate(
 ): LocalizedText {
   const element = getSignElement(signId);
   const level = getTemplateLevel(score);
-  const templates = elementTemplates[element][category][level];
-  return selectRandom(templates, random);
+  const pool = _elementTemplates[element]?.[category]?.[level];
+  if (!pool || pool.length === 0) {
+    return selectGenericTemplate(category, score, random);
+  }
+  return selectRandom(pool, random);
 }
 
 /**
  * 별자리 전용 카테고리별 운세 텍스트 선택
+ * _signTemplates 미주입 시 generic 템플릿으로 폴백
  */
 function selectSignTemplate(
   signId: ZodiacSignId,
@@ -328,7 +353,10 @@ function selectSignTemplate(
   random: () => number
 ): LocalizedText {
   const level = getTemplateLevel(score);
-  const pool = signTemplates[signId][category][level];
+  const pool = _signTemplates[signId]?.[category]?.[level];
+  if (!pool || pool.length === 0) {
+    return selectGenericTemplate(category, score, random);
+  }
   return selectRandom(pool, random);
 }
 

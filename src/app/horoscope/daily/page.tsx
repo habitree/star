@@ -5,7 +5,8 @@
 
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { getAllDailyHoroscopes } from '@/lib/horoscope-generator';
+import { getAllDailyHoroscopes, setTemplateData } from '@/lib/horoscope-generator';
+import { loadTemplates } from '@/lib/template-loader';
 import { zodiacData } from '@/data/zodiac-info';
 import ScoreBar from '@/components/ui/ScoreBar';
 import { AdSenseUnit } from '@/components/ads';
@@ -98,6 +99,8 @@ function HoroscopeCard({ horoscope }: { horoscope: DailyHoroscope }) {
 }
 
 export default async function DailyHoroscopePage() {
+  setTemplateData(await loadTemplates());
+
   // 모든 별자리의 오늘 운세 가져오기
   const allHoroscopes = getAllDailyHoroscopes(new Date(), 'ko');
 

@@ -4,7 +4,8 @@
 
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { getTodayTopSigns, generateDailyHoroscope } from '@/lib/horoscope-generator';
+import { getTodayTopSigns, generateDailyHoroscope, setTemplateData } from '@/lib/horoscope-generator';
+import { loadTemplates } from '@/lib/template-loader';
 import { zodiacData } from '@/data/zodiac-info';
 import { zodiacSigns } from '@/data/zodiac-signs';
 import { getSiteUrl } from '@/lib/site-url';
@@ -74,6 +75,8 @@ export default async function LocaleHoroscopePage({
   const safeLocale = locales.includes(locale as Locale) ? (locale as Locale) : 'ko';
   const meta = pageMetaByLocale[safeLocale];
   const baseUrl = getSiteUrl();
+
+  setTemplateData(await loadTemplates());
 
   const topSigns = getTodayTopSigns(new Date(), 3);
   const topHoroscopes = topSigns.map((item) => ({

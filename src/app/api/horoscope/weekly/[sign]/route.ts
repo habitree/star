@@ -4,7 +4,8 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { generateWeeklyHoroscope } from '@/lib/horoscope-generator';
+import { generateWeeklyHoroscope, setTemplateData } from '@/lib/horoscope-generator';
+import { loadTemplates } from '@/lib/template-loader';
 import { checkRateLimit } from '@/lib/rate-limiter';
 import {
   ApiError,
@@ -33,6 +34,9 @@ export async function GET(
   if (rateLimitResponse) return rateLimitResponse;
 
   try {
+    // 템플릿 데이터 로드 (Supabase → module-level 캐시)
+    setTemplateData(await loadTemplates());
+
     const { sign } = await params;
     const { searchParams } = new URL(request.url);
 
