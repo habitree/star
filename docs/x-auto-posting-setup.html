@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>X 자동 포스팅 설정 가이드 — luckytoday.one</title>
+  <style>
+    :root {
+      --bg: #0d0d1a;
+      --surface: #13132a;
+      --surface2: #1a1a35;
+      --border: #2a2a50;
+      --accent: #7c3aed;
+      --accent2: #a855f7;
+      --gold: #f59e0b;
+      --green: #10b981;
+      --red: #ef4444;
+      --blue: #3b82f6;
+      --text: #e2e8f0;
+      --text2: #94a3b8;
+      --code-bg: #0f172a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ── 헤더 ── */
+    .hero {
+      background: linear-gradient(135deg, #1a0a3e 0%, #2d1060 50%, #0d0d2e 100%);
+      padding: 60px 24px 48px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(124,58,237,0.3) 0%, transparent 60%);
+    }
+    .hero-content { position: relative; z-index: 1; }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(124,58,237,0.2);
+      border: 1px solid rgba(168,85,247,0.4);
+      border-radius: 999px;
+      padding: 4px 14px;
+      font-size: 12px;
+      color: var(--accent2);
+      margin-bottom: 20px;
+      letter-spacing: 0.05em;
+    }
+    .hero h1 {
+      font-size: clamp(24px, 5vw, 40px);
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff 0%, #a855f7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+    }
+    .hero p {
+      color: var(--text2);
+      font-size: 16px;
+      max-width: 520px;
+      margin: 0 auto 24px;
+    }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .stat {
+      text-align: center;
+    }
+    .stat-val {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--accent2);
+    }
+    .stat-label {
+      font-size: 11px;
+      color: var(--text2);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ── 레이아웃 ── */
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* ── TOC ── */
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-bottom: 48px;
+    }
+    .toc h2 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text2);
+      margin-bottom: 16px;
+    }
+    .toc ol {
+      list-style: none;
+      counter-reset: toc;
+    }
+    .toc li {
+      counter-increment: toc;
+      margin-bottom: 8px;
+    }
+    .toc a {
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 0;
+      transition: color 0.2s;
+    }
+    .toc a:hover { color: var(--accent2); }
+    .toc a::before {
+      content: counter(toc, decimal-leading-zero);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent);
+      min-width: 22px;
+    }
+    .toc-time {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--text2);
+      background: rgba(255,255,255,0.05);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    /* ── 섹션 ── */
+    .section {
+      margin-bottom: 56px;
+      scroll-margin-top: 24px;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .step-num {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .section-header h2 {
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .section-header .time-badge {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--gold);
+      background: rgba(245,158,11,0.1);
+      border: 1px solid rgba(245,158,11,0.3);
+      padding: 3px 10px;
+      border-radius: 6px;
+    }
+
+    /* ── 카드 ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text2);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ── 스텝 리스트 ── */
+    .steps {
+      list-style: none;
+      counter-reset: steps;
+    }
+    .steps li {
+      counter-increment: steps;
+      display: flex;
+      gap: 14px;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .steps li:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .steps li::before {
+      content: counter(steps);
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(124,58,237,0.2);
+      border: 1px solid rgba(124,58,237,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent2);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .steps li .step-content { flex: 1; }
+    .steps li strong { color: var(--text); }
+    .steps li p { color: var(--text2); font-size: 14px; margin-top: 4px; }
+
+    /* ── 코드 블록 ── */
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 16px 0;
+    }
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--border);
+    }
+    .code-lang {
+      font-size: 11px;
+      color: var(--text2);
+      font-family: 'Courier New', monospace;
+    }
+    .copy-btn {
+      font-size: 11px;
+      color: var(--accent2);
+      background: none;
+      border: 1px solid rgba(168,85,247,0.3);
+      border-radius: 5px;
+      padding: 3px 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover { background: rgba(168,85,247,0.1); }
+    pre {
+      padding: 16px;
+      overflow-x: auto;
+      font-family: 'Courier New', Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #e2e8f0;
+    }
+    .hl-comment { color: #64748b; }
+    .hl-key { color: #a855f7; }
+    .hl-val { color: #10b981; }
+    .hl-str { color: #f59e0b; }
+    .hl-nav { color: #60a5fa; }
+
+    /* ── 시크릿 테이블 ── */
+    .secrets-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .secrets-table th {
+      text-align: left;
+      padding: 10px 16px;
+      background: rgba(255,255,255,0.03);
+      color: var(--text2);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-bottom: 1px solid var(--border);
+    }
+    .secrets-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      vertical-align: top;
+    }
+    .secrets-table tr:last-child td { border-bottom: none; }
+    .secrets-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .secret-name {
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      color: var(--accent2);
+      white-space: nowrap;
+    }
+    .secret-source {
+      color: var(--text2);
+      font-size: 13px;
+    }
+    .secret-note {
+      font-size: 12px;
+      color: var(--text2);
+      margin-top: 3px;
+    }
+    .required-badge {
+      display: inline-block;
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 3px;
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.3);
+      color: #f87171;
+      margin-left: 6px;
+    }
+    .optional-badge {
+      display: inline-block;
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 3px;
+      background: rgba(100,116,139,0.1);
+      border: 1px solid rgba(100,116,139,0.3);
+      color: #94a3b8;
+      margin-left: 6px;
+    }
+
+    /* ── 네비게이션 경로 ── */
+    .nav-path {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      margin: 12px 0;
+    }
+    .nav-path .sep { color: var(--text2); }
+    .nav-path .nav-item {
+      color: var(--blue);
+      font-weight: 500;
+    }
+    .nav-path .nav-click {
+      background: rgba(59,130,246,0.1);
+      border: 1px solid rgba(59,130,246,0.3);
+      border-radius: 5px;
+      padding: 2px 8px;
+      color: var(--blue);
+      font-size: 12px;
+    }
+
+    /* ── 경고/팁 박스 ── */
+    .alert {
+      display: flex;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+    .alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .alert-body { flex: 1; }
+    .alert-title { font-weight: 600; margin-bottom: 4px; }
+    .alert.warn {
+      background: rgba(245,158,11,0.08);
+      border: 1px solid rgba(245,158,11,0.25);
+      color: #fcd34d;
+    }
+    .alert.info {
+      background: rgba(59,130,246,0.08);
+      border: 1px solid rgba(59,130,246,0.25);
+      color: #93c5fd;
+    }
+    .alert.success {
+      background: rgba(16,185,129,0.08);
+      border: 1px solid rgba(16,185,129,0.25);
+      color: #6ee7b7;
+    }
+    .alert.danger {
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.25);
+      color: #fca5a5;
+    }
+
+    /* ── 트윗 미리보기 ── */
+    .tweet-preview {
+      background: #15202b;
+      border: 1px solid #2f3336;
+      border-radius: 16px;
+      padding: 20px;
+      max-width: 480px;
+      margin: 16px 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .tweet-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .tweet-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .tweet-name { font-weight: 700; color: #fff; font-size: 15px; }
+    .tweet-handle { color: #71767b; font-size: 14px; }
+    .tweet-body {
+      color: #e7e9ea;
+      font-size: 15px;
+      line-height: 1.6;
+      white-space: pre-line;
+    }
+    .tweet-hashtag { color: #1d9bf0; }
+    .tweet-link { color: #1d9bf0; }
+    .tweet-footer {
+      display: flex;
+      gap: 20px;
+      margin-top: 16px;
+      color: #71767b;
+      font-size: 13px;
+      padding-top: 12px;
+      border-top: 1px solid #2f3336;
+    }
+
+    /* ── 스케줄 시각화 ── */
+    .schedule-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      margin-top: 12px;
+    }
+    .schedule-day {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text2);
+      padding: 4px 0;
+    }
+    .schedule-time {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 6px;
+      padding: 8px 4px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: white;
+    }
+    .schedule-empty {
+      background: var(--surface2);
+      border-radius: 6px;
+      padding: 8px 4px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text2);
+    }
+
+    /* ── 체크리스트 ── */
+    .checklist {
+      list-style: none;
+    }
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 14px;
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .check-box {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      border: 2px solid var(--border);
+      flex-shrink: 0;
+      margin-top: 2px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .check-box:hover {
+      border-color: var(--accent2);
+      background: rgba(168,85,247,0.1);
+    }
+    .check-box.checked {
+      background: var(--accent);
+      border-color: var(--accent);
+      position: relative;
+    }
+    .check-box.checked::after {
+      content: '✓';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: white;
+      font-weight: 700;
+    }
+
+    /* ── 구분선 ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 40px 0;
+    }
+
+    /* ── 반응형 ── */
+    @media (max-width: 600px) {
+      .hero-stats { gap: 20px; }
+      .section-header { flex-wrap: wrap; }
+      .section-header .time-badge { margin-left: 0; }
+      .secrets-table { font-size: 12px; }
+      .tweet-preview { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- 헤더 -->
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">🌟 luckytoday.one 자동화 설정 가이드</div>
+    <h1>X 일일 운세 자동 포스팅</h1>
+    <p>GitHub Actions + X API로 매일 오전 7시<br>12개 별자리 운세를 자동 포스팅하는 시스템 설정</p>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-val">~15분</div>
+        <div class="stat-label">총 설정 시간</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">$0</div>
+        <div class="stat-label">월 운영 비용</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">12개</div>
+        <div class="stat-label">일일 자동 포스트</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">372개</div>
+        <div class="stat-label">월 트윗 (한도 1,500)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- 목차 -->
+  <div class="toc">
+    <h2>📋 목차</h2>
+    <ol class="toc">
+      <li><a href="#step1">X Developer 계정 및 앱 생성<span class="toc-time">5분</span></a></li>
+      <li><a href="#step2">API 키 발급 (4개)<span class="toc-time">3분</span></a></li>
+      <li><a href="#step3">GitHub Secrets 등록<span class="toc-time">3분</span></a></li>
+      <li><a href="#step4">DRY RUN 테스트<span class="toc-time">2분</span></a></li>
+      <li><a href="#step5">실제 포스팅 테스트<span class="toc-time">2분</span></a></li>
+      <li><a href="#preview">트윗 미리보기</a></li>
+      <li><a href="#schedule">자동 실행 스케줄</a></li>
+      <li><a href="#checklist">최종 체크리스트</a></li>
+    </ol>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="section" id="step1">
+    <div class="section-header">
+      <div class="step-num">1</div>
+      <h2>X Developer 계정 및 앱 생성</h2>
+      <span class="time-badge">⏱ 약 5분</span>
+    </div>
+
+    <div class="alert info">
+      <div class="alert-icon">ℹ️</div>
+      <div class="alert-body">
+        <div class="alert-title">Free Tier로 충분합니다</div>
+        X API Free 플랜으로 월 1,500개 트윗 가능 — 12개 × 31일 = 372개로 여유 있음
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔗 접속 경로</div>
+      <div class="nav-path">
+        <span class="nav-item">developer.twitter.com</span>
+        <span class="sep">→</span>
+        <span class="nav-click">Sign up for Free Account</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📋 진행 순서</div>
+      <ol class="steps">
+        <li>
+          <div class="step-content">
+            <strong>developer.twitter.com 접속 후 로그인</strong>
+            <p>서비스 운영용 X 계정으로 로그인 (luckytoday.one 공식 계정 권장)</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>Developer Portal 진입</strong>
+            <p>로그인 후 우측 상단 프로필 → <strong>Developer Portal</strong> 클릭</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>앱 생성</strong>
+            <p><strong>Projects & Apps → Overview → + Create App</strong> 클릭</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>앱 이름 입력</strong>
+            <p>예: <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;font-size:12px;">luckytoday-auto-poster</code></p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>User Authentication 설정</strong>
+            <p>앱 설정 → <strong>User authentication settings → Set up</strong></p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>OAuth 1.0a 활성화</strong>
+            <p>App permissions: <strong>Read and write</strong> 선택<br>
+            Callback URI: <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;font-size:12px;">https://luckytoday.one</code><br>
+            Website URL: <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;font-size:12px;">https://luckytoday.one</code></p>
+          </div>
+        </li>
+      </ol>
+    </div>
+
+    <div class="alert warn">
+      <div class="alert-icon">⚠️</div>
+      <div class="alert-body">
+        <div class="alert-title">App permissions 반드시 확인</div>
+        기본값이 <strong>Read only</strong>인 경우 트윗 작성이 불가합니다. <strong>Read and write</strong>로 변경 필수
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="section" id="step2">
+    <div class="section-header">
+      <div class="step-num">2</div>
+      <h2>API 키 4개 발급</h2>
+      <span class="time-badge">⏱ 약 3분</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔑 키 발급 경로</div>
+      <div class="nav-path">
+        <span class="nav-item">Developer Portal</span>
+        <span class="sep">→</span>
+        <span class="nav-item">앱 선택</span>
+        <span class="sep">→</span>
+        <span class="nav-click">Keys and tokens</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📋 발급 항목 및 저장</div>
+      <ol class="steps">
+        <li>
+          <div class="step-content">
+            <strong>API Key & API Key Secret</strong>
+            <p><strong>Consumer Keys</strong> 섹션 → <span style="color:var(--blue)">Regenerate</span> 클릭<br>
+            팝업에서 두 값 즉시 복사 (창 닫으면 재확인 불가)</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>Access Token & Access Token Secret</strong>
+            <p><strong>Authentication Tokens</strong> 섹션 → <strong>Access Token and Secret</strong> → <span style="color:var(--blue)">Generate</span><br>
+            팝업에서 두 값 즉시 복사 (창 닫으면 재확인 불가)</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>안전한 곳에 임시 보관</strong>
+            <p>메모장에 아래 형식으로 저장 후 다음 단계에서 GitHub에 입력</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">📝 임시 메모 형식 (절대 공개 저장 금지)</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><span class="hl-comment"># X API 키 — GitHub Secrets에 등록 후 이 파일 삭제할 것</span>
+
+<span class="hl-key">X_API_KEY</span>        = <span class="hl-str">여기에_API_Key_붙여넣기</span>
+<span class="hl-key">X_API_SECRET</span>     = <span class="hl-str">여기에_API_Key_Secret_붙여넣기</span>
+<span class="hl-key">X_ACCESS_TOKEN</span>   = <span class="hl-str">여기에_Access_Token_붙여넣기</span>
+<span class="hl-key">X_ACCESS_SECRET</span>  = <span class="hl-str">여기에_Access_Token_Secret_붙여넣기</span></pre>
+    </div>
+
+    <div class="alert danger">
+      <div class="alert-icon">🚨</div>
+      <div class="alert-body">
+        <div class="alert-title">절대 코드에 직접 입력 금지</div>
+        API 키를 .env.local, 코드, 커밋에 절대 넣지 마세요. 반드시 GitHub Secrets를 통해서만 관리
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="section" id="step3">
+    <div class="section-header">
+      <div class="step-num">3</div>
+      <h2>GitHub Secrets 등록</h2>
+      <span class="time-badge">⏱ 약 3분</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔗 접속 경로</div>
+      <div class="nav-path">
+        <span class="nav-click">github.com/habitree/star</span>
+        <span class="sep">→</span>
+        <span class="nav-click">Settings</span>
+        <span class="sep">→</span>
+        <span class="nav-click">Secrets and variables</span>
+        <span class="sep">→</span>
+        <span class="nav-click">Actions</span>
+        <span class="sep">→</span>
+        <span class="nav-click">New repository secret</span>
+      </div>
+    </div>
+
+    <div class="card" style="padding:0;overflow:hidden;">
+      <table class="secrets-table">
+        <thead>
+          <tr>
+            <th>Secret 이름</th>
+            <th>값 출처</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="secret-name">X_API_KEY</div>
+              <span class="required-badge">필수</span>
+            </td>
+            <td>
+              <div class="secret-source">X Developer Portal → Consumer Keys → API Key</div>
+              <div class="secret-note">예: <code style="font-size:11px;">AbCdEfGhIjKlMnOpQrStUvWx</code></div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="secret-name">X_API_SECRET</div>
+              <span class="required-badge">필수</span>
+            </td>
+            <td>
+              <div class="secret-source">X Developer Portal → Consumer Keys → API Key Secret</div>
+              <div class="secret-note">긴 문자열 (50자+)</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="secret-name">X_ACCESS_TOKEN</div>
+              <span class="required-badge">필수</span>
+            </td>
+            <td>
+              <div class="secret-source">X Developer Portal → Authentication Tokens → Access Token</div>
+              <div class="secret-note">숫자-문자 형식: <code style="font-size:11px;">1234567890-AbCdEf...</code></div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="secret-name">X_ACCESS_SECRET</div>
+              <span class="required-badge">필수</span>
+            </td>
+            <td>
+              <div class="secret-source">X Developer Portal → Authentication Tokens → Access Token Secret</div>
+              <div class="secret-note">긴 문자열 (45자+)</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="secret-name">NEXT_PUBLIC_SITE_URL</div>
+              <span class="optional-badge">선택</span>
+            </td>
+            <td>
+              <div class="secret-source">배포 도메인 (미설정 시 기본값 사용)</div>
+              <div class="secret-note">기본값: <code style="font-size:11px;">https://luckytoday.one</code></div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">📋 각 Secret 등록 방법</span>
+      </div>
+      <pre><span class="hl-comment">1. "New repository secret" 버튼 클릭</span>
+<span class="hl-comment">2. Name 필드에 Secret 이름 입력 (예: X_API_KEY)</span>
+<span class="hl-comment">3. Secret 필드에 값 붙여넣기</span>
+<span class="hl-comment">4. "Add secret" 버튼 클릭</span>
+<span class="hl-comment">5. 위 과정을 4회 반복 (4개 필수 항목)</span></pre>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="section" id="step4">
+    <div class="section-header">
+      <div class="step-num">4</div>
+      <h2>DRY RUN 테스트 (포스팅 없음)</h2>
+      <span class="time-badge">⏱ 약 2분</span>
+    </div>
+
+    <p style="color:var(--text2);margin-bottom:16px;">실제로 X에 올리지 않고 트윗 내용만 미리 확인하는 단계</p>
+
+    <div class="card">
+      <div class="card-title">🔗 접속 경로</div>
+      <div class="nav-path">
+        <span class="nav-click">github.com/habitree/star</span>
+        <span class="sep">→</span>
+        <span class="nav-click">Actions</span>
+        <span class="sep">→</span>
+        <span class="nav-click">📅 Daily Horoscope X Post</span>
+        <span class="sep">→</span>
+        <span class="nav-click">Run workflow ▼</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📋 진행 순서</div>
+      <ol class="steps">
+        <li>
+          <div class="step-content">
+            <strong>Run workflow 드롭다운 클릭</strong>
+            <p>우측 상단 초록 버튼</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>DRY RUN 설정</strong>
+            <p><strong>dry_run</strong> 옵션을 <strong>true</strong>로 선택</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>Run workflow 실행</strong>
+            <p>약 2~3분 소요 (npm install + API 호출 × 12)</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>로그 확인</strong>
+            <p>실행 완료 후 클릭 → <strong>Post horoscopes to X</strong> 스텝 로그 확인<br>
+            12개 별자리 트윗 내용이 출력되면 정상</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+
+    <div class="alert success">
+      <div class="alert-icon">✅</div>
+      <div class="alert-body">
+        <div class="alert-title">성공 시 로그 예시</div>
+        <code style="font-size:12px;color:var(--green);">
+          ─── 🐏 양자리 ────────────────────<br>
+          🐏 #양자리 오늘의 운세<br>
+          ...(트윗 내용)...<br>
+          (214자)
+        </code>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="section" id="step5">
+    <div class="section-header">
+      <div class="step-num">5</div>
+      <h2>실제 포스팅 테스트</h2>
+      <span class="time-badge">⏱ 약 2분</span>
+    </div>
+
+    <div class="alert warn">
+      <div class="alert-icon">⚠️</div>
+      <div class="alert-body">
+        <div class="alert-title">실제 X 계정에 포스팅됩니다</div>
+        DRY RUN이 정상이고 X 계정 설정이 완료된 경우에만 진행하세요
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📋 진행 순서</div>
+      <ol class="steps">
+        <li>
+          <div class="step-content">
+            <strong>Run workflow 실행</strong>
+            <p>이번엔 <strong>dry_run</strong>을 <strong>false</strong>로 설정 후 실행</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>로그에서 성공 확인</strong>
+            <p><code style="font-size:12px;background:rgba(255,255,255,0.05);padding:2px 6px;border-radius:4px;">✓ 🐏 양자리 포스팅 완료</code> × 12개 확인</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>X 계정에서 직접 확인</strong>
+            <p>12개 트윗이 올라왔는지 X 타임라인에서 확인</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+
+    <div class="alert success">
+      <div class="alert-icon">🎉</div>
+      <div class="alert-body">
+        <div class="alert-title">설정 완료!</div>
+        이제부터 매일 오전 7시 KST에 자동으로 12개 별자리 운세가 X에 포스팅됩니다
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 트윗 미리보기 -->
+  <div class="section" id="preview">
+    <div class="section-header">
+      <div class="step-num" style="background:linear-gradient(135deg,#1d9bf0,#1a8cd8);">👁</div>
+      <h2>트윗 미리보기</h2>
+    </div>
+
+    <p style="color:var(--text2);margin-bottom:20px;">실제 X에 올라가는 포스트 형식 (약 210~220자)</p>
+
+    <div class="tweet-preview">
+      <div class="tweet-header">
+        <div class="tweet-avatar">🌟</div>
+        <div>
+          <div class="tweet-name">Lucky Today</div>
+          <div class="tweet-handle">@luckytodayone</div>
+        </div>
+      </div>
+      <div class="tweet-body"><span class="tweet-hashtag">🐏 #양자리</span> 오늘의 운세
+
+⭐ 종합 ⭐⭐⭐✩✩  ❤️ 연애 ⭐✩✩✩✩
+💼 직업 ⭐✩✩✩✩  💰 재물 ⭐⭐✩✩✩
+
+"마음이 복잡할 때는 자연과 함께하세요. 산책 한 번이 많은 것을 해결해줍니다."
+
+🍀 78 · 흰색 · 오후 (14:00-18:00)
+<span class="tweet-link">🔮 luckytoday.one/ko/horoscope/daily/aries</span>
+<span class="tweet-hashtag">#오늘의운세 #별자리운세 #Aries</span></div>
+      <div class="tweet-footer">
+        <span>💬 0</span>
+        <span>🔁 0</span>
+        <span>❤️ 0</span>
+        <span>🔗</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="card-title">📊 포스트 구성 분석</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:4px;">
+        <div style="background:var(--surface2);border-radius:8px;padding:12px;">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:4px;">별자리 + 해시태그</div>
+          <div style="font-size:14px;">이모지 + <span style="color:var(--accent2);">#양자리</span></div>
+        </div>
+        <div style="background:var(--surface2);border-radius:8px;padding:12px;">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:4px;">카테고리 점수</div>
+          <div style="font-size:14px;">종합/연애/직업/재물 ⭐</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:8px;padding:12px;">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:4px;">오늘의 조언</div>
+          <div style="font-size:14px;">최대 60자 인용구</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:8px;padding:12px;">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:4px;">행운 요소 + URL</div>
+          <div style="font-size:14px;">숫자·색·시간 + 🔮링크</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 스케줄 -->
+  <div class="section" id="schedule">
+    <div class="section-header">
+      <div class="step-num" style="background:linear-gradient(135deg,#f59e0b,#d97706);">⏰</div>
+      <h2>자동 실행 스케줄</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📅 주간 실행 패턴</div>
+      <div class="schedule-grid">
+        <div class="schedule-day">월</div>
+        <div class="schedule-day">화</div>
+        <div class="schedule-day">수</div>
+        <div class="schedule-day">목</div>
+        <div class="schedule-day">금</div>
+        <div class="schedule-day">토</div>
+        <div class="schedule-day">일</div>
+        <div class="schedule-time">07:00</div>
+        <div class="schedule-time">07:00</div>
+        <div class="schedule-time">07:00</div>
+        <div class="schedule-time">07:00</div>
+        <div class="schedule-time">07:00</div>
+        <div class="schedule-time">07:00</div>
+        <div class="schedule-time">07:00</div>
+      </div>
+      <p style="font-size:13px;color:var(--text2);margin-top:12px;">매일 오전 7시 KST (UTC 22:00 전날) — 기상 직후 타임라인 노출 최적</p>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">.github/workflows/daily-horoscope-post.yml (cron 설정)</span>
+      </div>
+      <pre><span class="hl-key">on:</span>
+  <span class="hl-key">schedule:</span>
+    - <span class="hl-key">cron:</span> <span class="hl-str">'0 22 * * *'</span>   <span class="hl-comment"># 22:00 UTC = 07:00 KST</span>
+  <span class="hl-key">workflow_dispatch:</span>   <span class="hl-comment"># 수동 트리거 (테스트용)</span></pre>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💰 X API 사용량 (무료 한도)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div>
+          <div style="color:var(--text2);font-size:12px;margin-bottom:6px;">월간 사용량</div>
+          <div style="height:8px;background:var(--surface2);border-radius:4px;overflow:hidden;">
+            <div style="width:24.8%;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:4px;"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-top:6px;">
+            <span style="color:var(--accent2);">372개 사용</span>
+            <span style="color:var(--text2);">한도 1,500개</span>
+          </div>
+        </div>
+        <div style="background:var(--surface2);border-radius:8px;padding:12px;text-align:center;">
+          <div style="font-size:28px;font-weight:700;color:var(--green);">24.8%</div>
+          <div style="font-size:12px;color:var(--text2);">한도 사용률</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 문제 해결 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-num" style="background:linear-gradient(135deg,#ef4444,#b91c1c);">🔧</div>
+      <h2>문제 해결</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-title">❌ 자주 발생하는 오류</div>
+      <ol class="steps">
+        <li>
+          <div class="step-content">
+            <strong style="color:#f87171;">403 Forbidden — 트윗 권한 없음</strong>
+            <p>X Developer Portal → 앱 설정 → App permissions가 <strong>Read and write</strong>인지 확인<br>
+            권한 변경 후 Access Token을 <strong>재생성</strong>해야 적용됨</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong style="color:#f87171;">401 Unauthorized — 인증 실패</strong>
+            <p>GitHub Secrets 값에 앞뒤 공백이 없는지 확인<br>
+            Secret을 삭제하고 재등록 시도</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong style="color:#f87171;">API fetch 오류 — 운세 데이터 없음</strong>
+            <p>luckytoday.one 서버가 정상 작동 중인지 확인<br>
+            브라우저에서 직접 접속: <code style="font-size:12px;">luckytoday.one/api/horoscope/daily/aries</code></p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong style="color:#f87171;">GitHub Actions 미실행</strong>
+            <p>repository Settings → Actions → General → <strong>Allow all actions</strong> 활성화 확인</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">💻 로컬에서 수동 테스트 (DRY RUN)</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><span class="hl-comment"># .env.local에 X API 키 추가 후:</span>
+<span class="hl-key">npm run</span> <span class="hl-val">post:horoscope:dry</span>    <span class="hl-comment"># 트윗 내용만 출력 (포스팅 없음)</span>
+<span class="hl-key">npm run</span> <span class="hl-val">post:horoscope</span>        <span class="hl-comment"># 실제 포스팅</span></pre>
+    </div>
+  </div>
+
+  <!-- 최종 체크리스트 -->
+  <div class="section" id="checklist">
+    <div class="section-header">
+      <div class="step-num" style="background:linear-gradient(135deg,var(--green),#059669);">✓</div>
+      <h2>최종 체크리스트</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📋 설정 완료 확인</div>
+      <ul class="checklist" id="checklistItems">
+        <li><div class="check-box" onclick="toggleCheck(this)"></div><span>X Developer 계정 생성 완료</span></li>
+        <li><div class="check-box" onclick="toggleCheck(this)"></div><span>앱 생성 및 App permissions: Read and write 설정</span></li>
+        <li><div class="check-box" onclick="toggleCheck(this)"></div><span>API Key & API Key Secret 발급</span></li>
+        <li><div class="check-box" onclick="toggleCheck(this)"></div><span>Access Token & Access Token Secret 발급</span></li>
+        <li><div class="check-box" onclick="toggleCheck(this)"></div><span>GitHub Secret: X_API_KEY 등록</span></li>
+        <li><div class="check-box" onclick="toggleCheck(this)"></div><span>GitHub Secret: X_API_SECRET 등록</span></li>
+        <li><div class="check-box" onclick="toggleCheck(this)"></div><span>GitHub Secret: X_ACCESS_TOKEN 등록</span></li>
+        <li><div class="check-box" onclick="toggleCheck(this)"></div><span>GitHub Secret: X_ACCESS_SECRET 등록</span></li>
+        <li><div class="check-box" onclick="toggleCheck(this)"></div><span>DRY RUN 테스트 — 12개 트윗 내용 확인</span></li>
+        <li><div class="check-box" onclick="toggleCheck(this)"></div><span>실제 포스팅 테스트 — X 타임라인 확인</span></li>
+        <li><div class="check-box" onclick="toggleCheck(this)"></div><span>자동 실행 확인 (다음날 07:00 KST 대기)</span></li>
+      </ul>
+    </div>
+
+    <div id="allDoneMsg" style="display:none;" class="alert success">
+      <div class="alert-icon">🎉</div>
+      <div class="alert-body">
+        <div class="alert-title">모든 설정 완료!</div>
+        매일 오전 7시 KST에 12개 별자리 운세가 자동으로 X에 포스팅됩니다.<br>
+        월 예상 트윗: <strong>372개</strong> (무료 한도 1,500개의 24.8%)
+      </div>
+    </div>
+  </div>
+
+  <!-- 관련 파일 -->
+  <div class="card" style="margin-bottom:0;">
+    <div class="card-title">📁 관련 파일 경로</div>
+    <div style="display:grid;gap:8px;">
+      <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--surface2);border-radius:6px;">
+        <span style="font-size:16px;">⚙️</span>
+        <div>
+          <div style="font-family:monospace;font-size:12px;color:var(--accent2);">.github/workflows/daily-horoscope-post.yml</div>
+          <div style="font-size:12px;color:var(--text2);">GitHub Actions 워크플로우 (cron 스케줄)</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--surface2);border-radius:6px;">
+        <span style="font-size:16px;">📜</span>
+        <div>
+          <div style="font-family:monospace;font-size:12px;color:var(--accent2);">scripts/post-daily-horoscope.ts</div>
+          <div style="font-size:12px;color:var(--text2);">포스팅 스크립트 본체 (트윗 포맷 + API 호출)</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--surface2);border-radius:6px;">
+        <span style="font-size:16px;">📦</span>
+        <div>
+          <div style="font-family:monospace;font-size:12px;color:var(--accent2);">package.json</div>
+          <div style="font-size:12px;color:var(--text2);">npm run post:horoscope / post:horoscope:dry</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function toggleCheck(el) {
+    el.classList.toggle('checked');
+    const items = document.querySelectorAll('.check-box');
+    const allChecked = Array.from(items).every(i => i.classList.contains('checked'));
+    document.getElementById('allDoneMsg').style.display = allChecked ? 'flex' : 'none';
+  }
+
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    const text = pre.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '복사됨 ✓';
+      btn.style.color = 'var(--green)';
+      setTimeout(() => {
+        btn.textContent = '복사';
+        btn.style.color = '';
+      }, 2000);
+    });
+  }
+
+  // 부드러운 스크롤
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+
+</body>
+</html>
