@@ -1,0 +1,47 @@
+name: 📅 Daily Horoscope X Post
+
+# 매일 오전 7시 KST (= UTC 22:00 전날) 자동 실행
+# workflow_dispatch: GitHub Actions UI에서 수동 트리거 가능
+on:
+  schedule:
+    - cron: '0 22 * * *'   # 22:00 UTC = 07:00 KST
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'DRY RUN (실제 포스팅 없이 트윗 내용만 출력)'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['false', 'true']
+
+jobs:
+  post-horoscope:
+    name: Post Daily Horoscope to X
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🌟 Post horoscopes to X
+        run: npx tsx scripts/post-daily-horoscope.ts
+        env:
+          # X (Twitter) API 인증 — GitHub Secrets에서 주입
+          X_API_KEY:        ${{ secrets.X_API_KEY }}
+          X_API_SECRET:     ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN:   ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET:  ${{ secrets.X_ACCESS_SECRET }}
+          # 사이트 URL (API 호출용)
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://luckytoday.one' }}
+          # DRY RUN 모드 (수동 트리거 시 선택 가능)
+          X_DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
