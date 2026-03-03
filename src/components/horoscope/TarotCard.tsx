@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import type { TarotCard as TarotCardType } from '@/types/horoscope-extended';
 
 interface TarotCardProps {
@@ -67,17 +68,24 @@ export default function TarotCard({ card }: TarotCardProps) {
                          shadow-lg shadow-amber-500/20 relative">
             {/* 실사 이미지 */}
             {!imgError ? (
-              <img
-                src={card.imageUrl}
-                alt={card.name}
-                onError={() => setImgError(true)}
-                className="w-full h-full object-cover"
+              <div
+                className="w-full h-full relative"
                 style={
                   card.isReversed
                     ? { transform: 'rotate(180deg)', filter: 'sepia(0.3) brightness(0.9)' }
                     : {}
                 }
-              />
+              >
+                <Image
+                  src={card.imageUrl}
+                  alt={card.name}
+                  fill
+                  sizes="144px"
+                  className="object-cover"
+                  onError={() => setImgError(true)}
+                  priority
+                />
+              </div>
             ) : (
               /* 이미지 로드 실패 폴백 */
               <div

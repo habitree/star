@@ -1,14 +1,20 @@
 /**
  * Template Loader — Supabase 기반 데이터 외부화
  *
- * 런타임(Cloudflare Workers): Supabase에서 sign-templates, element-templates 로드
- * 빌드 타임(SSG / Supabase 미설정): 빈 객체 반환 → generator가 generic 템플릿으로 폴백
+ * 런타임(Cloudflare Workers): Supabase에서 4개 테이블 로드 (1회 병렬 fetch, 이후 캐시)
+ *   - sign_templates (12개 별자리)
+ *   - element_templates (4개 원소)
+ *   - tarot_cards (22장 메이저 아르카나)
+ *   - compatibility (144개 궁합 매트릭스)
+ * 빌드 타임(SSG / Supabase 미설정): 빈 객체 반환 → generator가 bundled 데이터로 자동 폴백
  *
  * Workers module-level 캐시: instance 재사용 시 Supabase 재호출 방지
  */
 
 import type { SignTemplates } from '@/data/sign-templates/types';
 import type { ElementTemplates } from '@/data/element-templates';
+import type { TarotCardData } from '@/data/tarot-data';
+import type { CompatibilityData } from '@/data/compatibility-data';
 import { createServerSupabaseClient } from '@/lib/supabase';
 import type { TemplateData } from '@/lib/horoscope-generator';
 
@@ -17,11 +23,15 @@ export type { TemplateData };
 /** Workers module-level 캐시 (instance 재사용 시 반복 fetch 방지) */
 let cachedData: TemplateData | null = null;
 
+/** compatibility 매트릭스 런타임 캐시 (별도 export — compatibility API route 전용) */
+let cachedCompatibility: CompatibilityData[] | null = null;
+
 /** 빈 템플릿 데이터 (폴백용) */
 function emptyTemplateData(): TemplateData {
   return {
     signTemplates: {} as Record<string, SignTemplates>,
     elementTemplates: {} as Record<string, ElementTemplates>,
+    tarotCards: [],
   };
 }
 
@@ -43,11 +53,17 @@ export async function loadTemplates(): Promise<TemplateData> {
   }
 
   try {
-    const [{ data: signRows, error: signErr }, { data: elementRows, error: elementErr }] =
-      await Promise.all([
-        supabase.from('sign_templates').select('id, data'),
-        supabase.from('element_templates').select('id, data'),
-      ]);
+    const [
+      { data: signRows, error: signErr },
+      { data: elementRows, error: elementErr },
+      { data: tarotRows, error: tarotErr },
+      { data: compatRows, error: compatErr },
+    ] = await Promise.all([
+      supabase.from('sign_templates').select('id, data'),
+      supabase.from('element_templates').select('id, data'),
+      supabase.from('tarot_cards').select('id, data').eq('id', 'major_arcana').maybeSingle(),
+      supabase.from('compatibility').select('id, data').eq('id', 'matrix').maybeSingle(),
+    ]);
 
     if (signErr || elementErr) {
       console.error('[template-loader] Supabase 로드 오류:', signErr ?? elementErr);
@@ -65,10 +81,14 @@ export async function loadTemplates(): Promise<TemplateData> {
       elementTemplates[row.id] = row.data as ElementTemplates;
     }
 
-    cachedData = {
-      signTemplates,
-      elementTemplates,
-    };
+    const tarotCards: TarotCardData[] =
+      !tarotErr && tarotRows?.data ? (tarotRows.data as TarotCardData[]) : [];
+
+    if (!compatErr && compatRows?.data) {
+      cachedCompatibility = compatRows.data as CompatibilityData[];
+    }
+
+    cachedData = { signTemplates, elementTemplates, tarotCards };
   } catch (err) {
     console.error('[template-loader] 예상치 못한 오류:', err);
     cachedData = emptyTemplateData();
@@ -77,7 +97,16 @@ export async function loadTemplates(): Promise<TemplateData> {
   return cachedData!;
 }
 
+/**
+ * 로드된 궁합 매트릭스 반환 (compatibility API route 전용)
+ * loadTemplates() 호출 후 사용하세요.
+ */
+export function getCachedCompatibility(): CompatibilityData[] | null {
+  return cachedCompatibility;
+}
+
 /** 캐시 초기화 (테스트 또는 개발 환경 hot reload 시 사용) */
 export function clearTemplateCache(): void {
   cachedData = null;
+  cachedCompatibility = null;
 }

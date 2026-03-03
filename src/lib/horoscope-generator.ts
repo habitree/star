@@ -26,7 +26,7 @@ import type {
   CalendarDayData,
   TrendCategory,
 } from '@/types/horoscope-extended';
-import { majorArcana } from '@/data/tarot-data';
+import { majorArcana, type TarotCardData } from '@/data/tarot-data';
 import { luckyDirections, luckyFoods, luckyActivities } from '@/data/lucky-elements-extended';
 import { affirmationTemplates } from '@/data/affirmation-templates';
 import { calculateCompatibilityScore } from '@/lib/zodiac-utils';
@@ -52,11 +52,14 @@ import { toISODateString, getWeekStart, getWeekEnd } from '@/lib/utils';
 // setTemplateData()로 주입. 주입 전에는 빈 객체 → generic 템플릿으로 폴백
 let _signTemplates: Record<string, SignTemplates> = {};
 let _elementTemplates: Record<string, ElementTemplates> = {};
+/** Supabase에서 로드한 타로 카드 (없으면 bundled majorArcana 폴백) */
+let _tarotCards: TarotCardData[] | null = null;
 
 /** setTemplateData 인자 타입 */
 export interface TemplateData {
   signTemplates: Record<string, SignTemplates>;
   elementTemplates: Record<string, ElementTemplates>;
+  tarotCards?: TarotCardData[];
 }
 
 /**
@@ -66,6 +69,7 @@ export interface TemplateData {
 export function setTemplateData(data: TemplateData): void {
   _signTemplates = data.signTemplates;
   _elementTemplates = data.elementTemplates;
+  if (data.tarotCards?.length) _tarotCards = data.tarotCards;
 }
 
 // 별자리 ID를 숫자로 변환 (시드 생성용)
@@ -847,8 +851,9 @@ export function generateDailyTarot(
   const seed = generateSeed(signId, date, 'tarot');
   const random = seededRandom(seed);
 
-  const cardIndex = Math.floor(random() * majorArcana.length);
-  const card = majorArcana[cardIndex];
+  const cards = _tarotCards ?? majorArcana;
+  const cardIndex = Math.floor(random() * cards.length);
+  const card = cards[cardIndex];
   const isReversed = random() < 0.3; // 30% 확률로 역방향
 
   return {

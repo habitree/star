@@ -135,16 +135,106 @@ async function uploadElementTemplates() {
   console.log(`  → ${successCount}/${ELEMENTS.length} 완료`);
 }
 
+// ─── Tarot Cards 업로드 ────────────────────────────────────
+
+async function uploadTarotCards() {
+  console.log('\n📤 Tarot Cards 업로드 중...');
+
+  const { majorArcana } = await import('../src/data/tarot-data.js');
+
+  const { error } = await supabase
+    .from('tarot_cards')
+    .upsert({ id: 'major_arcana', data: majorArcana, updated_at: new Date().toISOString() });
+
+  if (error) {
+    console.error(`  ❌ tarot_cards: ${error.message}`);
+  } else {
+    console.log(`  ✓ major_arcana (${majorArcana.length}장)`);
+  }
+}
+
+// ─── Tarot Images → Supabase Storage ──────────────────────
+
+async function uploadTarotImages() {
+  console.log('\n🖼️  Tarot Images → Supabase Storage 업로드 중...');
+
+  const { readFileSync, existsSync } = await import('fs');
+  const { join } = await import('path');
+  const { fileURLToPath } = await import('url');
+
+  const __dirname2 = dirname(fileURLToPath(import.meta.url));
+  const publicDir = join(__dirname2, '..', 'public', 'images', 'tarot');
+
+  let successCount = 0;
+  const total = 22;
+
+  for (let i = 0; i < total; i++) {
+    const filename = `${String(i).padStart(2, '0')}.jpg`;
+    const filePath = join(publicDir, filename);
+
+    if (!existsSync(filePath)) {
+      console.warn(`  ⚠️  ${filename}: 파일 없음 (건너뜀)`);
+      continue;
+    }
+
+    const fileBuffer = readFileSync(filePath);
+    const storagePath = `tarot/${filename}`;
+
+    const { error } = await supabase.storage
+      .from('images')
+      .upload(storagePath, fileBuffer, {
+        contentType: 'image/jpeg',
+        upsert: true,
+      });
+
+    if (error) {
+      console.error(`  ❌ ${filename}: ${error.message}`);
+    } else {
+      console.log(`  ✓ ${storagePath}`);
+      successCount++;
+    }
+  }
+
+  console.log(`  → ${successCount}/${total} 완료`);
+
+  if (successCount > 0) {
+    const { data } = supabase.storage.from('images').getPublicUrl('tarot/00.jpg');
+    const baseUrl = data.publicUrl.replace('tarot/00.jpg', 'tarot/');
+    console.log(`  📌 Storage 공개 URL 패턴: ${baseUrl}XX.jpg`);
+  }
+}
+
+// ─── Compatibility Matrix 업로드 ──────────────────────────
+
+async function uploadCompatibility() {
+  console.log('\n📤 Compatibility Matrix 업로드 중...');
+
+  const { compatibilityMatrix } = await import('../src/data/compatibility-data.js');
+
+  const { error } = await supabase
+    .from('compatibility')
+    .upsert({ id: 'matrix', data: compatibilityMatrix, updated_at: new Date().toISOString() });
+
+  if (error) {
+    console.error(`  ❌ compatibility: ${error.message}`);
+  } else {
+    console.log(`  ✓ matrix (${compatibilityMatrix.length}개 조합)`);
+  }
+}
+
 // ─── 메인 ─────────────────────────────────────────────────
 
 async function main() {
-  console.log('🚀 Supabase 템플릿 업로드 시작');
+  console.log('🚀 Supabase 데이터 업로드 시작');
   console.log(`   URL: ${supabaseUrl}`);
 
   try {
     await uploadSignTemplates();
     await uploadElementTemplates();
-    console.log('\n✅ 모든 템플릿 업로드 완료!');
+    await uploadTarotCards();
+    await uploadTarotImages();
+    await uploadCompatibility();
+    console.log('\n✅ 모든 데이터 업로드 완료!');
     console.log('   이제 npm run build && npm run cf:deploy 를 실행하세요.');
   } catch (err) {
     console.error('\n❌ 업로드 실패:', err);

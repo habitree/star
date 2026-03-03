@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit } from '@/lib/rate-limiter';
-import { getCompatibilityData, getCompatibilityGrade, getGradeLabel } from '@/data/compatibility-data';
+import {
+  getCompatibilityData,
+  getCompatibilityGrade,
+  getGradeLabel,
+  type CompatibilityData,
+} from '@/data/compatibility-data';
+import { loadTemplates, getCachedCompatibility } from '@/lib/template-loader';
+import { setTemplateData } from '@/lib/horoscope-generator';
 import { zodiacSigns } from '@/data/zodiac-signs';
 import type { ZodiacSignId, CompatibilityResult, LocalizedText } from '@/types';
 import { getZodiacElement, getZodiacModality } from '@/lib/zodiac-utils';
@@ -152,9 +159,29 @@ function getModalityDescription(modality1: string, modality2: string, locale: st
   };
 }
 
+/** Supabase에서 로드한 궁합 매트릭스로 데이터 조회, 없으면 bundled 폴백 */
+function getCompatibility(
+  sign1: ZodiacSignId,
+  sign2: ZodiacSignId
+): CompatibilityData | undefined {
+  const matrix = getCachedCompatibility();
+  if (matrix) {
+    return matrix.find(
+      (d) =>
+        (d.sign1 === sign1 && d.sign2 === sign2) ||
+        (d.sign1 === sign2 && d.sign2 === sign1)
+    );
+  }
+  return getCompatibilityData(sign1, sign2);
+}
+
 export async function POST(request: NextRequest): Promise<NextResponse<ApiResponse<CompatibilityResult>>> {
   const rateLimitResponse = checkRateLimit(request);
   if (rateLimitResponse) return rateLimitResponse as NextResponse<ApiResponse<CompatibilityResult>>;
+
+  // Supabase에서 모든 앱 데이터 로드 (Workers 캐시: 최초 1회만 fetch)
+  const templateData = await loadTemplates();
+  setTemplateData(templateData);
 
   try {
     const body: CompatibilityRequest = await request.json();
@@ -175,8 +202,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
       );
     }
 
-    // 궁합 데이터 가져오기
-    const compatibilityData = getCompatibilityData(sign1 as ZodiacSignId, sign2 as ZodiacSignId);
+    // 궁합 데이터 가져오기 (Supabase 우선, bundled 폴백)
+    const compatibilityData = getCompatibility(sign1 as ZodiacSignId, sign2 as ZodiacSignId);
 
     if (!compatibilityData) {
       return NextResponse.json(
