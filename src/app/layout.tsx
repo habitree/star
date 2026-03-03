@@ -41,6 +41,13 @@ export const metadata = {
     locale: 'ko_KR',
     url: siteUrl,
     siteName: '별자리 운세 - LuckyToday',
+    images: [{ url: '/og/default.jpg', width: 1200, height: 630, alt: '별자리 운세 LuckyToday' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '별자리 운세 - 오늘의 운세와 별자리 궁합',
+    description: '12별자리의 오늘의 운세, 별자리 궁합, 출생 차트를 확인하세요.',
+    images: ['/og/default.jpg'],
   },
   robots: {
     index: true,

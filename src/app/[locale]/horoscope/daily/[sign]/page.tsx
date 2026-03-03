@@ -25,7 +25,11 @@ import { isAdSenseEnabled } from '@/lib/adsense-config';
 import { getSiteUrl } from '@/lib/site-url';
 import Breadcrumbs from '@/components/seo/Breadcrumbs';
 import JsonLd from '@/components/seo/JsonLd';
+import HoroscopeSummary from '@/components/seo/HoroscopeSummary';
+import FAQSection from '@/components/seo/FAQSection';
 import { locales, type Locale } from '@/i18n/config';
+import { buildLanguageAlternates } from '@/lib/seo-utils';
+import { getDailyHoroscopeFAQs } from '@/data/faq-data';
 import type { ZodiacSignId, HoroscopeCategory, DetailedCategoryHoroscope } from '@/types';
 
 const validSigns: ZodiacSignId[] = [
@@ -66,6 +70,8 @@ export async function generateMetadata({
 
   const description = descriptions[locale as Locale] ?? descriptions.ko;
 
+  const today = new Date();
+
   return {
     title: `${signName} ${locale === 'ko' ? '오늘의 운세' : 'Daily Horoscope'}`,
     description,
@@ -73,13 +79,20 @@ export async function generateMetadata({
       title: `${signName} Daily Horoscope`,
       description,
       url,
-      type: 'website',
+      type: 'article',
+      publishedTime: today.toISOString(),
+      modifiedTime: today.toISOString(),
+      images: [{ url: `/og/signs/${sign}.jpg`, width: 1200, height: 630, alt: `${signName} Daily Horoscope` }],
+    },
+    twitter: {
+      card: 'summary_large_image' as const,
+      title: `${signName} Daily Horoscope`,
+      description,
+      images: [`/og/signs/${sign}.jpg`],
     },
     alternates: {
       canonical: url,
-      languages: Object.fromEntries(
-        locales.map((loc) => [loc, `${baseUrl}/${loc}/horoscope/daily/${sign}`])
-      ),
+      languages: buildLanguageAlternates(baseUrl, `/horoscope/daily/${sign}`),
     },
   };
 }
@@ -147,9 +160,71 @@ export default async function LocaleSignDailyHoroscopePage({
     dateModified: today.toISOString().split('T')[0],
   };
 
+  const newsArticleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: `${signName} ${safeLocale === 'ko' ? '오늘의 운세' : 'Daily Horoscope'} - ${dateFormatted}`,
+    datePublished: today.toISOString(),
+    dateModified: today.toISOString(),
+    author: { '@type': 'Organization', name: 'LuckyToday', url: baseUrl },
+    publisher: {
+      '@type': 'Organization',
+      name: 'LuckyToday',
+      url: baseUrl,
+      logo: { '@type': 'ImageObject', url: `${baseUrl}/og/default.jpg` },
+    },
+    about: {
+      '@type': 'Thing',
+      name: signName,
+      sameAs: `https://en.wikipedia.org/wiki/${sign.charAt(0).toUpperCase() + sign.slice(1)}_(astrology)`,
+    },
+    inLanguage: safeLocale,
+    url: pageUrl,
+    image: `${baseUrl}/og/signs/${sign}.jpg`,
+  };
+
+  const speakableJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    url: pageUrl,
+    speakable: {
+      '@type': 'SpeakableSpecification',
+      cssSelector: ['#horoscope-daily-summary', '#page-affirmation'],
+    },
+  };
+
+  // FAQ 데이터 생성
+  const signNameByLocale = {
+    ko: signMeta?.names.ko ?? signData.name,
+    en: signMeta?.names.en ?? signData.name,
+    zh: signMeta?.names.zh ?? signData.name,
+    ja: signMeta?.names.ja ?? signData.name,
+    es: signMeta?.names.es ?? signData.name,
+  };
+  const faqItems = getDailyHoroscopeFAQs(
+    signNameByLocale,
+    dateFormatted,
+    signData.dateRange,
+    extendedLucky.number,
+    extendedLucky.color,
+  ).map((item) => ({
+    question: item.question[safeLocale] ?? item.question.en,
+    answer: item.answer[safeLocale] ?? item.answer.en,
+  }));
+
+  const faqTitles: Record<Locale, string> = {
+    ko: '자주 묻는 질문',
+    en: 'Frequently Asked Questions',
+    zh: '常见问题',
+    ja: 'よくある質問',
+    es: 'Preguntas Frecuentes',
+  };
+
   return (
     <div className="min-h-screen py-8 px-4">
       <JsonLd data={webPageJsonLd} />
+      <JsonLd data={newsArticleJsonLd} />
+      <JsonLd data={speakableJsonLd} />
       <div className="max-w-4xl mx-auto">
         <Breadcrumbs
           baseUrl={baseUrl}
@@ -159,6 +234,26 @@ export default async function LocaleSignDailyHoroscopePage({
             { label: signName, href: `/${safeLocale}/horoscope/daily/${sign}` },
           ]}
           className="mb-6"
+        />
+
+        {/* GEO 요약 블록 — SpeakableSpec #horoscope-daily-summary */}
+        <HoroscopeSummary
+          signName={signName}
+          signSymbol={signData.symbol}
+          dateFormatted={dateFormatted}
+          isoDate={today.toISOString().split('T')[0]}
+          overallText={(() => {
+            const overall = dailyHoroscope.overall as DetailedCategoryHoroscope;
+            return overall.text[safeLocale] ?? overall.text.ko;
+          })()}
+          scores={{
+            overall: (dailyHoroscope.overall as DetailedCategoryHoroscope).score,
+            love: (dailyHoroscope.love as DetailedCategoryHoroscope).score,
+            career: (dailyHoroscope.career as DetailedCategoryHoroscope).score,
+            health: (dailyHoroscope.health as DetailedCategoryHoroscope).score,
+            money: (dailyHoroscope.money as DetailedCategoryHoroscope).score,
+          }}
+          locale={safeLocale}
         />
 
         {/* 별자리 헤더 */}
@@ -179,7 +274,7 @@ export default async function LocaleSignDailyHoroscopePage({
         </div>
 
         {/* 오늘의 확언 */}
-        <div className="glass-card p-5 mb-8 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border-amber-500/20">
+        <div id="page-affirmation" className="glass-card p-5 mb-8 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border-amber-500/20">
           <p className="text-center text-white/90 leading-relaxed italic">
             &ldquo;{affirmation}&rdquo;
           </p>
@@ -304,6 +399,13 @@ export default async function LocaleSignDailyHoroscopePage({
             })}
           </div>
         </div>
+
+        {/* FAQ — GEO 최적화 */}
+        <FAQSection
+          items={faqItems}
+          title={faqTitles[safeLocale]}
+          pageUrl={pageUrl}
+        />
 
         {/* 관련 링크 */}
         <section className="glass-card p-6 mb-8" aria-label="Related content">

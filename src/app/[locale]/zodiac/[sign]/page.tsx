@@ -9,6 +9,9 @@ import { zodiacSigns } from '@/data/zodiac-signs';
 import { getSiteUrl } from '@/lib/site-url';
 import { locales, type Locale } from '@/i18n/config';
 import { isValidZodiacSign, ZODIAC_ORDER } from '@/lib/zodiac-utils';
+import { buildLanguageAlternates } from '@/lib/seo-utils';
+import FAQSection from '@/components/seo/FAQSection';
+import { getZodiacSignFAQs } from '@/data/faq-data';
 import type { ZodiacSignId } from '@/types/zodiac';
 
 export function generateStaticParams() {
@@ -48,7 +51,7 @@ export async function generateMetadata({
     openGraph: { title: name, description: descByLocale[safeLocale], url, type: 'website' },
     alternates: {
       canonical: url,
-      languages: Object.fromEntries(locales.map((loc) => [loc, `${baseUrl}/${loc}/zodiac/${sign}`])),
+      languages: buildLanguageAlternates(baseUrl, `/zodiac/${sign}`),
     },
   };
 }
@@ -78,14 +81,50 @@ export default async function LocaleZodiacSignPage({
     water: 'from-purple-500/20 to-violet-500/20',
   };
 
-  const labels: Record<Locale, { strengths: string; weaknesses: string; planet: string; dateRange: string; horoscope: string; backToList: string }> = {
-    ko: { strengths: '장점', weaknesses: '단점', planet: '지배 행성', dateRange: '날짜 범위', horoscope: '운세 보기', backToList: '별자리 목록' },
-    en: { strengths: 'Strengths', weaknesses: 'Weaknesses', planet: 'Ruling Planet', dateRange: 'Date Range', horoscope: 'View Horoscope', backToList: 'All Signs' },
-    zh: { strengths: '优点', weaknesses: '缺点', planet: '守护星', dateRange: '日期范围', horoscope: '查看运势', backToList: '所有星座' },
-    ja: { strengths: '長所', weaknesses: '短所', planet: '支配星', dateRange: '期間', horoscope: '運勢を見る', backToList: '星座一覧' },
-    es: { strengths: 'Fortalezas', weaknesses: 'Debilidades', planet: 'Planeta Regente', dateRange: 'Fechas', horoscope: 'Ver Horoscopo', backToList: 'Todos los Signos' },
+  const labels: Record<Locale, { strengths: string; weaknesses: string; planet: string; dateRange: string; horoscope: string; backToList: string; faqTitle: string; questionH2: string }> = {
+    ko: { strengths: '장점', weaknesses: '단점', planet: '지배 행성', dateRange: '날짜 범위', horoscope: '운세 보기', backToList: '별자리 목록', faqTitle: '자주 묻는 질문', questionH2: `오늘 ${name}의 운세는?` },
+    en: { strengths: 'Strengths', weaknesses: 'Weaknesses', planet: 'Ruling Planet', dateRange: 'Date Range', horoscope: 'View Horoscope', backToList: 'All Signs', faqTitle: 'Frequently Asked Questions', questionH2: `What is ${name}'s horoscope today?` },
+    zh: { strengths: '优点', weaknesses: '缺点', planet: '守护星', dateRange: '日期范围', horoscope: '查看运势', backToList: '所有星座', faqTitle: '常见问题', questionH2: `今天${name}的运势如何？` },
+    ja: { strengths: '長所', weaknesses: '短所', planet: '支配星', dateRange: '期間', horoscope: '運勢を見る', backToList: '星座一覧', faqTitle: 'よくある質問', questionH2: `今日の${name}の運勢は？` },
+    es: { strengths: 'Fortalezas', weaknesses: 'Debilidades', planet: 'Planeta Regente', dateRange: 'Fechas', horoscope: 'Ver Horoscopo', backToList: 'Todos los Signos', faqTitle: 'Preguntas Frecuentes', questionH2: `¿Cuál es el horóscopo de ${name} hoy?` },
   };
   const l = labels[safeLocale] ?? labels.ko;
+
+  // 원소 다국어
+  const elementByLocale: Record<string, Record<Locale, string>> = {
+    fire:  { ko: '불(화)', en: 'Fire', zh: '火', ja: '火', es: 'Fuego' },
+    earth: { ko: '흙(지)', en: 'Earth', zh: '土', ja: '土', es: 'Tierra' },
+    air:   { ko: '공기(풍)', en: 'Air', zh: '风', ja: '風', es: 'Aire' },
+    water: { ko: '물(수)', en: 'Water', zh: '水', ja: '水', es: 'Agua' },
+  };
+  const elementLocalized = elementByLocale[signMeta.element] ?? { ko: signMeta.element, en: signMeta.element, zh: signMeta.element, ja: signMeta.element, es: signMeta.element };
+
+  // 날짜 범위 텍스트
+  const dateRangeText = `${signMeta.dateRange.start} ~ ${signMeta.dateRange.end}`;
+
+  // positive traits 다국어 맵
+  const positiveByLocale: Record<Locale, string[]> = {
+    ko: signMeta.traits.positive.map((t) => t.ko),
+    en: signMeta.traits.positive.map((t) => t.en),
+    zh: signMeta.traits.positive.map((t) => t.zh),
+    ja: signMeta.traits.positive.map((t) => t.ja),
+    es: signMeta.traits.positive.map((t) => t.es),
+  };
+
+  const baseUrl = getSiteUrl();
+  const pageUrl = `${baseUrl}/${safeLocale}/zodiac/${sign}`;
+
+  // FAQ 생성
+  const faqItems = getZodiacSignFAQs(
+    signMeta.names as Record<Locale, string>,
+    dateRangeText,
+    elementLocalized,
+    signMeta.rulingPlanet as Record<Locale, string>,
+    positiveByLocale,
+  ).map((item) => ({
+    question: item.question[safeLocale] ?? item.question.en,
+    answer: item.answer[safeLocale] ?? item.answer.en,
+  }));
 
   return (
     <div className="min-h-screen py-12 px-4">
@@ -117,6 +156,16 @@ export default async function LocaleZodiacSignPage({
             </div>
           </div>
         </div>
+
+        {/* 질문형 H2 — SEO 전용 (시각적으로 숨김) */}
+        <h2 className="sr-only">{l.questionH2}</h2>
+
+        {/* FAQ — GEO 최적화 */}
+        <FAQSection
+          items={faqItems}
+          title={l.faqTitle}
+          pageUrl={pageUrl}
+        />
 
         {/* CTA */}
         <div className="text-center mb-8">

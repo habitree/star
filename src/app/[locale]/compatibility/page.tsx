@@ -8,6 +8,7 @@ import { AdSenseUnit } from '@/components/ads';
 import { isAdSenseEnabled } from '@/lib/adsense-config';
 import { getSiteUrl } from '@/lib/site-url';
 import { locales, type Locale } from '@/i18n/config';
+import { buildLanguageAlternates } from '@/lib/seo-utils';
 
 const pageMeta: Record<Locale, { title: string; desc: string }> = {
   ko: { title: '별자리 궁합', desc: '두 별자리의 궁합을 확인해보세요. 연애, 우정, 업무 궁합을 분석합니다.' },
@@ -38,7 +39,7 @@ export async function generateMetadata({
     openGraph: { title: meta.title, description: meta.desc, url, type: 'website' },
     alternates: {
       canonical: url,
-      languages: Object.fromEntries(locales.map((loc) => [loc, `${baseUrl}/${loc}/compatibility`])),
+      languages: buildLanguageAlternates(baseUrl, '/compatibility'),
     },
   };
 }

@@ -5,6 +5,7 @@
 import { Metadata } from 'next';
 import { getSiteUrl } from '@/lib/site-url';
 import { locales, type Locale } from '@/i18n/config';
+import { buildLanguageAlternates } from '@/lib/seo-utils';
 import BirthChartPageContent from './BirthChartPageContent';
 
 const pageMeta: Record<Locale, { title: string; desc: string }> = {
@@ -36,7 +37,7 @@ export async function generateMetadata({
     openGraph: { title: meta.title, description: meta.desc, url, type: 'website' },
     alternates: {
       canonical: url,
-      languages: Object.fromEntries(locales.map((loc) => [loc, `${baseUrl}/${loc}/birth-chart`])),
+      languages: buildLanguageAlternates(baseUrl, '/birth-chart'),
     },
   };
 }

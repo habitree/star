@@ -8,6 +8,7 @@ import Footer from '@/components/layout/Footer';
 import CookieConsent from '@/components/layout/CookieConsent';
 import JsonLd from '@/components/seo/JsonLd';
 import { locales, type Locale } from '@/i18n/config';
+import { buildLanguageAlternates } from '@/lib/seo-utils';
 import '../globals.css';
 
 const ADSENSE_PUBLISHER_ID = 'ca-pub-4166976105261105';
@@ -26,15 +27,11 @@ const playfair = Playfair_Display({
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://luckytoday.one';
 
-// hreflang alternates for SEO
+// hreflang alternates for SEO (x-default 포함)
 function buildAlternates(locale: Locale) {
-  const languages: Record<string, string> = {};
-  for (const loc of locales) {
-    languages[loc] = `${siteUrl}/${loc}`;
-  }
   return {
     canonical: `${siteUrl}/${locale}`,
-    languages,
+    languages: buildLanguageAlternates(siteUrl, ''),
   };
 }
 
@@ -70,6 +67,13 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       locale: localeToOgLocale[locale as Locale] ?? 'ko_KR',
       url: `${siteUrl}/${locale}`,
       siteName: 'LuckyToday',
+      images: [{ url: '/og/default.jpg', width: 1200, height: 630, alt: 'LuckyToday' }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: t('title'),
+      description: t('subtitle'),
+      images: ['/og/default.jpg'],
     },
     robots: {
       index: true,

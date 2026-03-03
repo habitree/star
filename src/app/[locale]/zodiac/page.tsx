@@ -7,6 +7,7 @@ import { Metadata } from 'next';
 import { zodiacSigns } from '@/data/zodiac-signs';
 import { getSiteUrl } from '@/lib/site-url';
 import { locales, type Locale } from '@/i18n/config';
+import { buildLanguageAlternates } from '@/lib/seo-utils';
 
 const pageMeta: Record<Locale, { title: string; desc: string }> = {
   ko: { title: '별자리', desc: '12별자리의 특성과 성격을 알아보세요.' },
@@ -37,7 +38,7 @@ export async function generateMetadata({
     openGraph: { title: meta.title, description: meta.desc, url, type: 'website' },
     alternates: {
       canonical: url,
-      languages: Object.fromEntries(locales.map((loc) => [loc, `${baseUrl}/${loc}/zodiac`])),
+      languages: buildLanguageAlternates(baseUrl, '/zodiac'),
     },
   };
 }

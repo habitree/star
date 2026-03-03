@@ -55,6 +55,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: locale === 'ko' ? 0.8 : 0.7,
       });
     }
+
+    // 궁합 결과 페이지: 12×11 pairs × 5 locales = 660
+    for (const sign1 of ZODIAC_ORDER) {
+      for (const sign2 of ZODIAC_ORDER) {
+        if (sign1 === sign2) continue;
+        entries.push({
+          url: `${baseUrl}/${locale}/compatibility/${sign1}/${sign2}`,
+          lastModified: now,
+          changeFrequency: 'weekly',
+          priority: locale === 'ko' ? 0.6 : 0.5,
+        });
+      }
+    }
   }
 
   return entries;
