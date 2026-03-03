@@ -21,6 +21,7 @@ import { startSession, trackEvent } from '@/lib/engagement-tracker';
 import { getActiveEvents } from '@/lib/seasonal-scheduler';
 import { generateDailyMicroStory, getTomorrowTeaser } from '@/lib/micro-story';
 import { generateEmotionResponse } from '@/lib/emotion-response';
+import { zodiacData } from '@/data/zodiac-info';
 import BirthDateForm from './BirthDateForm';
 import WelcomeBack from './WelcomeBack';
 import PersonalizedResult from './PersonalizedResult';
@@ -51,6 +52,12 @@ export default function HoroscopeClientApp() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showStarIntro, setShowStarIntro] = useState(false);
   const [newRewardMessage, setNewRewardMessage] = useState<string | null>(null);
+  const [showSignSelector, setShowSignSelector] = useState(false);
+
+  const ALL_SIGNS: ZodiacSignId[] = [
+    'aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo',
+    'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces',
+  ];
 
   // 하이드레이션 처리
   useEffect(() => {
@@ -143,7 +150,15 @@ export default function HoroscopeClientApp() {
   const handleReset = () => {
     setCurrentSign(null);
     setCurrentBirthDate(null);
+    setShowSignSelector(false);
     useUserStore.getState().clearBirthDate();
+  };
+
+  const handleSignChange = (newSignId: ZodiacSignId) => {
+    const dateToKeep = currentBirthDate ?? new Date().toISOString().split('T')[0];
+    setBirthDate(dateToKeep, newSignId);
+    setCurrentSign(newSignId);
+    setShowSignSelector(false);
   };
 
   const handleStarIntroComplete = useCallback(() => {
@@ -347,6 +362,46 @@ export default function HoroscopeClientApp() {
           todayScore={overallPercent}
         />
       )}
+
+      {/* 현재 별자리 표시 + 변경 버튼 */}
+      <div className="glass-card p-3 mb-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">{zodiacData[currentSign].symbol}</span>
+            <div>
+              <p className="text-white font-semibold text-sm">{zodiacData[currentSign].name}</p>
+              <p className="text-white/40 text-xs">{zodiacData[currentSign].dateRange}</p>
+            </div>
+          </div>
+          <button
+            onClick={() => setShowSignSelector(prev => !prev)}
+            className="text-xs px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors"
+          >
+            {showSignSelector ? '닫기' : '별자리 변경'}
+          </button>
+        </div>
+
+        {showSignSelector && (
+          <div className="mt-3 pt-3 border-t border-white/10">
+            <p className="text-white/50 text-xs text-center mb-3">보고 싶은 별자리를 선택하세요</p>
+            <div className="grid grid-cols-6 gap-1.5">
+              {ALL_SIGNS.map((sign) => (
+                <button
+                  key={sign}
+                  onClick={() => handleSignChange(sign)}
+                  className={`flex flex-col items-center gap-0.5 p-2 rounded-xl transition-all text-center
+                    ${sign === currentSign
+                      ? 'bg-zodiac-primary/30 ring-1 ring-zodiac-primary/60'
+                      : 'hover:bg-white/10'}`}
+                >
+                  <span className="text-xl">{zodiacData[sign].symbol}</span>
+                  <span className="text-white/60 text-[10px] leading-tight">{zodiacData[sign].name.replace('자리', '')}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* 맞춤 결과 대시보드 */}
       <PersonalizedResult
