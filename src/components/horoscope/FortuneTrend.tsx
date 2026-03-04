@@ -5,14 +5,30 @@ import type { ExtendedTrendPoint, TrendCategory } from '@/types/horoscope-extend
 
 interface FortuneTrendProps {
   data: ExtendedTrendPoint[];
+  locale?: string;
 }
 
-const categoryConfig: Record<TrendCategory, { label: string; icon: string; color: string }> = {
-  overall: { label: '종합', icon: '⭐', color: '#a855f7' },
-  love:    { label: '연애', icon: '❤️', color: '#ec4899' },
-  career:  { label: '직장', icon: '💼', color: '#3b82f6' },
-  health:  { label: '건강', icon: '🏥', color: '#22c55e' },
-  money:   { label: '금전', icon: '💰', color: '#f59e0b' },
+const CATEGORY_LABELS: Record<string, Record<TrendCategory, string>> = {
+  ko: { overall: '종합', love: '연애', career: '직장', health: '건강', money: '금전' },
+  en: { overall: 'Overall', love: 'Love', career: 'Career', health: 'Health', money: 'Money' },
+  zh: { overall: '综合', love: '爱情', career: '事业', health: '健康', money: '财运' },
+  ja: { overall: '総合', love: '恋愛', career: '仕事', health: '健康', money: '金運' },
+  es: { overall: 'General', love: 'Amor', career: 'Trabajo', health: 'Salud', money: 'Dinero' },
+};
+const TREND_TITLE: Record<string, string> = {
+  ko: '30일 운세 트렌드', en: '30-Day Fortune Trend',
+  zh: '30天运势趋势', ja: '30日間の運勢トレンド', es: 'Tendencia de 30 Días',
+};
+const TODAY_LABEL: Record<string, string> = {
+  ko: '오늘', en: 'Today', zh: '今天', ja: '今日', es: 'Hoy',
+};
+
+const categoryColors: Record<TrendCategory, { icon: string; color: string }> = {
+  overall: { icon: '⭐', color: '#a855f7' },
+  love:    { icon: '❤️', color: '#ec4899' },
+  career:  { icon: '💼', color: '#3b82f6' },
+  health:  { icon: '🏥', color: '#22c55e' },
+  money:   { icon: '💰', color: '#f59e0b' },
 };
 
 function buildBezierPath(pts: { x: number; y: number }[]): string {
@@ -28,13 +44,16 @@ function buildBezierPath(pts: { x: number; y: number }[]): string {
   return d;
 }
 
-export default function FortuneTrend({ data }: FortuneTrendProps) {
+export default function FortuneTrend({ data, locale = 'ko' }: FortuneTrendProps) {
   const [category, setCategory] = useState<TrendCategory>('overall');
   const scrollRef = useRef<HTMLDivElement>(null);
 
   if (data.length === 0) return null;
 
-  const cfg = categoryConfig[category];
+  const catLabels = CATEGORY_LABELS[locale in CATEGORY_LABELS ? locale : 'ko'];
+  const todayStr = TODAY_LABEL[locale in TODAY_LABEL ? locale : 'ko'];
+  const trendTitle = TREND_TITLE[locale in TREND_TITLE ? locale : 'ko'];
+  const cfg = { ...categoryColors[category], label: catLabels[category] };
   const scores = data.map(d =>
     category === 'overall' ? d.normalizedScore : (d.categoryScores[category] ?? d.normalizedScore)
   );
@@ -68,13 +87,13 @@ export default function FortuneTrend({ data }: FortuneTrendProps) {
 
   return (
     <div className="glass-card p-6">
-      <h3 className="text-lg font-semibold text-white mb-3 text-center">30일 운세 트렌드</h3>
+      <h3 className="text-lg font-semibold text-white mb-3 text-center">{trendTitle}</h3>
 
       {/* 카테고리 탭 */}
       <div className="flex justify-center gap-1 mb-4 flex-wrap">
-        {(Object.keys(categoryConfig) as TrendCategory[]).map(cat => {
+        {(Object.keys(categoryColors) as TrendCategory[]).map(cat => {
           const active = cat === category;
-          const c = categoryConfig[cat];
+          const c = categoryColors[cat];
           return (
             <button
               key={cat}
@@ -85,7 +104,7 @@ export default function FortuneTrend({ data }: FortuneTrendProps) {
                 : { backgroundColor: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.5)' }
               }
             >
-              {c.icon} {c.label}
+              {c.icon} {catLabels[cat]}
             </button>
           );
         })}
@@ -120,7 +139,7 @@ export default function FortuneTrend({ data }: FortuneTrendProps) {
                 x1={todayX} y1={padT} x2={todayX} y2={padT + chartH}
                 stroke="rgba(255,255,255,0.25)" strokeDasharray="4 3" strokeWidth="1"
               />
-              <text x={todayX} y={padT - 6} fill="white" fontSize="8" textAnchor="middle" fontWeight="bold">오늘</text>
+              <text x={todayX} y={padT - 6} fill="white" fontSize="8" textAnchor="middle" fontWeight="bold">{todayStr}</text>
             </>
           )}
 
@@ -179,7 +198,7 @@ export default function FortuneTrend({ data }: FortuneTrendProps) {
                 fontSize="7" textAnchor="middle"
                 fontWeight={d.isToday ? 'bold' : 'normal'}
               >
-                {d.isToday ? '오늘' : d.dayLabel}
+                {d.isToday ? todayStr : d.dayLabel}
               </text>
             );
           })}

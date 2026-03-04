@@ -17,11 +17,12 @@ import { getSmartCTAs } from '@/lib/smart-cta';
 import { getBiorhythmWeek } from '@/lib/biorhythm';
 import { getNewlyEarnedReward } from '@/lib/streak-rewards';
 import { getContentStatus } from '@/lib/content-unlock';
-import { startSession, trackEvent } from '@/lib/engagement-tracker';
+import { startSession, trackEvent, trackRetentionView } from '@/lib/engagement-tracker';
 import { getActiveEvents } from '@/lib/seasonal-scheduler';
 import { generateDailyMicroStory, getTomorrowTeaser } from '@/lib/micro-story';
 import { generateEmotionResponse } from '@/lib/emotion-response';
 import { zodiacData } from '@/data/zodiac-info';
+import { zodiacSigns } from '@/data/zodiac-signs';
 import BirthDateForm from './BirthDateForm';
 import WelcomeBack from './WelcomeBack';
 import PersonalizedResult from './PersonalizedResult';
@@ -34,16 +35,79 @@ import type { ZodiacSignId, HoroscopeCategory, DetailedCategoryHoroscope, SubInd
 import type { ContentLockStatus } from '@/types/engagement';
 import type { SmartCTA, CalendarDayData } from '@/types/horoscope-extended';
 
-export default function HoroscopeClientApp() {
+const UI_TEXT = {
+  ko: {
+    loading: '운세를 불러오는 중...',
+    today: '오늘',
+    dark: '다크', light: '라이트', system: '시스템',
+    changeSign: '별자리 변경', close: '닫기',
+    selectSign: '보고 싶은 별자리를 선택하세요',
+    microStoryTitle: '오늘의 별자리 이야기',
+    resetBtn: '다른 생년월일로 보기',
+    checkInSection: '오늘의 체크인',
+    welcomeSection: '오늘 운세 요약',
+  },
+  en: {
+    loading: 'Loading your horoscope...',
+    today: 'Today',
+    dark: 'Dark', light: 'Light', system: 'System',
+    changeSign: 'Change Sign', close: 'Close',
+    selectSign: 'Select a zodiac sign',
+    microStoryTitle: "Today's Star Story",
+    resetBtn: 'Try Another Birth Date',
+    checkInSection: "Today's Check-In",
+    welcomeSection: 'Horoscope Summary',
+  },
+  zh: {
+    loading: '加载运势中...',
+    today: '今天',
+    dark: '深色', light: '浅色', system: '系统',
+    changeSign: '更改星座', close: '关闭',
+    selectSign: '选择星座',
+    microStoryTitle: '今日星座故事',
+    resetBtn: '用其他出生日期查看',
+    checkInSection: '今日签到',
+    welcomeSection: '运势摘要',
+  },
+  ja: {
+    loading: '運勢を読み込み中...',
+    today: '今日',
+    dark: 'ダーク', light: 'ライト', system: 'システム',
+    changeSign: '星座を変更', close: '閉じる',
+    selectSign: '星座を選択してください',
+    microStoryTitle: '今日の星座物語',
+    resetBtn: '別の生年月日で見る',
+    checkInSection: '今日のチェックイン',
+    welcomeSection: '運勢サマリー',
+  },
+  es: {
+    loading: 'Cargando tu horóscopo...',
+    today: 'Hoy',
+    dark: 'Oscuro', light: 'Claro', system: 'Sistema',
+    changeSign: 'Cambiar Signo', close: 'Cerrar',
+    selectSign: 'Selecciona tu signo del zodiaco',
+    microStoryTitle: 'Historia del Zodiaco de Hoy',
+    resetBtn: 'Ver con otra fecha de nacimiento',
+    checkInSection: 'Check-in de hoy',
+    welcomeSection: 'Resumen del Horóscopo',
+  },
+} as const;
+
+type SupportedLocale = keyof typeof UI_TEXT;
+
+export default function HoroscopeClientApp({ locale = 'ko' }: { locale?: string }) {
+  const t = UI_TEXT[(locale as SupportedLocale) in UI_TEXT ? (locale as SupportedLocale) : 'ko'];
   const {
     birthDate, birthSign,
     visitStreak, longestStreak, earnedBadges,
     unlockedContentIds, completedActions,
     onboardingCompleted, todayCheckedIn, lastCheckInDate,
     history,
+    preferences,
     setBirthDate, recordHoroscopeView, addToHistory,
     performCheckIn, addBadge, unlockContent, completeAction,
     completeOnboarding,
+    setTheme,
   } = useUserStore();
 
   const [hydrated, setHydrated] = useState(false);
@@ -53,6 +117,13 @@ export default function HoroscopeClientApp() {
   const [showStarIntro, setShowStarIntro] = useState(false);
   const [newRewardMessage, setNewRewardMessage] = useState<string | null>(null);
   const [showSignSelector, setShowSignSelector] = useState(false);
+  const today = new Date();
+  const localeForDate = locale === 'zh' ? 'zh-CN' : locale === 'ja' ? 'ja-JP' : locale === 'es' ? 'es-ES' : locale === 'en' ? 'en-US' : 'ko-KR';
+  const todayLabel = today.toLocaleDateString(localeForDate, {
+    month: 'long',
+    day: 'numeric',
+    weekday: 'short',
+  });
 
   const ALL_SIGNS: ZodiacSignId[] = [
     'aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo',
@@ -63,6 +134,7 @@ export default function HoroscopeClientApp() {
   useEffect(() => {
     setHydrated(true);
     startSession();
+    trackRetentionView({ surface: 'daily-main', action: 'view' });
   }, []);
 
   // 오늘 체크인 리셋 (날짜 변경 감지)
@@ -105,7 +177,7 @@ export default function HoroscopeClientApp() {
     );
     if (alreadySaved) return;
 
-    const horoscope = generateDailyHoroscope(currentSign, today, 'ko');
+    const horoscope = generateDailyHoroscope(currentSign, today, locale);
     const cats = ['overall', 'love', 'career', 'health', 'money'] as const;
     const scores: Record<string, number> = {};
     let total = 0;
@@ -183,7 +255,7 @@ export default function HoroscopeClientApp() {
     return (
       <div className="max-w-2xl mx-auto mt-8 flex flex-col items-center justify-center py-20">
         <div className="w-10 h-10 border-2 border-white/20 border-t-zodiac-primary rounded-full animate-spin" />
-        <p className="mt-4 text-white/40 text-sm">운세를 불러오는 중...</p>
+        <p className="mt-4 text-white/40 text-sm">{t.loading}</p>
       </div>
     );
   }
@@ -212,10 +284,8 @@ export default function HoroscopeClientApp() {
     );
   }
 
-  // 맞춤 결과 생성
-  const today = new Date();
   const todayStr = today.toISOString().split('T')[0];
-  const horoscope = generateDailyHoroscope(currentSign, today, 'ko');
+  const horoscope = generateDailyHoroscope(currentSign, today, locale);
 
   const categories: HoroscopeCategory[] = ['overall', 'love', 'career', 'health', 'money'];
 
@@ -227,12 +297,15 @@ export default function HoroscopeClientApp() {
     money: horoscope.money.score,
   };
 
+  const getLocalizedText = (textObj: { ko: string; en: string; zh: string; ja: string; es: string }) =>
+    (textObj as Record<string, string>)[locale] ?? textObj.en ?? textObj.ko;
+
   const categoryTexts: Record<HoroscopeCategory, string> = {
-    overall: horoscope.overall.text.ko,
-    love: horoscope.love.text.ko,
-    career: horoscope.career.text.ko,
-    health: horoscope.health.text.ko,
-    money: horoscope.money.text.ko,
+    overall: getLocalizedText(horoscope.overall.text),
+    love: getLocalizedText(horoscope.love.text),
+    career: getLocalizedText(horoscope.career.text),
+    health: getLocalizedText(horoscope.health.text),
+    money: getLocalizedText(horoscope.money.text),
   };
 
   // 세밀 점수 추출 (DetailedCategoryHoroscope)
@@ -279,7 +352,7 @@ export default function HoroscopeClientApp() {
     healthScore: categoryDetailedScores.health,
     moneyScore: categoryDetailedScores.money,
     hasViewedBirthChart: completedActions.includes('view-birth-chart'),
-    locale: 'ko',
+    locale,
   });
 
   // 시즌 이벤트 (다중 이벤트 지원)
@@ -308,7 +381,7 @@ export default function HoroscopeClientApp() {
   // 어제 점수 (세밀 점수 기반)
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayHoroscope = generateDailyHoroscope(currentSign, yesterday, 'ko');
+  const yesterdayHoroscope = generateDailyHoroscope(currentSign, yesterday, locale);
   const yesterdayCategoryScores = {} as Record<HoroscopeCategory, number>;
   let yesterdayDetailedTotal = 0;
   for (const cat of categories) {
@@ -323,8 +396,41 @@ export default function HoroscopeClientApp() {
   const myRankEntry = ranking.find(e => e.signId === currentSign);
   const percentileRank = myRankEntry?.percentile;
 
+  const handleThemeToggle = () => {
+    const next =
+      preferences.theme === 'dark'
+        ? 'light'
+        : preferences.theme === 'light'
+        ? 'system'
+        : 'dark';
+    setTheme(next);
+  };
+
   return (
-    <div className="max-w-2xl mx-auto mt-6">
+    <div className="max-w-2xl mx-auto mt-6 space-y-4">
+      {/* 상단 헤더 영역 */}
+      <header className="flex items-center justify-between px-1">
+        <div className="flex flex-col">
+          <span className="text-xs text-white/40">{t.today}</span>
+          <span className="text-sm font-medium text-white/90">{todayLabel}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={handleThemeToggle}
+            className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-border-subtle bg-surface-elevated/70 text-[11px] text-text-muted hover:bg-surface-highest/90 hover:text-text-primary transition-colors"
+            aria-label="테마 변경"
+          >
+            <span>
+              {preferences.theme === 'dark'
+                ? t.dark
+                : preferences.theme === 'light'
+                ? t.light
+                : t.system}
+            </span>
+          </button>
+        </div>
+      </header>
       {/* 새 보상 알림 */}
       {newRewardMessage && (
         <div className="glass-card p-4 mb-4 text-center animate-scale-in bg-gradient-to-r from-yellow-500/10 to-amber-500/10 border-yellow-500/30">
@@ -332,14 +438,15 @@ export default function HoroscopeClientApp() {
         </div>
       )}
 
-      {/* 일일 체크인 */}
-      <div className="mb-4">
+      {/* 오늘 체크인 + 스트릭 요약 */}
+      <section aria-label={t.checkInSection} className="mt-2">
         <DailyCheckIn
           streak={visitStreak}
           todayCheckedIn={todayCheckedIn}
           onCheckIn={handleCheckIn}
+          locale={locale}
         />
-      </div>
+      </section>
 
       {/* 시즌 이벤트 배너 (다중 표시) */}
       {activeEvents.length > 0 && (
@@ -353,14 +460,17 @@ export default function HoroscopeClientApp() {
         </div>
       )}
 
-      {/* 재방문 환영 */}
+      {/* 재방문 환영 + 오늘 한 줄 요약 */}
       {visitStreak > 0 && (
-        <WelcomeBack
-          signId={currentSign}
-          visitStreak={visitStreak}
-          yesterdayScore={yesterdayPercent}
-          todayScore={overallPercent}
-        />
+        <section aria-label={t.welcomeSection}>
+          <WelcomeBack
+            signId={currentSign}
+            visitStreak={visitStreak}
+            yesterdayScore={yesterdayPercent}
+            todayScore={overallPercent}
+            locale={locale}
+          />
+        </section>
       )}
 
       {/* 현재 별자리 표시 + 변경 버튼 */}
@@ -369,7 +479,7 @@ export default function HoroscopeClientApp() {
           <div className="flex items-center gap-2">
             <span className="text-2xl">{zodiacData[currentSign].symbol}</span>
             <div>
-              <p className="text-white font-semibold text-sm">{zodiacData[currentSign].name}</p>
+              <p className="text-white font-semibold text-sm">{zodiacSigns.find(s => s.id === currentSign)?.names[locale as keyof typeof zodiacSigns[0]['names']] ?? zodiacData[currentSign].name}</p>
               <p className="text-white/40 text-xs">{zodiacData[currentSign].dateRange}</p>
             </div>
           </div>
@@ -377,15 +487,18 @@ export default function HoroscopeClientApp() {
             onClick={() => setShowSignSelector(prev => !prev)}
             className="text-xs px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors"
           >
-            {showSignSelector ? '닫기' : '별자리 변경'}
+            {showSignSelector ? t.close : t.changeSign}
           </button>
         </div>
 
         {showSignSelector && (
           <div className="mt-3 pt-3 border-t border-white/10">
-            <p className="text-white/50 text-xs text-center mb-3">보고 싶은 별자리를 선택하세요</p>
+            <p className="text-white/50 text-xs text-center mb-3">{t.selectSign}</p>
             <div className="grid grid-cols-6 gap-1.5">
-              {ALL_SIGNS.map((sign) => (
+              {ALL_SIGNS.map((sign) => {
+                const signMeta = zodiacSigns.find((s) => s.id === sign);
+                const signLabel = signMeta?.names[(locale as SupportedLocale) in signMeta.names ? locale as keyof typeof signMeta.names : 'ko'] ?? zodiacData[sign].name;
+                return (
                 <button
                   key={sign}
                   onClick={() => handleSignChange(sign)}
@@ -395,9 +508,10 @@ export default function HoroscopeClientApp() {
                       : 'hover:bg-white/10'}`}
                 >
                   <span className="text-xl">{zodiacData[sign].symbol}</span>
-                  <span className="text-white/60 text-[10px] leading-tight">{zodiacData[sign].name.replace('자리', '')}</span>
+                  <span className="text-white/60 text-[10px] leading-tight">{signLabel}</span>
                 </button>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}
@@ -407,6 +521,7 @@ export default function HoroscopeClientApp() {
       <PersonalizedResult
         signId={currentSign}
         overallPercent={overallPercent}
+        locale={locale}
         categoryScores={categoryScores}
         categoryTexts={categoryTexts}
         categoryDetailedScores={categoryDetailedScores}
@@ -450,13 +565,14 @@ export default function HoroscopeClientApp() {
             streak={visitStreak}
             longestStreak={longestStreak}
             earnedBadges={earnedBadges}
+            locale={locale}
           />
         </div>
       )}
 
       {/* 마이크로 스토리 */}
       <div className="mt-6 glass-card p-5">
-        <h3 className="text-lg font-semibold text-white mb-3 text-center">오늘의 별자리 이야기</h3>
+        <h3 className="text-lg font-semibold text-white mb-3 text-center">{t.microStoryTitle}</h3>
         <p className="text-white/90 font-medium text-sm mb-2">{microStory.title}</p>
         <p className="text-white/70 text-sm leading-relaxed mb-3">{microStory.content}</p>
         <p className="text-amber-300/80 text-sm italic mb-3">&ldquo;{microStory.moral}&rdquo;</p>
@@ -475,7 +591,7 @@ export default function HoroscopeClientApp() {
                      bg-white/10 hover:bg-white/20 text-white/70 hover:text-white
                      transition-colors"
         >
-          다른 생년월일로 보기
+          {t.resetBtn}
         </button>
       </div>
     </div>

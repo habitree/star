@@ -8,6 +8,8 @@ import { zodiacSigns } from '@/data/zodiac-signs';
 import { getSiteUrl } from '@/lib/site-url';
 import { locales, type Locale } from '@/i18n/config';
 import { buildLanguageAlternates } from '@/lib/seo-utils';
+import ZodiacIcon from '@/components/ui/ZodiacIcon';
+import type { ZodiacSignId } from '@/types/zodiac';
 
 const pageMeta: Record<Locale, { title: string; desc: string }> = {
   ko: { title: '별자리', desc: '12별자리의 특성과 성격을 알아보세요.' },
@@ -77,7 +79,9 @@ export default async function LocaleZodiacPage({
                 href={`/${safeLocale}/zodiac/${sign.id}`}
                 className={`glass-card p-6 text-center bg-gradient-to-br ${elementColor[sign.element] ?? ''} hover:scale-105 transition-transform duration-200`}
               >
-                <div className="text-5xl mb-3">{sign.symbol}</div>
+                <div className="mb-3 flex justify-center">
+                  <ZodiacIcon sign={sign.id as ZodiacSignId} size="md" />
+                </div>
                 <h2 className="text-white font-bold text-lg mb-1">{name}</h2>
                 <div className="flex flex-wrap gap-1 justify-center mt-2">
                   {traits.map((trait) => (

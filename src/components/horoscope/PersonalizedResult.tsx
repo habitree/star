@@ -45,6 +45,75 @@ interface MicroStoryData {
   teaser: string;
 }
 
+const RESULT_TEXT = {
+  ko: {
+    catLabels: { overall: '종합운', love: '연애운', career: '직장운', health: '건강운', money: '금전운' },
+    elements: { fire: '🔥 불의 원소', earth: '🌿 땅의 원소', air: '💨 바람의 원소', water: '💧 물의 원소' },
+    categorySection: '카테고리별 운세',
+    compatSection: '오늘의 궁합 하이라이트',
+    compatScore: '궁합 점수: ',
+    compatDetail: '자세한 궁합 보기',
+    learnMore: '더 알아보기',
+    compatibility: '별자리 궁합',
+    birthChart: '출생 차트',
+    details: '상세 정보',
+    detailPage: '상세 운세 페이지',
+  },
+  en: {
+    catLabels: { overall: 'Overall', love: 'Love', career: 'Career', health: 'Health', money: 'Money' },
+    elements: { fire: '🔥 Fire Element', earth: '🌿 Earth Element', air: '💨 Air Element', water: '💧 Water Element' },
+    categorySection: 'Category Horoscopes',
+    compatSection: "Today's Compatibility",
+    compatScore: 'Score: ',
+    compatDetail: 'View Compatibility',
+    learnMore: 'Learn More',
+    compatibility: 'Compatibility',
+    birthChart: 'Birth Chart',
+    details: 'Details',
+    detailPage: 'Detailed Horoscope',
+  },
+  zh: {
+    catLabels: { overall: '综合运', love: '爱情运', career: '事业运', health: '健康运', money: '财运' },
+    elements: { fire: '🔥 火元素', earth: '🌿 土元素', air: '💨 风元素', water: '💧 水元素' },
+    categorySection: '各类别运势',
+    compatSection: '今日配对亮点',
+    compatScore: '配对分数：',
+    compatDetail: '查看详细配对',
+    learnMore: '了解更多',
+    compatibility: '星座配对',
+    birthChart: '出生星盘',
+    details: '详细信息',
+    detailPage: '详细运势页面',
+  },
+  ja: {
+    catLabels: { overall: '総合運', love: '恋愛運', career: '仕事運', health: '健康運', money: '金運' },
+    elements: { fire: '🔥 火のエレメント', earth: '🌿 地のエレメント', air: '💨 風のエレメント', water: '💧 水のエレメント' },
+    categorySection: 'カテゴリ別運勢',
+    compatSection: '今日の相性ハイライト',
+    compatScore: '相性スコア：',
+    compatDetail: '詳細な相性を見る',
+    learnMore: '詳しく見る',
+    compatibility: '星座相性',
+    birthChart: '出生チャート',
+    details: '詳細情報',
+    detailPage: '詳細運勢ページ',
+  },
+  es: {
+    catLabels: { overall: 'General', love: 'Amor', career: 'Trabajo', health: 'Salud', money: 'Dinero' },
+    elements: { fire: '🔥 Elemento Fuego', earth: '🌿 Elemento Tierra', air: '💨 Elemento Aire', water: '💧 Elemento Agua' },
+    categorySection: 'Horóscopos por Categoría',
+    compatSection: 'Compatibilidad de Hoy',
+    compatScore: 'Puntuación: ',
+    compatDetail: 'Ver Compatibilidad',
+    learnMore: 'Más Info',
+    compatibility: 'Compatibilidad',
+    birthChart: 'Carta Natal',
+    details: 'Detalles',
+    detailPage: 'Horóscopo Detallado',
+  },
+} as const;
+type ResultLocale = keyof typeof RESULT_TEXT;
+
 interface PersonalizedResultProps {
   signId: ZodiacSignId;
   overallPercent: number;
@@ -72,15 +141,12 @@ interface PersonalizedResultProps {
   tomorrowTeaser?: string;
   smartCTAs?: SmartCTA[];
   visitedDates?: Set<string>;
+  locale?: string;
 }
 
-const categoryMeta: { key: HoroscopeCategory; label: string; icon: string }[] = [
-  { key: 'overall', label: '종합운', icon: '⭐' },
-  { key: 'love', label: '연애운', icon: '❤️' },
-  { key: 'career', label: '직장운', icon: '💼' },
-  { key: 'health', label: '건강운', icon: '🏥' },
-  { key: 'money', label: '금전운', icon: '💰' },
-];
+const CAT_ICONS: Record<HoroscopeCategory, string> = {
+  overall: '⭐', love: '❤️', career: '💼', health: '🏥', money: '💰',
+};
 
 function RevealSection({ children, className = '', delay = 0 }: {
   children: React.ReactNode;
@@ -110,7 +176,14 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
     biorhythm, extendedTrend, calendarData, calendarYear, calendarMonth,
     ranking, compatibilityHighlight,
     contentStatuses, smartCTAs = [], visitedDates = new Set<string>(),
+    locale = 'ko',
   } = props;
+  const tl = RESULT_TEXT[(locale as ResultLocale) in RESULT_TEXT ? (locale as ResultLocale) : 'ko'];
+  const categoryMeta = (Object.keys(CAT_ICONS) as HoroscopeCategory[]).map(key => ({
+    key,
+    label: tl.catLabels[key],
+    icon: CAT_ICONS[key],
+  }));
 
   const [calDisplay, setCalDisplay] = useState({ year: calendarYear, month: calendarMonth });
   const [dynCalData, setDynCalData] = useState<CalendarDayData[]>(calendarData);
@@ -159,14 +232,14 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
             ${info.element === 'air' ? 'bg-blue-500/20 text-blue-300 element-glow-air' : ''}
             ${info.element === 'water' ? 'bg-purple-500/20 text-purple-300 element-glow-water' : ''}
           `}>
-            {info.element === 'fire' ? '🔥 불의 원소' : info.element === 'earth' ? '🌿 땅의 원소' : info.element === 'air' ? '💨 바람의 원소' : '💧 물의 원소'}
+            {tl.elements[info.element as keyof typeof tl.elements]}
           </span>
         </div>
       </RevealSection>
 
       {/* ① ‑b 일일 리듬 타임라인 */}
       <RevealSection delay={80}>
-        <DailyRhythm timeFortunes={timeFortunes} />
+        <DailyRhythm timeFortunes={timeFortunes} locale={locale} />
       </RevealSection>
 
       {/* ② 종합 점수 게이지 */}
@@ -206,7 +279,7 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
       {/* ⑥ 카테고리별 상세 운세 */}
       <RevealSection>
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-white text-center">카테고리별 운세</h3>
+          <h3 className="text-lg font-semibold text-white text-center">{tl.categorySection}</h3>
           {categoryMeta.map(({ key, label, icon }) => {
             const dScore = categoryDetailedScores?.[key];
             const subs = categorySubIndicators?.[key];
@@ -273,7 +346,7 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
 
       {/* ⑪ 30일 트렌드 */}
       <RevealSection>
-        <FortuneTrend data={extendedTrend} />
+        <FortuneTrend data={extendedTrend} locale={locale} />
       </RevealSection>
 
       {/* ⑪‑b 월간 운세 캘린더 */}
@@ -284,6 +357,7 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
           month={calDisplay.month}
           onMonthChange={handleMonthChange}
           visitStreak={props.visitStreak}
+          locale={locale}
         />
       </RevealSection>
 
@@ -295,7 +369,7 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
       {/* ⑬ 궁합 하이라이트 */}
       <RevealSection>
         <div className="glass-card p-6 text-center">
-          <h3 className="text-lg font-semibold text-white mb-3">오늘의 궁합 하이라이트</h3>
+          <h3 className="text-lg font-semibold text-white mb-3">{tl.compatSection}</h3>
           <div className="flex items-center justify-center gap-3 mb-3">
             <div style={{ filter: `drop-shadow(0 0 10px ${theme.glowColor})` }}>
               <ZodiacIcon sign={signId} size="md" />
@@ -304,14 +378,14 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
             <ZodiacIcon sign={compatibilityHighlight.bestMatch} size="md" />
           </div>
           <p className="text-white font-medium">{bestMatchInfo.name}</p>
-          <p className={`text-sm ${theme.textClass} mb-2`}>궁합 점수: {compatibilityHighlight.score}점</p>
+          <p className={`text-sm ${theme.textClass} mb-2`}>{tl.compatScore}{compatibilityHighlight.score}</p>
           <p className="text-sm text-white/70 leading-relaxed">{compatibilityHighlight.message}</p>
           <Link
             href="/compatibility"
             className="inline-block mt-3 px-5 py-2 rounded-full text-sm font-medium
                        bg-white/10 hover:bg-white/20 text-white transition-colors"
           >
-            자세한 궁합 보기
+            {tl.compatDetail}
           </Link>
         </div>
       </RevealSection>
@@ -336,31 +410,31 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
       {/* ⑰ 관련 콘텐츠 링크 */}
       <RevealSection>
         <div className="glass-card p-6 text-center">
-          <h3 className="text-lg font-semibold text-white mb-4">더 알아보기</h3>
+          <h3 className="text-lg font-semibold text-white mb-4">{tl.learnMore}</h3>
           <div className="flex flex-wrap justify-center gap-3">
             <Link
               href="/compatibility"
               className="px-5 py-2.5 rounded-full text-sm font-medium bg-white/10 hover:bg-white/20 text-white transition-colors"
             >
-              별자리 궁합
+              {tl.compatibility}
             </Link>
             <Link
               href="/birth-chart"
               className="px-5 py-2.5 rounded-full text-sm font-medium bg-white/10 hover:bg-white/20 text-white transition-colors"
             >
-              출생 차트
+              {tl.birthChart}
             </Link>
             <Link
               href={`/zodiac/${signId}`}
               className="px-5 py-2.5 rounded-full text-sm font-medium bg-white/10 hover:bg-white/20 text-white transition-colors"
             >
-              {info.name} 상세 정보
+              {info.name} {tl.details}
             </Link>
             <Link
               href={`/horoscope/daily/${signId}`}
               className="px-5 py-2.5 rounded-full text-sm font-medium bg-white/10 hover:bg-white/20 text-white transition-colors"
             >
-              상세 운세 페이지
+              {tl.detailPage}
             </Link>
           </div>
         </div>

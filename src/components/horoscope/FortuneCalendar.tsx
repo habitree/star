@@ -23,18 +23,66 @@ interface FortuneCalendarProps {
   month: number;
   onMonthChange: (delta: number) => void;
   visitStreak?: number;
+  locale?: string;
 }
 
-const DAY_LABELS = ['일', '월', '화', '수', '목', '금', '토'];
-const MONTHS_KO = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+// ── 다국어 ──────────────────────────────────────────────────────────────
+const CAL_TEXT = {
+  ko: {
+    days: ['일', '월', '화', '수', '목', '금', '토'],
+    months: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+    calendarSuffix: '운세 캘린더', yearSuffix: '년 ', prevMonth: '이전 달', nextMonth: '다음 달',
+    avgLabel: '월평균', streakLabel: '🔥 연속', visitLabel: '✅ 방문', dayUnit: '일',
+    visited: '✓ 방문한 날', notVisited: '미방문', bestDayBadge: '🏆 이달 최고의 날',
+    catLabels: { overall: '종합', love: '연애', career: '직장', health: '건강', money: '금전' },
+    scoreTiers: { top: '최고', good: '좋음', avg: '보통', caution: '주의', low: '낮음', bestMonth: '이달 최고' },
+  },
+  en: {
+    days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    months: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+    calendarSuffix: 'Fortune Calendar', yearSuffix: ' ', prevMonth: 'Previous', nextMonth: 'Next',
+    avgLabel: 'Avg', streakLabel: '🔥 Streak', visitLabel: '✅ Visits', dayUnit: 'd',
+    visited: '✓ Visited', notVisited: 'Not visited', bestDayBadge: '🏆 Best day',
+    catLabels: { overall: 'All', love: 'Love', career: 'Work', health: 'Health', money: 'Money' },
+    scoreTiers: { top: 'Great', good: 'Good', avg: 'OK', caution: 'Low', low: 'Poor', bestMonth: 'Best' },
+  },
+  zh: {
+    days: ['日', '一', '二', '三', '四', '五', '六'],
+    months: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+    calendarSuffix: '运势日历', yearSuffix: '年', prevMonth: '上月', nextMonth: '下月',
+    avgLabel: '月均', streakLabel: '🔥 连续', visitLabel: '✅ 访问', dayUnit: '天',
+    visited: '✓ 已访问', notVisited: '未访问', bestDayBadge: '🏆 本月最佳',
+    catLabels: { overall: '综合', love: '爱情', career: '事业', health: '健康', money: '财运' },
+    scoreTiers: { top: '极好', good: '好', avg: '普通', caution: '注意', low: '差', bestMonth: '最佳' },
+  },
+  ja: {
+    days: ['日', '月', '火', '水', '木', '金', '土'],
+    months: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+    calendarSuffix: '運勢カレンダー', yearSuffix: '年', prevMonth: '前月', nextMonth: '翌月',
+    avgLabel: '月平均', streakLabel: '🔥 連続', visitLabel: '✅ 訪問', dayUnit: '日',
+    visited: '✓ 訪問済み', notVisited: '未訪問', bestDayBadge: '🏆 今月最高の日',
+    catLabels: { overall: '総合', love: '恋愛', career: '仕事', health: '健康', money: '金運' },
+    scoreTiers: { top: '最高', good: '良い', avg: '普通', caution: '注意', low: '低い', bestMonth: '最高' },
+  },
+  es: {
+    days: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+    months: ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
+    calendarSuffix: 'Calendario de Fortuna', yearSuffix: ' ', prevMonth: 'Anterior', nextMonth: 'Siguiente',
+    avgLabel: 'Prom', streakLabel: '🔥 Racha', visitLabel: '✅ Visitas', dayUnit: 'd',
+    visited: '✓ Visitado', notVisited: 'No visitado', bestDayBadge: '🏆 Mejor día',
+    catLabels: { overall: 'Gral', love: 'Amor', career: 'Trabajo', health: 'Salud', money: 'Dinero' },
+    scoreTiers: { top: 'Excelente', good: 'Bueno', avg: 'Normal', caution: 'Bajo', low: 'Malo', bestMonth: 'Mejor' },
+  },
+} as const;
+type CalLocale = keyof typeof CAL_TEXT;
 
 // ── 카테고리 색상 시스템 (FortuneTrend와 통일) ──────────────────────────
-const categoryConfig: Record<TrendCategory, { label: string; icon: string; color: string; rgb: string }> = {
-  overall: { label: '종합', icon: '⭐', color: '#a855f7', rgb: '168,85,247' },
-  love:    { label: '연애', icon: '💕', color: '#ec4899', rgb: '236,72,153' },
-  career:  { label: '직장', icon: '💼', color: '#3b82f6', rgb: '59,130,246' },
-  health:  { label: '건강', icon: '🌿', color: '#22c55e', rgb: '34,197,94' },
-  money:   { label: '금전', icon: '✨', color: '#f59e0b', rgb: '245,158,11' },
+const categoryColors: Record<TrendCategory, { icon: string; color: string; rgb: string }> = {
+  overall: { icon: '⭐', color: '#a855f7', rgb: '168,85,247' },
+  love:    { icon: '💕', color: '#ec4899', rgb: '236,72,153' },
+  career:  { icon: '💼', color: '#3b82f6', rgb: '59,130,246' },
+  health:  { icon: '🌿', color: '#22c55e', rgb: '34,197,94' },
+  money:   { icon: '✨', color: '#f59e0b', rgb: '245,158,11' },
 };
 
 // ── 5단계 점수 → 우주 색상 티어 ────────────────────────────────────────
@@ -47,14 +95,15 @@ interface ScoreTier {
   label: string;
 }
 
-function getScoreTier(score: number): ScoreTier {
+function getScoreTier(score: number, tiers?: { top: string; good: string; avg: string; caution: string; low: string; bestMonth: string }): ScoreTier {
+  const t = tiers ?? CAL_TEXT.ko.scoreTiers;
   if (score >= 85) return {
     gradient: 'linear-gradient(135deg, rgba(251,191,36,0.42) 0%, rgba(245,158,11,0.22) 100%)',
     glow: '0 0 14px rgba(251,191,36,0.65)',
     textColor: '#fcd34d',
     border: 'rgba(251,191,36,0.55)',
     emoji: '🌟',
-    label: '최고',
+    label: t.top,
   };
   if (score >= 70) return {
     gradient: 'linear-gradient(135deg, rgba(16,185,129,0.4) 0%, rgba(5,150,105,0.22) 100%)',
@@ -62,7 +111,7 @@ function getScoreTier(score: number): ScoreTier {
     textColor: '#34d399',
     border: 'rgba(16,185,129,0.48)',
     emoji: '✨',
-    label: '좋음',
+    label: t.good,
   };
   if (score >= 50) return {
     gradient: 'linear-gradient(135deg, rgba(99,102,241,0.38) 0%, rgba(139,92,246,0.18) 100%)',
@@ -70,7 +119,7 @@ function getScoreTier(score: number): ScoreTier {
     textColor: '#a5b4fc',
     border: 'rgba(99,102,241,0.38)',
     emoji: '🔮',
-    label: '보통',
+    label: t.avg,
   };
   if (score >= 30) return {
     gradient: 'linear-gradient(135deg, rgba(249,115,22,0.38) 0%, rgba(234,88,12,0.18) 100%)',
@@ -78,7 +127,7 @@ function getScoreTier(score: number): ScoreTier {
     textColor: '#fb923c',
     border: 'rgba(249,115,22,0.38)',
     emoji: '⚡',
-    label: '주의',
+    label: t.caution,
   };
   return {
     gradient: 'linear-gradient(135deg, rgba(239,68,68,0.38) 0%, rgba(185,28,28,0.18) 100%)',
@@ -86,7 +135,7 @@ function getScoreTier(score: number): ScoreTier {
     textColor: '#fca5a5',
     border: 'rgba(239,68,68,0.38)',
     emoji: '🌑',
-    label: '낮음',
+    label: t.low,
   };
 }
 
@@ -99,12 +148,17 @@ export default function FortuneCalendar({
   month,
   onMonthChange,
   visitStreak = 0,
+  locale = 'ko',
 }: FortuneCalendarProps) {
   const [selectedDay, setSelectedDay] = useState<CalendarDayData | null>(null);
   const [activeCategory, setActiveCategory] = useState<TrendCategory>('overall');
 
+  const tl = CAL_TEXT[(locale as CalLocale) in CAL_TEXT ? (locale as CalLocale) : 'ko'];
   const firstDayOfWeek = new Date(year, month, 1).getDay();
-  const catConfig = categoryConfig[activeCategory];
+  const catConfig = categoryColors[activeCategory];
+  const categoryConfig = Object.fromEntries(
+    (Object.keys(categoryColors) as TrendCategory[]).map(k => [k, { ...categoryColors[k], label: tl.catLabels[k] }])
+  ) as Record<TrendCategory, { icon: string; color: string; rgb: string; label: string }>;
 
   // ── 월간 통계 계산 ───────────────────────────────────────────────────
   const stats = useMemo(() => {
@@ -119,7 +173,7 @@ export default function FortuneCalendar({
       bestDay: past[bestIdx] ?? null,
       visitCount: data.filter(d => d.isVisited).length,
     };
-  }, [data, activeCategory]);
+  }, [data, activeCategory]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── 6×7 그리드 ──────────────────────────────────────────────────────
   const cells: (CalendarDayData | null)[] = [
@@ -141,7 +195,7 @@ export default function FortuneCalendar({
           <button
             onClick={() => { setSelectedDay(null); onMonthChange(-1); }}
             className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all hover:scale-110 flex items-center justify-center font-bold text-base"
-            aria-label="이전 달"
+            aria-label={tl.prevMonth}
           >
             ‹
           </button>
@@ -149,16 +203,16 @@ export default function FortuneCalendar({
           <div className="text-center">
             <h3 className="text-base font-bold text-white tracking-tight">
               <span className="text-purple-400">{year}</span>
-              <span className="text-white/60 font-normal text-sm">년 </span>
-              <span className="text-white">{MONTHS_KO[month]}</span>
-              <span className="text-white/60 font-normal text-sm"> 운세 캘린더</span>
+              <span className="text-white/60 font-normal text-sm">{tl.yearSuffix}</span>
+              <span className="text-white">{tl.months[month]}</span>
+              <span className="text-white/60 font-normal text-sm"> {tl.calendarSuffix}</span>
             </h3>
           </div>
 
           <button
             onClick={() => { setSelectedDay(null); onMonthChange(1); }}
             className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all hover:scale-110 flex items-center justify-center font-bold text-base"
-            aria-label="다음 달"
+            aria-label={tl.nextMonth}
           >
             ›
           </button>
@@ -170,27 +224,27 @@ export default function FortuneCalendar({
           <div
             className="text-center py-2 px-1 rounded-xl border transition-all"
             style={{
-              background: stats.avg ? getScoreTier(stats.avg).gradient : 'rgba(255,255,255,0.04)',
-              borderColor: stats.avg ? getScoreTier(stats.avg).border : 'rgba(255,255,255,0.08)',
+              background: stats.avg ? getScoreTier(stats.avg, tl.scoreTiers).gradient : 'rgba(255,255,255,0.04)',
+              borderColor: stats.avg ? getScoreTier(stats.avg, tl.scoreTiers).border : 'rgba(255,255,255,0.08)',
             }}
           >
-            <p className="text-white/40 text-[9px] mb-0.5 leading-none">월평균</p>
+            <p className="text-white/40 text-[9px] mb-0.5 leading-none">{tl.avgLabel}</p>
             <p
               className="text-sm font-bold tabular-nums leading-none"
-              style={{ color: stats.avg ? getScoreTier(stats.avg).textColor : 'rgba(255,255,255,0.3)' }}
+              style={{ color: stats.avg ? getScoreTier(stats.avg, tl.scoreTiers).textColor : 'rgba(255,255,255,0.3)' }}
             >
               {stats.avg || '--'}
             </p>
           </div>
           {/* 스트릭 */}
           <div className="text-center py-2 px-1 rounded-xl border border-orange-500/25 bg-gradient-to-br from-orange-500/15 to-red-500/10">
-            <p className="text-orange-300/50 text-[9px] mb-0.5 leading-none">🔥 연속</p>
-            <p className="text-sm font-bold text-orange-300 leading-none tabular-nums">{visitStreak}<span className="text-[9px] font-normal text-orange-300/60">일</span></p>
+            <p className="text-orange-300/50 text-[9px] mb-0.5 leading-none">{tl.streakLabel}</p>
+            <p className="text-sm font-bold text-orange-300 leading-none tabular-nums">{visitStreak}<span className="text-[9px] font-normal text-orange-300/60">{tl.dayUnit}</span></p>
           </div>
           {/* 방문일 */}
           <div className="text-center py-2 px-1 rounded-xl border border-purple-500/25 bg-gradient-to-br from-purple-500/15 to-indigo-500/10">
-            <p className="text-purple-300/50 text-[9px] mb-0.5 leading-none">✅ 방문</p>
-            <p className="text-sm font-bold text-purple-300 leading-none tabular-nums">{stats.visitCount}<span className="text-[9px] font-normal text-purple-300/60">일</span></p>
+            <p className="text-purple-300/50 text-[9px] mb-0.5 leading-none">{tl.visitLabel}</p>
+            <p className="text-sm font-bold text-purple-300 leading-none tabular-nums">{stats.visitCount}<span className="text-[9px] font-normal text-purple-300/60">{tl.dayUnit}</span></p>
           </div>
         </div>
 
@@ -221,7 +275,7 @@ export default function FortuneCalendar({
 
       {/* ────────────────────────────── 요일 헤더 ── */}
       <div className="grid grid-cols-7 gap-1 mb-1.5">
-        {DAY_LABELS.map((d, i) => (
+        {tl.days.map((d, i) => (
           <div
             key={d}
             className="text-center text-[10px] font-bold py-0.5 tracking-wide"
@@ -238,7 +292,7 @@ export default function FortuneCalendar({
           if (!cell) return <div key={`e-${idx}`} className="aspect-square" />;
 
           const score = cell.categoryScores[activeCategory] ?? cell.normalizedScore;
-          const tier = getScoreTier(score);
+          const tier = getScoreTier(score, tl.scoreTiers);
           const isBestDay = stats.bestDay?.date === cell.date;
           const isSelected = selectedDay?.date === cell.date;
           const isFuture = cell.date > todayStr;
@@ -345,7 +399,7 @@ export default function FortuneCalendar({
       {/* ────────────────────────── 선택한 날 상세 카드 ── */}
       {selectedDay && (() => {
         const activeScore = selectedDay.categoryScores[activeCategory] ?? selectedDay.normalizedScore;
-        const activeTier = getScoreTier(activeScore);
+        const activeTier = getScoreTier(activeScore, tl.scoreTiers);
         const isBest = stats.bestDay?.date === selectedDay.date;
 
         return (
@@ -364,8 +418,8 @@ export default function FortuneCalendar({
                   {activeTier.emoji} {selectedDay.date.replace(/-/g, '.')}
                 </p>
                 <p className="text-white/40 text-[10px] mt-0.5">
-                  {selectedDay.isVisited ? '✓ 방문한 날' : '미방문'}
-                  {isBest ? ' · 🏆 이달 최고의 날' : ''}
+                  {selectedDay.isVisited ? tl.visited : tl.notVisited}
+                  {isBest ? ` · ${tl.bestDayBadge}` : ''}
                 </p>
               </div>
               {/* 점수 원형 배지 */}
@@ -384,7 +438,7 @@ export default function FortuneCalendar({
 
             {/* 카테고리별 점수 바 */}
             <div className="space-y-2">
-              {(Object.entries(categoryConfig) as [TrendCategory, (typeof categoryConfig)[TrendCategory]][]).map(([key, cfg]) => {
+              {(Object.entries(categoryConfig) as [TrendCategory, { icon: string; color: string; rgb: string; label: string }][]).map(([key, cfg]) => {
                 const s = selectedDay.categoryScores[key] ?? selectedDay.normalizedScore;
                 const isActive = key === activeCategory;
                 return (
@@ -425,12 +479,12 @@ export default function FortuneCalendar({
       {/* ────────────────────────────────── 범례 ── */}
       <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 mt-3.5">
         {[
-          { emoji: '🌑', label: '낮음',  color: '#fca5a5' },
-          { emoji: '⚡', label: '주의',  color: '#fb923c' },
-          { emoji: '🔮', label: '보통',  color: '#a5b4fc' },
-          { emoji: '✨', label: '좋음',  color: '#34d399' },
-          { emoji: '🌟', label: '최고',  color: '#fcd34d' },
-          { emoji: '👑', label: '이달 최고', color: '#fcd34d' },
+          { emoji: '🌑', label: tl.scoreTiers.low,     color: '#fca5a5' },
+          { emoji: '⚡', label: tl.scoreTiers.caution, color: '#fb923c' },
+          { emoji: '🔮', label: tl.scoreTiers.avg,     color: '#a5b4fc' },
+          { emoji: '✨', label: tl.scoreTiers.good,    color: '#34d399' },
+          { emoji: '🌟', label: tl.scoreTiers.top,     color: '#fcd34d' },
+          { emoji: '👑', label: tl.scoreTiers.bestMonth, color: '#fcd34d' },
         ].map(({ emoji, label, color }) => (
           <span
             key={label}

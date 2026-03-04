@@ -94,7 +94,8 @@ export type EngagementEventType =
   | 'content_unlock'
   | 'onboarding_complete'
   | 'checkin_complete'
-  | 'section_scroll';
+  | 'section_scroll'
+  | 'ui_interaction';
 
 /** 참여도 이벤트 */
 export interface EngagementEvent {

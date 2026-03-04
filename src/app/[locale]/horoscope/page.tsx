@@ -109,7 +109,7 @@ export default async function LocaleHoroscopePage({
         </div>
 
         {/* 맞춤형 운세 클라이언트 영역 */}
-        <HoroscopeClientApp />
+        <HoroscopeClientApp locale={safeLocale} />
 
         {/* TOP 3 (서버 렌더링) */}
         <section className="mt-16 mb-16">

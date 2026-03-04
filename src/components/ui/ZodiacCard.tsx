@@ -4,6 +4,12 @@ import Link from 'next/link';
 import { type ZodiacSignId, type Element } from '@/types/zodiac';
 import ZodiacIcon from '@/components/ui/ZodiacIcon';
 import FavoriteButton from '@/components/ui/FavoriteButton';
+import { zodiacSigns } from '@/data/zodiac-signs';
+
+// Locale-aware name lookup
+const signNames: Record<string, Record<string, string>> = Object.fromEntries(
+  zodiacSigns.map((s) => [s.id, s.names as unknown as Record<string, string>])
+);
 
 interface ZodiacInfo {
   symbol: string;
@@ -104,6 +110,7 @@ const iconSizeMap = {
 export default function ZodiacCard({ sign, size = 'md', showFavorite = true, locale }: ZodiacCardProps) {
   const data = zodiacData[sign];
   const href = locale ? `/${locale}/zodiac/${sign}` : `/zodiac/${sign}`;
+  const localeName = locale ? (signNames[sign]?.[locale] ?? data.name) : data.name;
 
   const sizeClasses = {
     sm: {
@@ -144,7 +151,7 @@ export default function ZodiacCard({ sign, size = 'md', showFavorite = true, loc
             <ZodiacIcon sign={sign} size={iconSizeMap[size]} animated />
           </div>
           <h3 className={`font-semibold ${classes.name} text-white mb-1 relative z-10 tracking-wide`}>
-            {data.name}
+            {localeName}
           </h3>
           <p className={`${classes.date} text-white/60 font-medium relative z-10`}>{data.dateRange}</p>
         </div>

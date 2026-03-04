@@ -9,6 +9,26 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        surface: {
+          base: '#050111', // 기본 다크 배경
+          elevated: 'rgba(15, 23, 42, 0.9)', // 카드/모달 기본 서피스
+          highest: 'rgba(15, 23, 42, 0.98)', // 헤더/고정 요소
+        },
+        border: {
+          subtle: 'rgba(148, 163, 184, 0.25)', // 미세한 구분선
+          strong: 'rgba(148, 163, 184, 0.45)', // 강조 보더
+        },
+        text: {
+          primary: '#f9fafb',
+          secondary: 'rgba(209, 213, 219, 1)',
+          muted: 'rgba(148, 163, 184, 0.85)',
+        },
+        state: {
+          success: '#22c55e',
+          warning: '#eab308',
+          danger: '#ef4444',
+          info: '#38bdf8',
+        },
         zodiac: {
           primary: '#8b5cf6', // brighter neon purple
           secondary: '#d946ef', // mystical fuchsia
@@ -46,6 +66,15 @@ const config: Config = {
       fontFamily: {
         sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
         display: ['var(--font-playfair)', 'serif'],
+      },
+      borderRadius: {
+        card: '1.5rem',
+        badge: '9999px',
+      },
+      boxShadow: {
+        'card-soft': '0 18px 45px rgba(15, 23, 42, 0.85)',
+        'card-inner': 'inset 0 1px 0 rgba(255, 255, 255, 0.06)',
+        'focus-ring': '0 0 0 1px rgba(139, 92, 246, 0.6), 0 18px 45px rgba(15, 23, 42, 0.9)',
       },
       animation: {
         'pulse-slow': 'pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',

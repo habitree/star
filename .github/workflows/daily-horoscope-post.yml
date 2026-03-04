@@ -1,12 +1,22 @@
-name: 📅 Daily Horoscope X Post
+name: 📅 Daily Horoscope X Post (Multi-locale)
 
-# 매일 오전 7시 KST (= UTC 22:00 전날) 자동 실행
-# workflow_dispatch: GitHub Actions UI에서 수동 트리거 가능
+# 각 크론은 해당 로케일의 현지 오전 7시에 실행
+# ko/ja: 22:00 UTC = 07:00 KST/JST (UTC+9)
+# zh:    23:00 UTC = 07:00 CST      (UTC+8)
+# en:    12:00 UTC = 07:00 EST      (UTC-5)
+#
+# 트윗 한도: 4 로케일 × 12 × 31일 = 1,488/월 (무료 한도 1,500 이내 ✓)
 on:
   schedule:
-    - cron: '0 22 * * *'   # 22:00 UTC = 07:00 KST
+    - cron: '0 22 * * *'   # 07:00 KST/JST → ko, ja
+    - cron: '0 23 * * *'   # 07:00 CST      → zh
+    - cron: '0 12 * * *'   # 07:00 EST      → en
   workflow_dispatch:
     inputs:
+      locales:
+        description: '언어 (쉼표 구분: ko,ja,en,zh,es)'
+        required: false
+        default: 'ko'
       dry_run:
         description: 'DRY RUN (실제 포스팅 없이 트윗 내용만 출력)'
         required: false
@@ -15,10 +25,36 @@ on:
         options: ['false', 'true']
 
 jobs:
+  detect-locales:
+    name: Detect target locales
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set.outputs.matrix }}
+    steps:
+      - id: set
+        run: |
+          if [ -n "${{ github.event.inputs.locales }}" ]; then
+            # workflow_dispatch: 쉼표 구분 문자열 → JSON 배열
+            LOCALES=$(echo "${{ github.event.inputs.locales }}" | tr ',' '\n' | jq -R . | jq -sc .)
+          else
+            HOUR=$(date -u +%H)
+            case "$HOUR" in
+              22) LOCALES='["ko","ja"]' ;;
+              23) LOCALES='["zh"]' ;;
+              12) LOCALES='["en"]' ;;
+              *)  LOCALES='["ko"]' ;;
+            esac
+          fi
+          echo "matrix={\"locale\":$LOCALES}" >> $GITHUB_OUTPUT
+
   post-horoscope:
-    name: Post Daily Horoscope to X
+    name: Post ${{ matrix.locale }} horoscope
+    needs: detect-locales
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    strategy:
+      matrix: ${{ fromJson(needs.detect-locales.outputs.matrix) }}
+      fail-fast: false   # 한 로케일 실패해도 나머지는 계속 실행
 
     steps:
       - name: ⬇️ Checkout
@@ -33,15 +69,13 @@ jobs:
       - name: 📦 Install dependencies
         run: npm ci
 
-      - name: 🌟 Post horoscopes to X
+      - name: 🌟 Post ${{ matrix.locale }} horoscopes to X
         run: npx tsx scripts/post-daily-horoscope.ts
         env:
-          # X (Twitter) API 인증 — GitHub Secrets에서 주입
-          X_API_KEY:        ${{ secrets.X_API_KEY }}
-          X_API_SECRET:     ${{ secrets.X_API_SECRET }}
-          X_ACCESS_TOKEN:   ${{ secrets.X_ACCESS_TOKEN }}
-          X_ACCESS_SECRET:  ${{ secrets.X_ACCESS_SECRET }}
-          # 사이트 URL (API 호출용)
+          X_API_KEY:            ${{ secrets.X_API_KEY }}
+          X_API_SECRET:         ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN:       ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET:      ${{ secrets.X_ACCESS_SECRET }}
           NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://luckytoday.one' }}
-          # DRY RUN 모드 (수동 트리거 시 선택 가능)
-          X_DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+          X_LOCALE:             ${{ matrix.locale }}
+          X_DRY_RUN:            ${{ github.event.inputs.dry_run || 'false' }}

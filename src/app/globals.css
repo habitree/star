@@ -33,8 +33,10 @@
 
   /* 글래스모피즘 카드 */
   .glass-card {
-    @apply backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl;
-    box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    @apply backdrop-blur-2xl bg-surface-elevated/80 border border-border-subtle rounded-card;
+    box-shadow:
+      0 18px 45px rgba(15, 23, 42, 0.85),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
 
   .glass-card-hover {
@@ -42,8 +44,10 @@
   }
 
   .glass-card-hover:hover {
-    @apply bg-white/10 border-white/20 scale-[1.02];
-    box-shadow: 0 8px 32px -4px rgba(139, 92, 246, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    @apply bg-surface-highest/95 border-border-strong scale-[1.02];
+    box-shadow:
+      0 0 0 1px rgba(139, 92, 246, 0.6),
+      0 22px 55px -10px rgba(15, 23, 42, 0.95);
   }
 
   /* 원소별 카드 배경 */
@@ -85,14 +89,18 @@
 
   /* 버튼 스타일 */
   .btn-primary {
-    @apply px-6 py-3 bg-gradient-primary text-white font-medium rounded-xl;
-    @apply hover:opacity-90 active:scale-95 transition-all duration-200;
-    @apply shadow-lg shadow-zodiac-primary/30;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full;
+    @apply bg-gradient-primary text-text-primary font-medium;
+    @apply shadow-card-soft;
+    @apply hover:opacity-95 active:scale-95 transition-all duration-200;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-zodiac-primary focus-visible:ring-offset-surface-base;
   }
 
   .btn-secondary {
-    @apply px-6 py-3 bg-white/10 text-white font-medium rounded-xl border border-white/20;
-    @apply hover:bg-white/20 active:scale-95 transition-all duration-200;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full;
+    @apply bg-surface-elevated/80 text-text-secondary font-medium border border-border-subtle;
+    @apply hover:bg-surface-highest/90 hover:border-border-strong active:scale-95 transition-all duration-200;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-zodiac-primary focus-visible:ring-offset-surface-base;
   }
 
   /* 스코어 바 */

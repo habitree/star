@@ -2,15 +2,31 @@
 
 import type { TimeBasedFortune } from '@/types/horoscope-extended';
 
+const PERIOD_LABELS = {
+  ko: { morning: '아침', afternoon: '오후', evening: '저녁', now: '지금', rhythm: '하루의 리듬', score: '점' },
+  en: { morning: 'Morning', afternoon: 'Afternoon', evening: 'Evening', now: 'Now', rhythm: 'Daily Rhythm', score: 'pt' },
+  zh: { morning: '早晨', afternoon: '下午', evening: '傍晚', now: '现在', rhythm: '每日节律', score: '分' },
+  ja: { morning: '朝', afternoon: '午後', evening: '夜', now: '今', rhythm: 'デイリーリズム', score: '点' },
+  es: { morning: 'Mañana', afternoon: 'Tarde', evening: 'Noche', now: 'Ahora', rhythm: 'Ritmo Diario', score: 'pt' },
+} as const;
+type PLocale = keyof typeof PERIOD_LABELS;
+
+const PERIOD_RANGES = {
+  morning: '06-12',
+  afternoon: '12-18',
+  evening: '18-24',
+} as const;
+
+const PERIOD_ICONS = {
+  morning: '🌅',
+  afternoon: '☀️',
+  evening: '🌙',
+} as const;
+
 interface DailyRhythmProps {
   timeFortunes: TimeBasedFortune[];
+  locale?: string;
 }
-
-const periodMeta = {
-  morning:   { icon: '🌅', label: '아침', range: '06-12시' },
-  afternoon: { icon: '☀️', label: '오후', range: '12-18시' },
-  evening:   { icon: '🌙', label: '저녁', range: '18-24시' },
-} as const;
 
 function getCurrentPeriod(): 'morning' | 'afternoon' | 'evening' {
   const h = new Date().getHours();
@@ -19,14 +35,15 @@ function getCurrentPeriod(): 'morning' | 'afternoon' | 'evening' {
   return 'evening';
 }
 
-export default function DailyRhythm({ timeFortunes }: DailyRhythmProps) {
+export default function DailyRhythm({ timeFortunes, locale = 'ko' }: DailyRhythmProps) {
+  const tl = PERIOD_LABELS[(locale as PLocale) in PERIOD_LABELS ? (locale as PLocale) : 'ko'];
   const currentPeriod = getCurrentPeriod();
   const periodOrder: ('morning' | 'afternoon' | 'evening')[] = ['morning', 'afternoon', 'evening'];
   const currentIdx = periodOrder.indexOf(currentPeriod);
 
   return (
     <div className="glass-card p-5">
-      <p className="text-xs text-white/40 text-center mb-4 tracking-wider uppercase">하루의 리듬</p>
+      <p className="text-xs text-white/40 text-center mb-4 tracking-wider uppercase">{tl.rhythm}</p>
 
       {/* 타임라인 */}
       <div className="relative flex items-center justify-between px-4">
@@ -46,7 +63,6 @@ export default function DailyRhythm({ timeFortunes }: DailyRhythmProps) {
 
         {periodOrder.map((period, idx) => {
           const fortune = timeFortunes.find(f => f.period === period);
-          const meta = periodMeta[period];
           const isCurrent = period === currentPeriod;
           const isPast = idx < currentIdx;
 
@@ -75,19 +91,19 @@ export default function DailyRhythm({ timeFortunes }: DailyRhythmProps) {
                       : '1px dashed rgba(255,255,255,0.15)',
                   }}
                 >
-                  {meta.icon}
+                  {PERIOD_ICONS[period]}
                 </div>
               </div>
 
               {/* 레이블 */}
               <div className="text-center">
                 <p className={`text-xs font-medium ${isCurrent ? 'text-white' : 'text-white/50'}`}>
-                  {meta.label}
-                  {isCurrent && <span className="ml-1 text-purple-300 text-[10px]">지금</span>}
+                  {tl[period]}
+                  {isCurrent && <span className="ml-1 text-purple-300 text-[10px]">{tl.now}</span>}
                 </p>
                 {fortune && (
                   <p className={`text-xs tabular-nums mt-0.5 ${isCurrent ? 'text-purple-300 font-bold' : 'text-white/30'}`}>
-                    {fortune.detailedScore}점
+                    {fortune.detailedScore}{tl.score}
                   </p>
                 )}
               </div>

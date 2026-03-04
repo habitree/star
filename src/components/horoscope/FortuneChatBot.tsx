@@ -11,7 +11,7 @@ import {
   getCurrentChoices,
   type ChatState,
 } from '@/lib/chat-fortune';
-import { trackEvent } from '@/lib/engagement-tracker';
+import { trackEvent, trackRetentionView } from '@/lib/engagement-tracker';
 
 interface FortuneChatBotProps {
   signId: ZodiacSignId;
@@ -38,6 +38,7 @@ export default function FortuneChatBot({
     setVisibleCount(0);
     setIsOpen(true);
     trackEvent('chat_start', { signId });
+    trackRetentionView({ surface: 'chatbot', action: 'view' });
   };
 
   // 메시지 순차 표시
@@ -90,38 +91,40 @@ export default function FortuneChatBot({
 
   if (!isOpen) {
     return (
-      <div className="glass-card p-5 text-center">
-        <p className="text-white/70 text-sm mb-3">별의 도사와 대화하기</p>
+      <section className="glass-card p-5 text-center" aria-label="별의 도사 대화 시작">
+        <p className="text-white/70 text-sm mb-3">오늘 기분에 맞춘 한 줄 조언이 필요할 때</p>
         <button
           onClick={initChat}
-          className="px-5 py-2.5 rounded-full text-sm font-medium
-                     bg-gradient-to-r from-purple-500 to-pink-500
-                     text-white hover:opacity-90 transition-opacity active:scale-95"
+          className="btn-primary text-sm px-5 py-2.5"
         >
           🔮 대화 시작하기
         </button>
-      </div>
+      </section>
     );
   }
 
   return (
-    <div className="glass-card p-4 max-h-[500px] flex flex-col">
+    <section className="glass-card p-4 max-h-[500px] flex flex-col" aria-label="별의 도사와의 대화">
       {/* 헤더 */}
-      <div className="flex items-center justify-between mb-3 pb-3 border-b border-white/10">
+      <header className="flex items-center justify-between mb-3 pb-3 border-b border-white/10">
         <div className="flex items-center gap-2">
-          <span className="text-xl">🔮</span>
-          <span className="text-white font-medium text-sm">별의 도사</span>
+          <span className="text-xl" aria-hidden="true">🔮</span>
+          <div className="flex flex-col">
+            <span className="text-white font-medium text-sm">별의 도사</span>
+            <span className="text-[11px] text-white/40">감정에 맞춰 오늘의 메시지를 전해드려요</span>
+          </div>
         </div>
         <button
           onClick={() => setIsOpen(false)}
           className="text-white/40 hover:text-white/70 text-sm transition-colors"
+          aria-label="대화 닫기"
         >
           ✕
         </button>
-      </div>
+      </header>
 
       {/* 메시지 영역 */}
-      <div className="flex-1 overflow-y-auto space-y-3 mb-3 min-h-[200px] max-h-[350px]">
+      <div className="flex-1 overflow-y-auto space-y-3 mb-3 min-h-[200px] max-h-[350px]" aria-live="polite">
         {visibleMessages.map((msg) => (
           <div
             key={msg.id}
@@ -146,7 +149,7 @@ export default function FortuneChatBot({
         {/* 타이핑 인디케이터 */}
         {visibleCount < (chatState?.messages.length || 0) && (
           <div className="flex justify-start">
-            <div className="bg-white/10 rounded-2xl rounded-tl-sm px-4 py-3">
+            <div className="bg-white/10 rounded-2xl rounded-tl-sm px-4 py-3" aria-hidden="true">
               <div className="flex gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-white/40 animate-bounce" style={{ animationDelay: '0ms' }} />
                 <span className="w-1.5 h-1.5 rounded-full bg-white/40 animate-bounce" style={{ animationDelay: '150ms' }} />
@@ -161,7 +164,7 @@ export default function FortuneChatBot({
 
       {/* 선택지 */}
       {showChoices && currentChoices && (
-        <div className="flex flex-col gap-2 border-t border-white/10 pt-3">
+        <div className="flex flex-col gap-2 border-t border-white/10 pt-3" aria-label="감정 선택지">
           {currentChoices.map((choice) => (
             <button
               key={choice.id}
@@ -187,6 +190,6 @@ export default function FortuneChatBot({
           </button>
         </div>
       )}
-    </div>
+    </section>
   );
 }

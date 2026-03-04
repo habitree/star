@@ -121,3 +121,16 @@ export function getEngagementStats(): {
     avgDailyEvents,
   };
 }
+
+/** 리텐션 중심 UI 상호작용 헬퍼 */
+export function trackRetentionView(context: {
+  surface: 'daily-main' | 'streak-dashboard' | 'chatbot' | 'calendar';
+  action: 'view' | 'expand' | 'cta_click';
+  label?: string;
+}): void {
+  trackEvent('ui_interaction', {
+    elementId: `retention-${context.surface}`,
+    action: context.action,
+    metadata: context.label ? { label: context.label } : undefined,
+  });
+}

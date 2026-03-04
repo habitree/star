@@ -4,13 +4,24 @@ import { useState, useEffect } from 'react';
 import { getStreakLevel, getMotivationMessage, getDaysToNextMilestone } from '@/lib/streak-rewards';
 import { trackEvent } from '@/lib/engagement-tracker';
 
+const CHECKIN_TEXT = {
+  ko: { done: '체크인 완료!', consecutive: (n: number) => `${n}일 연속 달성!`, streakDays: (n: number) => `${n}일 연속`, complete: '✓ 완료', checkIn: '오늘의 체크인' },
+  en: { done: 'Check-in done!', consecutive: (n: number) => `${n}-day streak!`, streakDays: (n: number) => `${n} days`, complete: '✓ Done', checkIn: "Today's Check-in" },
+  zh: { done: '打卡完成！', consecutive: (n: number) => `连续${n}天！`, streakDays: (n: number) => `连续${n}天`, complete: '✓ 完成', checkIn: '今日打卡' },
+  ja: { done: 'チェックイン完了！', consecutive: (n: number) => `${n}日連続達成！`, streakDays: (n: number) => `${n}日連続`, complete: '✓ 完了', checkIn: '今日のチェックイン' },
+  es: { done: '¡Check-in hecho!', consecutive: (n: number) => `¡${n} días seguidos!`, streakDays: (n: number) => `${n} días`, complete: '✓ Listo', checkIn: 'Check-in de hoy' },
+} as const;
+type CheckInLocale = keyof typeof CHECKIN_TEXT;
+
 interface DailyCheckInProps {
   streak: number;
   todayCheckedIn: boolean;
   onCheckIn: () => void;
+  locale?: string;
 }
 
-export default function DailyCheckIn({ streak, todayCheckedIn, onCheckIn }: DailyCheckInProps) {
+export default function DailyCheckIn({ streak, todayCheckedIn, onCheckIn, locale = 'ko' }: DailyCheckInProps) {
+  const tl = CHECKIN_TEXT[(locale as CheckInLocale) in CHECKIN_TEXT ? (locale as CheckInLocale) : 'ko'];
   const [showAnimation, setShowAnimation] = useState(false);
   const [justCheckedIn, setJustCheckedIn] = useState(false);
 
@@ -40,8 +51,8 @@ export default function DailyCheckIn({ streak, todayCheckedIn, onCheckIn }: Dail
         <div className="absolute inset-0 flex items-center justify-center bg-black/40 z-10 animate-fade-in-up">
           <div className="text-center">
             <div className="text-5xl mb-2 animate-scale-in">🎉</div>
-            <p className="text-white font-bold text-lg">체크인 완료!</p>
-            <p className="text-white/70 text-sm">{streak + 1}일 연속 달성!</p>
+            <p className="text-white font-bold text-lg">{tl.done}</p>
+            <p className="text-white/70 text-sm">{tl.consecutive(streak + 1)}</p>
           </div>
         </div>
       )}
@@ -52,7 +63,7 @@ export default function DailyCheckIn({ streak, todayCheckedIn, onCheckIn }: Dail
           <span className="text-2xl">{level.icon}</span>
           <div>
             <p className={`text-sm font-semibold ${level.color}`}>{level.level}</p>
-            <p className="text-white/50 text-xs">{streak}일 연속</p>
+            <p className="text-white/50 text-xs">{tl.streakDays(streak)}</p>
           </div>
         </div>
 
@@ -66,7 +77,7 @@ export default function DailyCheckIn({ streak, todayCheckedIn, onCheckIn }: Dail
               : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:opacity-90 active:scale-95'
           }`}
         >
-          {todayCheckedIn || justCheckedIn ? '✓ 완료' : '오늘의 체크인'}
+          {todayCheckedIn || justCheckedIn ? tl.complete : tl.checkIn}
         </button>
       </div>
 
