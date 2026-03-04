@@ -72,6 +72,24 @@ export const streakBadges: Record<StreakMilestone, Badge> = {
   },
 };
 
+/** 배지 다국어 이름 (locale 기반 표시용) */
+const badgeNames: Record<string, Record<string, string>> = {
+  'streak-3':   { ko: '운세 초보 탐험가', en: 'Fortune Novice',       zh: '命运初学者',    ja: '占い初心者',        es: 'Aprendiz del Destino' },
+  'streak-7':   { ko: '별빛 수집가',       en: 'Starlight Collector', zh: '星光收藏家',    ja: '星明り採集家',      es: 'Coleccionista de Estrellas' },
+  'streak-14':  { ko: '우주의 탐구자',     en: 'Cosmic Explorer',     zh: '宇宙探索者',    ja: '宇宙の探求者',      es: 'Explorador Cósmico' },
+  'streak-30':  { ko: '별의 동반자',       en: 'Star Companion',      zh: '星星伴侣',      ja: '星の伴侶',          es: 'Compañero de las Estrellas' },
+  'streak-45':  { ko: '성운의 여행자',     en: 'Nebula Traveler',     zh: '星云旅行者',    ja: '星雲の旅人',        es: 'Viajero de la Nebulosa' },
+  'streak-60':  { ko: '은하수의 탐험가',   en: 'Milky Way Explorer',  zh: '银河探险家',    ja: '天の川の探検家',    es: 'Explorador de la Vía Láctea' },
+  'streak-75':  { ko: '별자리의 수호자',   en: 'Zodiac Guardian',     zh: '星座守护者',    ja: '星座の守護者',      es: 'Guardián del Zodíaco' },
+  'streak-90':  { ko: '우주의 예언자',     en: 'Cosmic Prophet',      zh: '宇宙预言者',    ja: '宇宙の預言者',      es: 'Profeta Cósmico' },
+  'streak-100': { ko: '별의 현자',         en: 'Star Sage',           zh: '星星贤者',      ja: '星の賢者',          es: 'Sabio de las Estrellas' },
+};
+
+/** 배지 이름을 locale에 맞게 반환 */
+export function getBadgeName(badgeId: string, locale = 'ko'): string {
+  return badgeNames[badgeId]?.[locale] ?? badgeNames[badgeId]?.['ko'] ?? badgeId;
+}
+
 /** 스트릭 보상 정의 */
 export const streakRewards: StreakReward[] = [
   {
@@ -168,34 +186,85 @@ export function getNewlyEarnedReward(
   return null;
 }
 
+/** 스트릭 레벨 다국어 */
+const STREAK_LEVEL_NAMES: Record<string, Record<string, string>> = {
+  sage:       { ko: '별의 현자',       en: 'Star Sage',            zh: '星星贤者',      ja: '星の賢者',       es: 'Sabio de las Estrellas' },
+  prophet:    { ko: '우주의 예언자',   en: 'Cosmic Prophet',       zh: '宇宙预言者',    ja: '宇宙の預言者',   es: 'Profeta Cósmico' },
+  guardian:   { ko: '별자리의 수호자', en: 'Zodiac Guardian',      zh: '星座守护者',    ja: '星座の守護者',   es: 'Guardián del Zodíaco' },
+  explorer:   { ko: '은하수의 탐험가', en: 'Milky Way Explorer',   zh: '银河探险家',    ja: '天の川の探検家', es: 'Explorador de la Vía Láctea' },
+  traveler:   { ko: '성운의 여행자',   en: 'Nebula Traveler',      zh: '星云旅行者',    ja: '星雲の旅人',     es: 'Viajero de la Nebulosa' },
+  companion:  { ko: '별의 동반자',     en: 'Star Companion',       zh: '星星伴侣',      ja: '星の伴侶',       es: 'Compañero de las Estrellas' },
+  seeker:     { ko: '우주의 탐구자',   en: 'Cosmic Seeker',        zh: '宇宙探索者',    ja: '宇宙の探求者',   es: 'Buscador Cósmico' },
+  collector:  { ko: '별빛 수집가',     en: 'Starlight Collector',  zh: '星光收藏家',    ja: '星明り採集家',   es: 'Coleccionista de Estrellas' },
+  novice:     { ko: '운세 초보 탐험가',en: 'Fortune Novice',       zh: '命运初学者',    ja: '占い初心者',     es: 'Aprendiz del Destino' },
+  wanderer:   { ko: '별의 여행자',     en: 'Star Wanderer',        zh: '星星旅行者',    ja: '星の旅人',       es: 'Viajero Estelar' },
+};
+
 /** 스트릭 레벨 (표시용) */
-export function getStreakLevel(streak: number): {
+export function getStreakLevel(streak: number, locale = 'ko'): {
   level: string;
   icon: string;
   color: string;
 } {
-  if (streak >= 100) return { level: '별의 현자', icon: '👑', color: 'text-yellow-400' };
-  if (streak >= 90) return { level: '우주의 예언자', icon: '🌠', color: 'text-amber-400' };
-  if (streak >= 75) return { level: '별자리의 수호자', icon: '🛡️', color: 'text-rose-400' };
-  if (streak >= 60) return { level: '은하수의 탐험가', icon: '🪐', color: 'text-orange-400' };
-  if (streak >= 45) return { level: '성운의 여행자', icon: '🌌', color: 'text-indigo-400' };
-  if (streak >= 30) return { level: '별의 동반자', icon: '🌙', color: 'text-purple-400' };
-  if (streak >= 14) return { level: '우주의 탐구자', icon: '🔮', color: 'text-blue-400' };
-  if (streak >= 7) return { level: '별빛 수집가', icon: '⭐', color: 'text-cyan-400' };
-  if (streak >= 3) return { level: '운세 초보 탐험가', icon: '🌟', color: 'text-green-400' };
-  return { level: '별의 여행자', icon: '✨', color: 'text-white/60' };
+  const name = (key: string) => STREAK_LEVEL_NAMES[key]?.[locale] ?? STREAK_LEVEL_NAMES[key]?.['ko'] ?? key;
+  if (streak >= 100) return { level: name('sage'),      icon: '👑', color: 'text-yellow-400' };
+  if (streak >= 90)  return { level: name('prophet'),   icon: '🌠', color: 'text-amber-400' };
+  if (streak >= 75)  return { level: name('guardian'),  icon: '🛡️', color: 'text-rose-400' };
+  if (streak >= 60)  return { level: name('explorer'),  icon: '🪐', color: 'text-orange-400' };
+  if (streak >= 45)  return { level: name('traveler'),  icon: '🌌', color: 'text-indigo-400' };
+  if (streak >= 30)  return { level: name('companion'), icon: '🌙', color: 'text-purple-400' };
+  if (streak >= 14)  return { level: name('seeker'),    icon: '🔮', color: 'text-blue-400' };
+  if (streak >= 7)   return { level: name('collector'), icon: '⭐', color: 'text-cyan-400' };
+  if (streak >= 3)   return { level: name('novice'),    icon: '🌟', color: 'text-green-400' };
+  return               { level: name('wanderer'),  icon: '✨', color: 'text-white/60' };
 }
 
-/** 스트릭 유지 동기부여 메시지 */
-export function getMotivationMessage(streak: number): string {
-  const next = getDaysToNextMilestone(streak);
-  if (!next) return '👑 모든 마일스톤을 달성한 전설적인 현자님! 별들이 경의를 표합니다.';
+/** 스트릭 유지 동기부여 메시지 (다국어) */
+const MOTIVATION_TEXT: Record<string, {
+  legend: string;
+  tomorrow: (n: number) => string;
+  almostThere: (n: number, d: number) => string;
+  keepGoing: (n: number, d: number) => string;
+}> = {
+  ko: {
+    legend: '👑 모든 마일스톤을 달성한 전설적인 현자님! 별들이 경의를 표합니다.',
+    tomorrow: (n) => `내일이면 ${n}일 달성! 🎉 새로운 보상이 기다리고 있어요!`,
+    almostThere: (n, d) => `${n}일까지 ${d}일 남았어요! 거의 다 왔어요! 💪`,
+    keepGoing: (n, d) => `${n}일 달성까지 ${d}일! 꾸준히 함께해요 ✨`,
+  },
+  en: {
+    legend: '👑 Legendary sage who achieved all milestones! The stars bow to you.',
+    tomorrow: (n) => `One more day to reach ${n}! 🎉 A new reward awaits!`,
+    almostThere: (n, d) => `Only ${d} days to ${n}! Almost there! 💪`,
+    keepGoing: (n, d) => `${d} days to reach ${n}! Keep going ✨`,
+  },
+  zh: {
+    legend: '👑 达成所有里程碑的传奇贤者！星星向您致敬。',
+    tomorrow: (n) => `明天就能达成${n}天！🎉 新奖励在等待你！`,
+    almostThere: (n, d) => `距${n}天还剩${d}天！快到了！💪`,
+    keepGoing: (n, d) => `距${n}天还剩${d}天！继续加油 ✨`,
+  },
+  ja: {
+    legend: '👑 全マイルストーンを達成した伝説の賢者！星々があなたに敬意を表します。',
+    tomorrow: (n) => `あと1日で${n}日達成！🎉 新しい報酬が待っています！`,
+    almostThere: (n, d) => `${n}日まであと${d}日！もう少しです！💪`,
+    keepGoing: (n, d) => `${n}日達成まで${d}日！一緒に続けましょう ✨`,
+  },
+  es: {
+    legend: '👑 ¡Sabio legendario que logró todos los hitos! Las estrellas te rinden homenaje.',
+    tomorrow: (n) => `¡Un día más para llegar a ${n}! 🎉 ¡Una nueva recompensa te espera!`,
+    almostThere: (n, d) => `¡Solo ${d} días para ${n}! ¡Casi ahí! 💪`,
+    keepGoing: (n, d) => `¡${d} días para llegar a ${n}! Sigue adelante ✨`,
+  },
+};
 
-  if (next.daysRemaining === 1) {
-    return `내일이면 ${next.nextMilestone}일 달성! 🎉 새로운 보상이 기다리고 있어요!`;
-  }
-  if (next.daysRemaining <= 3) {
-    return `${next.nextMilestone}일까지 ${next.daysRemaining}일 남았어요! 거의 다 왔어요! 💪`;
-  }
-  return `${next.nextMilestone}일 달성까지 ${next.daysRemaining}일! 꾸준히 함께해요 ✨`;
+/** 스트릭 유지 동기부여 메시지 */
+export function getMotivationMessage(streak: number, locale = 'ko'): string {
+  const tl = MOTIVATION_TEXT[locale] ?? MOTIVATION_TEXT['ko'];
+  const next = getDaysToNextMilestone(streak);
+  if (!next) return tl.legend;
+
+  if (next.daysRemaining === 1) return tl.tomorrow(next.nextMilestone);
+  if (next.daysRemaining <= 3) return tl.almostThere(next.nextMilestone, next.daysRemaining);
+  return tl.keepGoing(next.nextMilestone, next.daysRemaining);
 }

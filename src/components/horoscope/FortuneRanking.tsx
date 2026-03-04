@@ -2,29 +2,71 @@
 
 import Link from 'next/link';
 import { zodiacData } from '@/data/zodiac-info';
+import { zodiacSigns } from '@/data/zodiac-signs';
 import type { FortuneRankingEntry } from '@/types/horoscope-extended';
 import type { ZodiacSignId } from '@/types';
+
+const RANKING_TEXT = {
+  ko: {
+    title: '오늘의 별자리 순위',
+    myRank: (rank: number, pct: number) => `내 순위: ${rank}위 / 상위 ${pct}%`,
+    me: '← 나',
+    scoreUnit: '점',
+  },
+  en: {
+    title: "Today's Zodiac Ranking",
+    myRank: (rank: number, pct: number) => `My rank: #${rank} / Top ${pct}%`,
+    me: '← me',
+    scoreUnit: 'pts',
+  },
+  zh: {
+    title: '今日星座排名',
+    myRank: (rank: number, pct: number) => `我的排名: 第${rank}名 / 前${pct}%`,
+    me: '← 我',
+    scoreUnit: '分',
+  },
+  ja: {
+    title: '今日の星座ランキング',
+    myRank: (rank: number, pct: number) => `私の順位: ${rank}位 / 上位${pct}%`,
+    me: '← 私',
+    scoreUnit: '点',
+  },
+  es: {
+    title: 'Ranking del Zodíaco Hoy',
+    myRank: (rank: number, pct: number) => `Mi posición: #${rank} / Top ${pct}%`,
+    me: '← yo',
+    scoreUnit: 'pts',
+  },
+} as const;
+type RankingLocale = keyof typeof RANKING_TEXT;
+
+// Locale-aware sign name lookup
+const signNameMap: Record<string, Record<string, string>> = Object.fromEntries(
+  zodiacSigns.map((s) => [s.id, s.names as unknown as Record<string, string>])
+);
 
 interface FortuneRankingProps {
   ranking: FortuneRankingEntry[];
   mySignId: ZodiacSignId;
+  locale?: string;
 }
 
-export default function FortuneRanking({ ranking, mySignId }: FortuneRankingProps) {
+export default function FortuneRanking({ ranking, mySignId, locale = 'ko' }: FortuneRankingProps) {
+  const tl = RANKING_TEXT[(locale as RankingLocale) in RANKING_TEXT ? (locale as RankingLocale) : 'ko'];
   const maxFine = ranking.length > 0 ? ranking[0].fineScore : 500;
   const myEntry = ranking.find(e => e.signId === mySignId);
 
   return (
     <div className="glass-card p-6">
       <h3 className="text-lg font-semibold text-white mb-2 text-center">
-        오늘의 별자리 순위
+        {tl.title}
       </h3>
 
       {/* 내 순위 배지 */}
       {myEntry && (
         <div className="text-center mb-4">
           <span className="text-xs px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-300 font-medium">
-            내 순위: {myEntry.rank}위 / 상위 {myEntry.percentile}%
+            {tl.myRank(myEntry.rank, myEntry.percentile)}
           </span>
         </div>
       )}
@@ -32,6 +74,7 @@ export default function FortuneRanking({ ranking, mySignId }: FortuneRankingProp
       <div className="space-y-2">
         {ranking.map((entry, idx) => {
           const info = zodiacData[entry.signId];
+          const signName = signNameMap[entry.signId]?.[locale] ?? info.name;
           const isMe = entry.signId === mySignId;
           const finePercent = maxFine > 0 ? (entry.fineScore / maxFine) * 100 : 0;
           const displayScore = Math.round(entry.fineScore / 5); // 0-100 스케일
@@ -60,13 +103,13 @@ export default function FortuneRanking({ ranking, mySignId }: FortuneRankingProp
                 {/* 별자리 */}
                 <span className="text-xl">{info.symbol}</span>
                 <span className={`text-sm font-medium flex-1 ${isMe ? 'text-white' : 'text-white/80'}`}>
-                  {info.name}
-                  {isMe && <span className="text-purple-300 text-xs ml-1">&larr; 나</span>}
+                  {signName}
+                  {isMe && <span className="text-purple-300 text-xs ml-1">{tl.me}</span>}
                 </span>
 
                 {/* 점수 */}
                 <span className={`text-sm font-bold tabular-nums ${isMe ? 'text-purple-300' : 'text-white/60'}`}>
-                  {displayScore}점
+                  {displayScore}{tl.scoreUnit}
                 </span>
               </div>
 

@@ -4,11 +4,122 @@ import { useState } from 'react';
 import type { ZodiacSignId } from '@/types';
 import type { OnboardingStep } from '@/types/engagement';
 import { zodiacData } from '@/data/zodiac-info';
+import { zodiacSigns } from '@/data/zodiac-signs';
 import { getElementTheme } from '@/lib/element-theme';
+
+const OB_TEXT = {
+  ko: {
+    welcome: {
+      title: '별의 세계에 오신 것을 환영합니다',
+      desc: '매일 별이 전하는 특별한 메시지를 받아보세요. 당신만을 위한 맞춤 운세가 준비되어 있습니다.',
+      start: '시작하기',
+      later: '나중에 할게요',
+    },
+    birthdate: {
+      title: '생년월일을 알려주세요',
+      desc: '당신의 별자리를 찾고, 맞춤 운세를 준비할게요',
+      next: '다음',
+      back: '← 뒤로',
+    },
+    element: {
+      intro: (name: string, dateRange: string) => `${dateRange}에 태어난 당신은 ${name}입니다. 매일 별이 전하는 메시지를 확인해보세요!`,
+      confirm: '내 운세 확인하기 ✨',
+      reenter: '← 다시 입력',
+      elements: { fire: '🔥 불의 원소', earth: '🌿 땅의 원소', air: '💨 바람의 원소', water: '💧 물의 원소' },
+    },
+  },
+  en: {
+    welcome: {
+      title: 'Welcome to the World of Stars',
+      desc: 'Receive special messages from the stars every day. Your personalized horoscope is ready.',
+      start: 'Get Started',
+      later: 'Maybe Later',
+    },
+    birthdate: {
+      title: 'Enter Your Birth Date',
+      desc: "We'll find your zodiac sign and prepare your personalized fortune",
+      next: 'Next',
+      back: '← Back',
+    },
+    element: {
+      intro: (name: string, dateRange: string) => `Born in ${dateRange}, you are ${name}. Check the daily messages the stars have for you!`,
+      confirm: 'See My Fortune ✨',
+      reenter: '← Re-enter',
+      elements: { fire: '🔥 Fire Element', earth: '🌿 Earth Element', air: '💨 Air Element', water: '💧 Water Element' },
+    },
+  },
+  zh: {
+    welcome: {
+      title: '欢迎来到星星的世界',
+      desc: '每天接收星星传递的特别信息。您的个性化运势已准备好。',
+      start: '开始',
+      later: '稍后再说',
+    },
+    birthdate: {
+      title: '请输入您的生日',
+      desc: '我们将找到您的星座并准备个性化运势',
+      next: '下一步',
+      back: '← 返回',
+    },
+    element: {
+      intro: (name: string, dateRange: string) => `出生于${dateRange}的您是${name}。查看星星每天传递给您的信息！`,
+      confirm: '查看我的运势 ✨',
+      reenter: '← 重新输入',
+      elements: { fire: '🔥 火元素', earth: '🌿 土元素', air: '💨 风元素', water: '💧 水元素' },
+    },
+  },
+  ja: {
+    welcome: {
+      title: '星の世界へようこそ',
+      desc: '毎日、星から特別なメッセージをお届けします。あなただけのパーソナライズされた占いが準備されています。',
+      start: '始める',
+      later: 'あとで',
+    },
+    birthdate: {
+      title: '生年月日を教えてください',
+      desc: 'あなたの星座を見つけ、パーソナライズされた運勢を準備します',
+      next: '次へ',
+      back: '← 戻る',
+    },
+    element: {
+      intro: (name: string, dateRange: string) => `${dateRange}生まれのあなたは${name}です。毎日の星のメッセージを確認してください！`,
+      confirm: '私の運勢を確認する ✨',
+      reenter: '← 再入力',
+      elements: { fire: '🔥 火のエレメント', earth: '🌿 地のエレメント', air: '💨 風のエレメント', water: '💧 水のエレメント' },
+    },
+  },
+  es: {
+    welcome: {
+      title: 'Bienvenido al Mundo de las Estrellas',
+      desc: 'Recibe mensajes especiales de las estrellas cada día. Tu horóscopo personalizado está listo.',
+      start: 'Comenzar',
+      later: 'Tal vez después',
+    },
+    birthdate: {
+      title: 'Ingresa tu Fecha de Nacimiento',
+      desc: 'Encontraremos tu signo zodiacal y prepararemos tu fortuna personalizada',
+      next: 'Siguiente',
+      back: '← Atrás',
+    },
+    element: {
+      intro: (name: string, dateRange: string) => `Nacido en ${dateRange}, eres ${name}. ¡Consulta los mensajes diarios que las estrellas tienen para ti!`,
+      confirm: 'Ver Mi Fortuna ✨',
+      reenter: '← Volver a ingresar',
+      elements: { fire: '🔥 Elemento Fuego', earth: '🌿 Elemento Tierra', air: '💨 Elemento Aire', water: '💧 Elemento Agua' },
+    },
+  },
+} as const;
+type OBLocale = keyof typeof OB_TEXT;
+
+// Locale-aware sign name lookup
+const signNameMap: Record<string, Record<string, string>> = Object.fromEntries(
+  zodiacSigns.map((s) => [s.id, s.names as unknown as Record<string, string>])
+);
 
 interface OnboardingFlowProps {
   onComplete: (birthDate: string, signId: ZodiacSignId) => void;
   onSkip: () => void;
+  locale?: string;
 }
 
 /** 생년월일로 별자리 계산 */
@@ -36,7 +147,8 @@ function calculateZodiacSign(month: number, day: number): ZodiacSignId {
   return 'capricorn';
 }
 
-export default function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
+export default function OnboardingFlow({ onComplete, onSkip, locale = 'ko' }: OnboardingFlowProps) {
+  const tl = OB_TEXT[(locale as OBLocale) in OB_TEXT ? (locale as OBLocale) : 'ko'];
   const [step, setStep] = useState<OnboardingStep>('welcome');
   const [birthDate, setBirthDate] = useState('');
   const [detectedSign, setDetectedSign] = useState<ZodiacSignId | null>(null);
@@ -67,11 +179,10 @@ export default function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowPro
           <div className="space-y-6">
             <div className="text-6xl animate-float">✨</div>
             <h2 className="text-2xl font-serif font-bold text-white">
-              별의 세계에 오신 것을 환영합니다
+              {tl.welcome.title}
             </h2>
             <p className="text-white/70 leading-relaxed">
-              매일 별이 전하는 특별한 메시지를 받아보세요.
-              당신만을 위한 맞춤 운세가 준비되어 있습니다.
+              {tl.welcome.desc}
             </p>
             <div className="space-y-3">
               <button
@@ -79,13 +190,13 @@ export default function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowPro
                 className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500
                            text-white font-semibold hover:opacity-90 transition-opacity"
               >
-                시작하기
+                {tl.welcome.start}
               </button>
               <button
                 onClick={onSkip}
                 className="text-white/50 text-sm hover:text-white/70 transition-colors"
               >
-                나중에 할게요
+                {tl.welcome.later}
               </button>
             </div>
           </div>
@@ -96,10 +207,10 @@ export default function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowPro
           <div className="space-y-6">
             <div className="text-5xl">🌙</div>
             <h2 className="text-xl font-serif font-bold text-white">
-              생년월일을 알려주세요
+              {tl.birthdate.title}
             </h2>
             <p className="text-white/60 text-sm">
-              당신의 별자리를 찾고, 맞춤 운세를 준비할게요
+              {tl.birthdate.desc}
             </p>
             <input
               type="date"
@@ -116,14 +227,14 @@ export default function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowPro
                 className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500
                            text-white font-semibold hover:opacity-90 transition-opacity"
               >
-                다음
+                {tl.birthdate.next}
               </button>
             )}
             <button
               onClick={() => setStep('welcome')}
               className="text-white/50 text-sm hover:text-white/70 transition-colors"
             >
-              ← 뒤로
+              {tl.birthdate.back}
             </button>
           </div>
         )}
@@ -134,6 +245,7 @@ export default function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowPro
             {(() => {
               const info = zodiacData[detectedSign];
               const theme = getElementTheme(detectedSign);
+              const signName = signNameMap[detectedSign]?.[locale] ?? info.name;
               return (
                 <>
                   <div
@@ -143,16 +255,13 @@ export default function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowPro
                     {info.symbol}
                   </div>
                   <h2 className="text-2xl font-serif font-bold text-white">
-                    {info.name}
+                    {signName}
                   </h2>
                   <p className={`text-sm font-medium ${theme.textClass}`}>
-                    {info.element === 'fire' ? '🔥 불의 원소' :
-                     info.element === 'earth' ? '🌿 땅의 원소' :
-                     info.element === 'air' ? '💨 바람의 원소' : '💧 물의 원소'}
+                    {tl.element.elements[info.element as keyof typeof tl.element.elements]}
                   </p>
                   <p className="text-white/70 text-sm leading-relaxed">
-                    {info.dateRange}에 태어난 당신은 <strong className="text-white">{info.name}</strong>입니다.
-                    매일 별이 전하는 메시지를 확인해보세요!
+                    {tl.element.intro(signName, info.dateRange)}
                   </p>
                   <button
                     onClick={handleComplete}
@@ -160,13 +269,13 @@ export default function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowPro
                                hover:opacity-90 transition-opacity"
                     style={{ background: `linear-gradient(135deg, ${theme.primaryColor}, ${theme.secondaryColor})` }}
                   >
-                    내 운세 확인하기 ✨
+                    {tl.element.confirm}
                   </button>
                   <button
                     onClick={() => setStep('birthdate')}
                     className="text-white/50 text-sm hover:text-white/70 transition-colors"
                   >
-                    ← 다시 입력
+                    {tl.element.reenter}
                   </button>
                 </>
               );

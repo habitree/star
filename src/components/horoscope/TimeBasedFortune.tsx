@@ -3,8 +3,18 @@
 import { useState } from 'react';
 import type { TimeBasedFortune as TimeBasedFortuneType } from '@/types/horoscope-extended';
 
+const TBF_TEXT = {
+  ko: { title: '시간대별 운세', now: '지금', scoreUnit: '점' },
+  en: { title: 'Hourly Fortune',   now: 'Now', scoreUnit: 'pts' },
+  zh: { title: '时段运势',          now: '现在', scoreUnit: '分' },
+  ja: { title: '時間帯別運勢',      now: '今',   scoreUnit: '点' },
+  es: { title: 'Fortuna por Hora', now: 'Ahora', scoreUnit: 'pts' },
+} as const;
+type TBFLocale = keyof typeof TBF_TEXT;
+
 interface TimeBasedFortuneProps {
   fortunes: TimeBasedFortuneType[];
+  locale?: string;
 }
 
 function getCurrentPeriod(): 'morning' | 'afternoon' | 'evening' {
@@ -14,16 +24,17 @@ function getCurrentPeriod(): 'morning' | 'afternoon' | 'evening' {
   return 'evening';
 }
 
-export default function TimeBasedFortune({ fortunes }: TimeBasedFortuneProps) {
+export default function TimeBasedFortune({ fortunes, locale = 'ko' }: TimeBasedFortuneProps) {
   const currentPeriod = getCurrentPeriod();
   const [activePeriod, setActivePeriod] = useState(currentPeriod);
+  const tl = TBF_TEXT[(locale as TBFLocale) in TBF_TEXT ? (locale as TBFLocale) : 'ko'];
 
   const activeFortune = fortunes.find(f => f.period === activePeriod);
 
   return (
     <div className="glass-card p-6">
       <h3 className="text-lg font-semibold text-white mb-4 text-center">
-        시간대별 운세
+        {tl.title}
       </h3>
 
       {/* 탭 */}
@@ -42,7 +53,7 @@ export default function TimeBasedFortune({ fortunes }: TimeBasedFortuneProps) {
                 }`}
             >
               {f.label}
-              {isCurrent && <span className="ml-1 text-[10px] text-purple-300">지금</span>}
+              {isCurrent && <span className="ml-1 text-[10px] text-purple-300">{tl.now}</span>}
             </button>
           );
         })}
@@ -71,7 +82,7 @@ export default function TimeBasedFortune({ fortunes }: TimeBasedFortuneProps) {
               </div>
               {/* 점수 배지 */}
               <span className="text-xs font-bold text-white/80 px-1.5 py-0.5 rounded bg-white/10 tabular-nums">
-                {activeFortune.detailedScore}점
+                {activeFortune.detailedScore}{tl.scoreUnit}
               </span>
             </div>
           </div>

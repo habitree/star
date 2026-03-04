@@ -250,6 +250,7 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
           categoryDetailedScores={categoryDetailedScores}
           yesterdayPercent={yesterdayPercent}
           percentileRank={percentileRank}
+          locale={locale}
         />
       </RevealSection>
 
@@ -266,7 +267,7 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
 
       {/* ④ 시간대별 운세 */}
       <RevealSection delay={200}>
-        <TimeBasedFortune fortunes={timeFortunes} />
+        <TimeBasedFortune fortunes={timeFortunes} locale={locale} />
       </RevealSection>
 
       {/* ⑤ AdSense 배너 */}
@@ -316,13 +317,13 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
       {/* ⑥‑b 스마트 CTA */}
       {smartCTAs.length > 0 && (
         <RevealSection>
-          <SmartCTASection ctas={smartCTAs} />
+          <SmartCTASection ctas={smartCTAs} locale={locale} />
         </RevealSection>
       )}
 
       {/* ⑦ 확장 행운 요소 */}
       <RevealSection>
-        <LuckyElements lucky={extendedLucky} />
+        <LuckyElements lucky={extendedLucky} locale={locale} />
       </RevealSection>
 
       {/* ⑧ 오늘의 타로 */}
@@ -339,7 +340,7 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
 
       {/* ⑩ 바이오리듬 */}
       <RevealSection>
-        <LockedContent contentId="biorhythm" status={getStatus('biorhythm')} currentStreak={streak}>
+        <LockedContent contentId="biorhythm" status={getStatus('biorhythm')} currentStreak={streak} locale={locale}>
           <BiorhythmChart data={biorhythm} />
         </LockedContent>
       </RevealSection>
@@ -363,7 +364,7 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
 
       {/* ⑫ 별자리 순위 */}
       <RevealSection>
-        <FortuneRanking ranking={ranking} mySignId={signId} />
+        <FortuneRanking ranking={ranking} mySignId={signId} locale={locale} />
       </RevealSection>
 
       {/* ⑬ 궁합 하이라이트 */}
@@ -392,12 +393,12 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
 
       {/* ⑭ 친구와 비교 */}
       <RevealSection>
-        <FortuneComparison mySignId={signId} />
+        <FortuneComparison mySignId={signId} locale={locale} />
       </RevealSection>
 
       {/* ⑮ 공유 카드 */}
       <RevealSection>
-        <ShareCard signId={signId} score={overallPercent} affirmation={affirmation} />
+        <ShareCard signId={signId} score={overallPercent} affirmation={affirmation} locale={locale} />
       </RevealSection>
 
       {/* ⑯ AdSense 배너 */}

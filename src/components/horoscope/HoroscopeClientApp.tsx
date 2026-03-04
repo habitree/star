@@ -266,6 +266,7 @@ export default function HoroscopeClientApp({ locale = 'ko' }: { locale?: string 
       <OnboardingFlow
         onComplete={handleOnboardingComplete}
         onSkip={() => setShowOnboarding(false)}
+        locale={locale}
       />
     );
   }
@@ -279,7 +280,7 @@ export default function HoroscopeClientApp({ locale = 'ko' }: { locale?: string 
   if (!currentSign || !currentBirthDate) {
     return (
       <div className="max-w-2xl mx-auto mt-8">
-        <BirthDateForm onSubmit={handleBirthDateSubmit} />
+        <BirthDateForm onSubmit={handleBirthDateSubmit} locale={locale} />
       </div>
     );
   }
@@ -356,7 +357,7 @@ export default function HoroscopeClientApp({ locale = 'ko' }: { locale?: string 
   });
 
   // 시즌 이벤트 (다중 이벤트 지원)
-  const activeEvents = getActiveEvents(today);
+  const activeEvents = getActiveEvents(today, locale);
 
   // 마이크로 스토리
   const microStory = generateDailyMicroStory(currentSign, today);

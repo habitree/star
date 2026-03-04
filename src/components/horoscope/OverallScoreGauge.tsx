@@ -2,21 +2,53 @@
 
 import type { HoroscopeScore, HoroscopeCategory } from '@/types';
 
+const GAUGE_TEXT = {
+  ko: {
+    categories: { overall: '종합', love: '연애', career: '직장', health: '건강', money: '금전' },
+    scoreUnit: '점',
+    vsYesterday: 'vs 어제',
+    topPercent: (n: number) => `상위 ${n}%`,
+  },
+  en: {
+    categories: { overall: 'Total', love: 'Love', career: 'Career', health: 'Health', money: 'Money' },
+    scoreUnit: 'pts',
+    vsYesterday: 'vs yesterday',
+    topPercent: (n: number) => `Top ${n}%`,
+  },
+  zh: {
+    categories: { overall: '综合', love: '爱情', career: '事业', health: '健康', money: '财运' },
+    scoreUnit: '分',
+    vsYesterday: '对比昨天',
+    topPercent: (n: number) => `前 ${n}%`,
+  },
+  ja: {
+    categories: { overall: '総合', love: '恋愛', career: '仕事', health: '健康', money: '金運' },
+    scoreUnit: '点',
+    vsYesterday: '昨日比',
+    topPercent: (n: number) => `上位 ${n}%`,
+  },
+  es: {
+    categories: { overall: 'Total', love: 'Amor', career: 'Trabajo', health: 'Salud', money: 'Dinero' },
+    scoreUnit: 'pts',
+    vsYesterday: 'vs ayer',
+    topPercent: (n: number) => `Top ${n}%`,
+  },
+} as const;
+type GaugeLocale = keyof typeof GAUGE_TEXT;
+
 interface OverallScoreGaugeProps {
   overallPercent: number; // 0-100
   categoryScores: Record<HoroscopeCategory, HoroscopeScore>;
   categoryDetailedScores?: Record<HoroscopeCategory, number>;
   yesterdayPercent?: number;
   percentileRank?: number; // 상위 X%
+  locale?: string;
 }
 
-const categoryMeta: { key: HoroscopeCategory; label: string; icon: string }[] = [
-  { key: 'overall', label: '종합', icon: '⭐' },
-  { key: 'love', label: '연애', icon: '❤️' },
-  { key: 'career', label: '직장', icon: '💼' },
-  { key: 'health', label: '건강', icon: '🏥' },
-  { key: 'money', label: '금전', icon: '💰' },
-];
+const categoryKeys: HoroscopeCategory[] = ['overall', 'love', 'career', 'health', 'money'];
+const categoryIcons: Record<HoroscopeCategory, string> = {
+  overall: '⭐', love: '❤️', career: '💼', health: '🏥', money: '💰',
+};
 
 function getMoodEmoji(pct: number): string {
   if (pct < 30) return '😰';
@@ -32,7 +64,10 @@ export default function OverallScoreGauge({
   categoryDetailedScores,
   yesterdayPercent,
   percentileRank,
+  locale = 'ko',
 }: OverallScoreGaugeProps) {
+  const tl = GAUGE_TEXT[(locale as GaugeLocale) in GAUGE_TEXT ? (locale as GaugeLocale) : 'ko'];
+
   const radius = 70;
   const stroke = 10;
   const circumference = 2 * Math.PI * radius;
@@ -77,7 +112,7 @@ export default function OverallScoreGauge({
             <span className="text-4xl font-bold text-white countup-number">
               {overallPercent}
             </span>
-            <span className="text-sm text-white/50">점</span>
+            <span className="text-sm text-white/50">{tl.scoreUnit}</span>
           </div>
         </div>
 
@@ -85,20 +120,22 @@ export default function OverallScoreGauge({
         <div className="flex items-center gap-3 mb-3">
           {delta != null && (
             <span className={`text-sm font-medium ${delta > 0 ? 'score-up' : delta < 0 ? 'score-down' : 'text-white/40'}`}>
-              {delta > 0 ? '▲' : delta < 0 ? '▼' : '—'}{Math.abs(delta)}점
-              <span className="text-white/30 text-xs ml-1">vs 어제</span>
+              {delta > 0 ? '▲' : delta < 0 ? '▼' : '—'}{Math.abs(delta)}{tl.scoreUnit}
+              <span className="text-white/30 text-xs ml-1">{tl.vsYesterday}</span>
             </span>
           )}
           {percentileRank != null && (
             <span className="text-xs px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 font-medium">
-              상위 {percentileRank}%
+              {tl.topPercent(percentileRank)}
             </span>
           )}
         </div>
 
         {/* 5개 카테고리 미니 바 */}
         <div className="w-full grid grid-cols-5 gap-2">
-          {categoryMeta.map(({ key, label, icon }) => {
+          {categoryKeys.map((key) => {
+            const label = tl.categories[key];
+            const icon = categoryIcons[key];
             const detailedPct = categoryDetailedScores?.[key];
             const pct = detailedPct != null ? detailedPct : (categoryScores[key] / 5) * 100;
             return (

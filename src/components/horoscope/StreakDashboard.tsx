@@ -1,6 +1,6 @@
 'use client';
 
-import { getEarnedBadges, getDaysToNextMilestone, getStreakLevel } from '@/lib/streak-rewards';
+import { getEarnedBadges, getDaysToNextMilestone, getStreakLevel, getBadgeName } from '@/lib/streak-rewards';
 import { trackRetentionView } from '@/lib/engagement-tracker';
 import type { Badge } from '@/types/engagement';
 
@@ -47,7 +47,7 @@ interface StreakDashboardProps {
 
 export default function StreakDashboard({ streak, longestStreak, earnedBadges, locale = 'ko' }: StreakDashboardProps) {
   const tl = STREAK_TEXT[(locale as StreakLocale) in STREAK_TEXT ? (locale as StreakLocale) : 'ko'];
-  const level = getStreakLevel(streak);
+  const level = getStreakLevel(streak, locale);
   const nextMilestone = getDaysToNextMilestone(streak);
   const allBadges = getEarnedBadges(streak);
   const displayBadges = earnedBadges.length > 0 ? earnedBadges : allBadges;
@@ -90,7 +90,7 @@ export default function StreakDashboard({ streak, longestStreak, earnedBadges, l
                 title={badge.description}
               >
                 <span className="text-2xl drop-shadow-glow">{badge.icon}</span>
-                <span className="text-[10px] text-white/70 text-center leading-tight">{badge.name}</span>
+                <span className="text-[10px] text-white/70 text-center leading-tight">{getBadgeName(badge.id, locale)}</span>
               </div>
             ))}
           </div>
