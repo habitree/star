@@ -1,24 +1,26 @@
 'use client';
 
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 export default function Footer() {
+  const t = useTranslations('footer');
   const currentYear = new Date().getFullYear();
 
   const footerLinks = [
-    { href: '/about', label: '소개' },
-    { href: '/privacy', label: '개인정보처리방침' },
-    { href: '/terms', label: '이용약관' },
-    { href: '/contact', label: '문의하기' },
+    { href: '/about', label: t('about') },
+    { href: '/privacy', label: t('privacy') },
+    { href: '/terms', label: t('terms') },
+    { href: '/contact', label: t('contact') },
   ];
 
   const contentLinks = [
-    { href: '/horoscope', label: '오늘의 운세' },
-    { href: '/horoscope/daily', label: '12별자리 일일 운세' },
-    { href: '/zodiac', label: '12별자리 목록' },
-    { href: '/compatibility', label: '별자리 궁합' },
-    { href: '/birth-chart', label: '출생 차트' },
-    { href: '/blog', label: '점성술 가이드' },
+    { href: '/horoscope', label: t('dailyHoroscope') },
+    { href: '/horoscope/daily', label: t('allSigns') },
+    { href: '/zodiac', label: t('zodiacSigns') },
+    { href: '/compatibility', label: t('compatibility') },
+    { href: '/birth-chart', label: t('birthChart') },
+    { href: '/blog', label: t('blog') },
   ];
 
   return (
@@ -30,17 +32,17 @@ export default function Footer() {
             <Link href="/" className="flex items-center gap-2 mb-4">
               <span className="text-2xl">&#x2B50;</span>
               <span className="font-display text-xl font-bold text-gradient">
-                별자리 운세
+                {t('logo')}
               </span>
             </Link>
             <p className="text-white/60 text-sm max-w-md">
-              12별자리의 오늘의 운세, 별자리 궁합, 출생 차트를 확인하세요. 매일 업데이트되는 정확한 운세 정보를 제공합니다.
+              {t('description')}
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-semibold text-white mb-4">바로가기</h3>
+            <h3 className="font-semibold text-white mb-4">{t('quickLinks')}</h3>
             <ul className="space-y-2">
               {footerLinks.map((link) => (
                 <li key={link.href}>
@@ -55,9 +57,9 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* 주요 콘텐츠 (SEO 내부 링크) */}
+          {/* Main Content (SEO internal links) */}
           <div>
-            <h3 className="font-semibold text-white mb-4">주요 콘텐츠</h3>
+            <h3 className="font-semibold text-white mb-4">{t('mainContent')}</h3>
             <ul className="space-y-2">
               {contentLinks.map((link) => (
                 <li key={link.href}>
@@ -76,10 +78,20 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-white/40 text-sm">
-            &copy; {currentYear} 별자리 운세. 모든 권리 보유.
+            &copy; {currentYear} {t('logo')}. {t('allRightsReserved')}
           </p>
 
-          {/* Social Links - 소셜 계정 개설 후 활성화 */}
+          {/* Ko-fi support button */}
+          <a
+            href="https://ko-fi.com/starzodiac"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full
+                       bg-[#FF5E5B]/20 hover:bg-[#FF5E5B]/40 border border-[#FF5E5B]/30
+                       text-white/70 hover:text-white text-sm transition-colors"
+          >
+            ☕ {t('supportUs')}
+          </a>
         </div>
       </div>
     </footer>

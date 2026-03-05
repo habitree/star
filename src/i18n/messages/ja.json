@@ -110,15 +110,24 @@
     "logo": "星座占い",
     "description": "12星座の今日の運勢、星座の相性、出生チャートをチェック。毎日更新される正確な占い情報をお届けします。",
     "quickLinks": "クイックリンク",
+    "mainContent": "主要コンテンツ",
     "services": "サービス",
     "about": "概要",
     "privacy": "プライバシーポリシー",
     "terms": "利用規約",
     "contact": "お問い合わせ",
     "dailyHoroscope": "今日の運勢",
+    "allSigns": "12星座の日替わり占い",
     "compatibility": "相性",
     "birthChart": "出生図",
     "zodiacSigns": "星座",
+    "blog": "占星術ガイド",
+    "supportUs": "Ko-fiで応援する",
     "allRightsReserved": "全著作権所有。"
+  },
+  "cookie": {
+    "message": "当サイトはサービス改善とパーソナライズ広告のためにCookieを使用しています。サイトを引き続きご利用の場合、Cookie使用に同意したものとみなします。",
+    "privacyLink": "プライバシーポリシー",
+    "accept": "同意する"
   }
 }

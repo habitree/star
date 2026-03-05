@@ -110,15 +110,24 @@
     "logo": "별자리 운세",
     "description": "12별자리의 오늘의 운세, 별자리 궁합, 출생 차트를 확인하세요. 매일 업데이트되는 정확한 운세 정보를 제공합니다.",
     "quickLinks": "바로가기",
+    "mainContent": "주요 콘텐츠",
     "services": "서비스",
     "about": "소개",
     "privacy": "개인정보처리방침",
     "terms": "이용약관",
     "contact": "문의하기",
     "dailyHoroscope": "오늘의 운세",
+    "allSigns": "12별자리 일일 운세",
     "compatibility": "궁합",
     "birthChart": "출생차트",
     "zodiacSigns": "별자리",
+    "blog": "점성술 가이드",
+    "supportUs": "Ko-fi로 응원하기",
     "allRightsReserved": "모든 권리 보유."
+  },
+  "cookie": {
+    "message": "이 웹사이트는 서비스 개선과 맞춤 광고 제공을 위해 쿠키를 사용합니다. 사이트를 계속 이용하시면 쿠키 사용에 동의하는 것으로 간주됩니다.",
+    "privacyLink": "개인정보처리방침",
+    "accept": "동의합니다"
   }
 }

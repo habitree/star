@@ -110,15 +110,24 @@
     "logo": "Horoscopo",
     "description": "Consulta el horoscopo diario, compatibilidad zodiacal y cartas natales de los 12 signos. Actualizaciones precisas cada dia.",
     "quickLinks": "Enlaces Rapidos",
+    "mainContent": "Contenido Principal",
     "services": "Servicios",
     "about": "Acerca de",
     "privacy": "Politica de Privacidad",
     "terms": "Terminos de Servicio",
     "contact": "Contacto",
     "dailyHoroscope": "Horoscopo Diario",
+    "allSigns": "Horoscopo Diario de 12 Signos",
     "compatibility": "Compatibilidad",
     "birthChart": "Carta Natal",
     "zodiacSigns": "Signos del Zodiaco",
+    "blog": "Guia de Astrologia",
+    "supportUs": "Apoyanos en Ko-fi",
     "allRightsReserved": "Todos los derechos reservados."
+  },
+  "cookie": {
+    "message": "Este sitio web utiliza cookies para mejorar nuestros servicios y proporcionar anuncios personalizados. Al continuar usando el sitio, acepta nuestro uso de cookies.",
+    "privacyLink": "Politica de Privacidad",
+    "accept": "Aceptar"
   }
 }

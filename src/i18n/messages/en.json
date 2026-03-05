@@ -110,15 +110,24 @@
     "logo": "Horoscope",
     "description": "Discover daily horoscope, zodiac compatibility, and birth charts for all 12 signs. Accurate horoscope updates every day.",
     "quickLinks": "Quick Links",
+    "mainContent": "Key Content",
     "services": "Services",
     "about": "About",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
     "contact": "Contact",
     "dailyHoroscope": "Daily Horoscope",
+    "allSigns": "12-Sign Daily Horoscope",
     "compatibility": "Compatibility",
     "birthChart": "Birth Chart",
     "zodiacSigns": "Zodiac Signs",
+    "blog": "Astrology Guide",
+    "supportUs": "Support on Ko-fi",
     "allRightsReserved": "All rights reserved."
+  },
+  "cookie": {
+    "message": "This website uses cookies to improve our services and provide personalized ads. By continuing to use this site, you agree to our use of cookies.",
+    "privacyLink": "Privacy Policy",
+    "accept": "Accept"
   }
 }
