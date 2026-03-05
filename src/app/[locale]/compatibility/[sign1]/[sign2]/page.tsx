@@ -4,6 +4,7 @@ import CompatibilityResult from '@/components/compatibility/CompatibilityResult'
 import { buildCompatibilityResult, zodiacKoNames } from '@/lib/compatibility-builder';
 import { isValidZodiacSign, ZODIAC_ORDER } from '@/lib/zodiac-utils';
 import { AdSenseUnit } from '@/components/ads';
+import AffiliateBanner from '@/components/ads/AffiliateBanner';
 import { isAdSenseEnabled } from '@/lib/adsense-config';
 import { locales, type Locale } from '@/i18n/config';
 import { buildLanguageAlternates } from '@/lib/seo-utils';
@@ -159,6 +160,16 @@ export default async function LocaleCompatibilityResultPage({
         </div>
 
         <CompatibilityResult result={result} />
+
+        {/* 결과 중간 광고 */}
+        {isAdSenseEnabled() && (
+          <div className="my-6">
+            <AdSenseUnit adFormat="auto" responsive={true} className="w-full" />
+          </div>
+        )}
+
+        {/* 어필리에이트 배너 — LifeReader (궁합 관련) */}
+        <AffiliateBanner program="lifereader" locale={safeLocale} className="my-6" />
 
         {/* FAQ — GEO 최적화 */}
         <FAQSection

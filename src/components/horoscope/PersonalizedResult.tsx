@@ -6,6 +6,7 @@ import ZodiacIcon from '@/components/ui/ZodiacIcon';
 import { zodiacData } from '@/data/zodiac-info';
 import { isAdSenseEnabled } from '@/lib/adsense-config';
 import { AdSenseUnit, AdSenseInArticle } from '@/components/ads';
+import AffiliateBanner from '@/components/ads/AffiliateBanner';
 import { getElementTheme, getElementCSSVars } from '@/lib/element-theme';
 import { getMonthCalendar } from '@/lib/horoscope-generator';
 import ScoreBar from '@/components/ui/ScoreBar';
@@ -113,6 +114,14 @@ const RESULT_TEXT = {
   },
 } as const;
 type ResultLocale = keyof typeof RESULT_TEXT;
+
+const KOFI_TEXT: Record<string, { label: string; desc: string }> = {
+  ko: { label: '☕ 서비스 응원하기', desc: '별자리 운세 서비스가 도움이 됐다면 커피 한 잔으로 응원해 주세요!' },
+  en: { label: '☕ Support Us', desc: 'Enjoying the horoscope service? Buy us a coffee to keep the stars shining!' },
+  zh: { label: '☕ 支持我们', desc: '如果您喜欢这个星座服务，请请我们喝杯咖啡！' },
+  ja: { label: '☕ サービスを応援', desc: '星座占いサービスが役に立ちましたか？コーヒー1杯で応援してください！' },
+  es: { label: '☕ Apóyanos', desc: '¿Disfrutas el servicio de horóscopos? ¡Invítanos un café!' },
+};
 
 interface PersonalizedResultProps {
   signId: ZodiacSignId;
@@ -331,6 +340,11 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
         <TarotCard card={tarot} />
       </RevealSection>
 
+      {/* ⑧‑b 타로 섹션 아래 어필리에이트 배너 (Moon Reading) */}
+      <RevealSection>
+        <AffiliateBanner program="moon-reading" locale={locale} />
+      </RevealSection>
+
       {/* ⑨ AdSense 인아티클 */}
       {adsEnabled && (
         <div>
@@ -407,6 +421,28 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
           <AdSenseUnit adFormat="auto" responsive={true} className="w-full" />
         </div>
       )}
+
+      {/* ⑯‑b Ko-fi 응원 섹션 */}
+      <RevealSection>
+        {(() => {
+          const kofi = KOFI_TEXT[locale] ?? KOFI_TEXT.ko;
+          return (
+            <div className="glass-card p-5 text-center border border-yellow-500/20">
+              <p className="text-white/70 text-sm mb-3">{kofi.desc}</p>
+              <a
+                href="https://ko-fi.com/starzodiac"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full
+                           bg-[#FF5E5B]/90 hover:bg-[#FF5E5B] text-white text-sm font-medium
+                           transition-colors"
+              >
+                {kofi.label}
+              </a>
+            </div>
+          );
+        })()}
+      </RevealSection>
 
       {/* ⑰ 관련 콘텐츠 링크 */}
       <RevealSection>

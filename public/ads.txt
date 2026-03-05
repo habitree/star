@@ -1,1 +1,3 @@
 google.com, pub-4166976105261105, DIRECT, f08c47fec0942fa0
+# Ezoic — https://www.ezoic.com 신청 후 아래 라인 추가 (DNS 또는 Cloudflare Worker 연동)
+# ezoic.com, XXXXXXXXX, DIRECT

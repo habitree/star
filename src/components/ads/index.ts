@@ -6,4 +6,5 @@ export { default as AdSenseAuto } from './AdSenseAuto';
 export { default as AdSenseUnit } from './AdSenseUnit';
 export { default as AdSenseInArticle } from './AdSenseInArticle';
 export { default as AdSenseInFeed } from './AdSenseInFeed';
+export { default as AffiliateBanner } from './AffiliateBanner';
 

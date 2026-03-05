@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>수익 다각화 외부 설정 가이드 — 별자리 운세 서비스</title>
+  <style>
+    :root {
+      --bg: #0d0d1a;
+      --card: #16162a;
+      --border: #2a2a45;
+      --purple: #8b5cf6;
+      --pink: #ec4899;
+      --blue: #3b82f6;
+      --green: #10b981;
+      --yellow: #f59e0b;
+      --red: #ef4444;
+      --kofi: #FF5E5B;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --code-bg: #1e1e35;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.7;
+      padding: 2rem 1rem 4rem;
+    }
+
+    .container { max-width: 860px; margin: 0 auto; }
+
+    /* ── 헤더 ── */
+    .header {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: linear-gradient(135deg, #1a1a35, #2a1a45);
+      border: 1px solid var(--border);
+      border-radius: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .header .star { font-size: 3rem; display: block; margin-bottom: 1rem; }
+    .header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+    .header p { color: var(--muted); font-size: 0.95rem; }
+
+    /* ── 요약 카드 ── */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    .summary-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.2rem;
+      text-align: center;
+    }
+    .summary-card .emoji { font-size: 1.8rem; margin-bottom: 0.4rem; }
+    .summary-card .name { font-weight: 600; font-size: 0.9rem; color: var(--text); margin-bottom: 0.2rem; }
+    .summary-card .earn { font-size: 0.8rem; color: var(--green); font-weight: 600; }
+    .summary-card .time { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* ── 섹션 ── */
+    .section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1.2rem;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+
+    .section-header {
+      padding: 1.4rem 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-badge {
+      width: 2.4rem; height: 2.4rem;
+      border-radius: 0.6rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .badge-kofi   { background: rgba(255,94,91,0.2); color: var(--kofi); }
+    .badge-moon   { background: rgba(139,92,246,0.2); color: var(--purple); }
+    .badge-life   { background: rgba(59,130,246,0.2); color: var(--blue); }
+    .badge-ezoic  { background: rgba(16,185,129,0.2); color: var(--green); }
+
+    .section-header h2 { font-size: 1.15rem; font-weight: 700; }
+    .section-header .subtitle { font-size: 0.8rem; color: var(--muted); margin-top: 0.1rem; }
+
+    .section-body { padding: 1.6rem 1.8rem; }
+
+    /* ── 스텝 ── */
+    .steps { display: flex; flex-direction: column; gap: 1.2rem; }
+    .step {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .step-num {
+      width: 1.8rem; height: 1.8rem;
+      border-radius: 50%;
+      background: rgba(139,92,246,0.15);
+      border: 1px solid rgba(139,92,246,0.4);
+      color: var(--purple);
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+    .step-content h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      color: var(--text);
+    }
+    .step-content p {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .step-content ul {
+      margin-top: 0.5rem;
+      padding-left: 1.1rem;
+      font-size: 0.875rem;
+      color: var(--muted);
+    }
+    .step-content ul li { margin-bottom: 0.2rem; }
+    .step-content ul li::marker { color: var(--purple); }
+
+    /* ── 코드 블록 ── */
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.6rem;
+      padding: 1rem 1.2rem;
+      margin-top: 0.8rem;
+      font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+    .code-block .comment { color: #6b7280; }
+    .code-block .key { color: #f59e0b; }
+    .code-block .val { color: #34d399; }
+    .code-block .url { color: #60a5fa; }
+    .code-block .file { color: #c084fc; }
+
+    /* ── 링크 버튼 ── */
+    .link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.8rem;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.2s;
+      cursor: pointer;
+    }
+    .link-btn:hover { opacity: 0.85; }
+    .btn-kofi   { background: rgba(255,94,91,0.2); color: var(--kofi); border: 1px solid rgba(255,94,91,0.4); }
+    .btn-moon   { background: rgba(139,92,246,0.2); color: #a78bfa; border: 1px solid rgba(139,92,246,0.4); }
+    .btn-blue   { background: rgba(59,130,246,0.2); color: #93c5fd; border: 1px solid rgba(59,130,246,0.4); }
+    .btn-green  { background: rgba(16,185,129,0.2); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.4); }
+
+    /* ── 알림 박스 ── */
+    .alert {
+      border-radius: 0.6rem;
+      padding: 0.8rem 1rem;
+      font-size: 0.85rem;
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.6rem;
+    }
+    .alert-warn { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); color: #fcd34d; }
+    .alert-info { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3); color: #93c5fd; }
+    .alert-green { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: #6ee7b7; }
+
+    /* ── 파일 수정 지점 ── */
+    .file-edit {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.8rem;
+      margin-top: 1rem;
+      overflow: hidden;
+    }
+    .file-edit-header {
+      padding: 0.5rem 1rem;
+      background: rgba(139,92,246,0.1);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: #c084fc;
+      font-family: monospace;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .file-edit-body {
+      padding: 0.8rem 1.2rem;
+      font-family: monospace;
+      font-size: 0.8rem;
+      line-height: 1.7;
+    }
+    .diff-old { color: #f87171; }
+    .diff-new { color: #34d399; }
+    .diff-ctx { color: #6b7280; }
+
+    /* ── 진행 체크리스트 ── */
+    .checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.6rem 0.8rem;
+      background: rgba(255,255,255,0.03);
+      border-radius: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      cursor: pointer;
+      transition: background 0.15s;
+      user-select: none;
+    }
+    .check-item:hover { background: rgba(255,255,255,0.06); }
+    .check-item input[type="checkbox"] {
+      accent-color: var(--purple);
+      width: 1rem; height: 1rem;
+    }
+
+    /* ── 수익 예측 표 ── */
+    .revenue-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.85rem;
+    }
+    .revenue-table th {
+      text-align: left;
+      padding: 0.6rem 1rem;
+      background: rgba(139,92,246,0.1);
+      color: var(--purple);
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+    }
+    .revenue-table td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      color: var(--muted);
+    }
+    .revenue-table tr:last-child td { border-bottom: none; }
+    .revenue-table .amount { color: var(--green); font-weight: 600; }
+
+    /* ── 푸터 ── */
+    .footer-note {
+      text-align: center;
+      margin-top: 3rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    /* 구분선 */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 1.4rem 0; }
+
+    @media (max-width: 600px) {
+      .section-body { padding: 1.2rem; }
+      .section-header { padding: 1rem 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 헤더 -->
+  <div class="header">
+    <span class="star">⭐</span>
+    <h1>수익 다각화 외부 설정 가이드</h1>
+    <p>별자리 운세 서비스 — Ko-fi · Moon Reading · LifeReader/Keen · Ezoic 단계별 안내</p>
+  </div>
+
+  <!-- 요약 카드 -->
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="emoji">☕</div>
+      <div class="name">Ko-fi</div>
+      <div class="earn">수수료 0~5%</div>
+      <div class="time">설정 시간: ~10분</div>
+    </div>
+    <div class="summary-card">
+      <div class="emoji">🌙</div>
+      <div class="name">Moon Reading</div>
+      <div class="earn">수익 75%</div>
+      <div class="time">설정 시간: ~20분</div>
+    </div>
+    <div class="summary-card">
+      <div class="emoji">🔮</div>
+      <div class="name">LifeReader</div>
+      <div class="earn">$80 / 고객</div>
+      <div class="time">설정 시간: ~20분</div>
+    </div>
+    <div class="summary-card">
+      <div class="emoji">⭐</div>
+      <div class="name">Keen</div>
+      <div class="earn">$100 / 고객</div>
+      <div class="time">설정 시간: ~20분</div>
+    </div>
+    <div class="summary-card">
+      <div class="emoji">📊</div>
+      <div class="name">Ezoic</div>
+      <div class="earn">RPM 3~5배↑</div>
+      <div class="time">설정 시간: ~1시간</div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════
+       STEP 1: Ko-fi
+  ══════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-badge badge-kofi">☕</div>
+      <div>
+        <h2>STEP 1 — Ko-fi 팁 버튼 설정</h2>
+        <div class="subtitle">수수료 0~5% · 계정 생성 즉시 사용 · 결제 시스템 불필요</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="steps">
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>Ko-fi 계정 생성</h3>
+            <p>아래 링크에서 Ko-fi 계정을 만드세요. Google 계정으로도 즉시 가입 가능합니다.</p>
+            <a class="link-btn btn-kofi" href="https://ko-fi.com" target="_blank">
+              🔗 ko-fi.com 바로가기 →
+            </a>
+            <ul>
+              <li>우측 상단 <strong>Sign Up</strong> 클릭</li>
+              <li>구글 또는 이메일로 가입</li>
+              <li>Username 설정: <code>starzodiac</code> 입력 시도 (이미 사용 중이면 다른 이름 선택)</li>
+            </ul>
+            <div class="alert alert-warn">
+              ⚠️ Username이 <strong>starzodiac</strong>이 아닌 경우, 아래 코드 2곳의 URL을 교체해야 합니다.
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>프로필 설정</h3>
+            <ul>
+              <li><strong>Page Name</strong>: 별자리 운세 (Star Zodiac)</li>
+              <li><strong>Goal</strong>: "서비스 운영비 지원" 또는 "Keep the Stars Shining"</li>
+              <li><strong>Profile Image</strong>: 서비스 로고 업로드</li>
+              <li><strong>Payment</strong>: PayPal 또는 Stripe 연결 (수익 수령용)</li>
+            </ul>
+            <div class="alert alert-info">
+              ℹ️ PayPal 계정이 없으면 <a href="https://paypal.com" style="color:#93c5fd">paypal.com</a>에서 먼저 개설하세요. 한국 계좌 연결 가능합니다.
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>코드에서 URL 확인 또는 교체</h3>
+            <p>Username이 <code>starzodiac</code>과 다른 경우 아래 두 파일을 수정하세요.</p>
+
+            <div class="file-edit">
+              <div class="file-edit-header">
+                📄 src/components/horoscope/PersonalizedResult.tsx (약 417번째 줄)
+              </div>
+              <div class="file-edit-body">
+                <span class="diff-old">- href="https://ko-fi.com/<strong>starzodiac</strong>"</span><br>
+                <span class="diff-new">+ href="https://ko-fi.com/<strong>YOUR_USERNAME</strong>"</span>
+              </div>
+            </div>
+
+            <div class="file-edit">
+              <div class="file-edit-header">
+                📄 src/components/layout/Footer.tsx (약 81번째 줄)
+              </div>
+              <div class="file-edit-body">
+                <span class="diff-old">- href="https://ko-fi.com/<strong>starzodiac</strong>"</span><br>
+                <span class="diff-new">+ href="https://ko-fi.com/<strong>YOUR_USERNAME</strong>"</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h3>교체 후 빌드 확인</h3>
+            <div class="code-block">
+              <span class="comment"># URL 교체 후 빌드 테스트</span><br>
+              npm run build
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <hr class="divider">
+      <strong style="font-size:0.85rem;">✅ 완료 체크리스트</strong>
+      <div class="checklist">
+        <label class="check-item"><input type="checkbox"> Ko-fi 계정 생성 완료</label>
+        <label class="check-item"><input type="checkbox"> PayPal / Stripe 연결 완료</label>
+        <label class="check-item"><input type="checkbox"> Username 확인 (starzodiac 또는 교체)</label>
+        <label class="check-item"><input type="checkbox"> 코드 URL 교체 후 npm run build 성공</label>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════
+       STEP 2: Moon Reading
+  ══════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-badge badge-moon">🌙</div>
+      <div>
+        <h2>STEP 2 — Moon Reading 어필리에이트</h2>
+        <div class="subtitle">판매당 75% 수익 · 타로 카드 섹션과 자연스럽게 연결</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="steps">
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>어필리에이트 신청</h3>
+            <p>Moon Reading 공식 어필리에이트 페이지에서 신청합니다.</p>
+            <a class="link-btn btn-moon" href="https://moonreading.com/affiliates" target="_blank">
+              🔗 moonreading.com/affiliates 바로가기 →
+            </a>
+            <ul>
+              <li>이름, 이메일, 웹사이트 URL (<code>https://star-zodiac.pages.dev</code>) 입력</li>
+              <li>프로모션 방법: "별자리 운세 서비스의 타로 카드 섹션 연계" 설명</li>
+              <li>승인까지 보통 <strong>1~3 영업일</strong> 소요</li>
+            </ul>
+            <div class="alert alert-info">
+              ℹ️ 대안: ClickBank 또는 ShareASale 통해서도 Moon Reading 프로그램에 참여 가능합니다.
+              <br>→ <a href="https://www.clickbank.com" style="color:#93c5fd">clickbank.com</a> 검색창에 "moon reading" 검색
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>승인 후 — 어필리에이트 링크 취득</h3>
+            <p>승인 이메일에 포함된 개인 추적 링크를 확인하세요. 보통 형식은 다음과 같습니다:</p>
+            <div class="code-block">
+              https://moonreading.com/?ref=<span class="val">YOUR_AFFILIATE_ID</span><br>
+              <span class="comment">또는 ClickBank 링크:</span><br>
+              https://hop.clickbank.net/?vendor=moonread&affiliate=<span class="val">YOUR_ID</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>코드에서 URL 교체</h3>
+            <div class="file-edit">
+              <div class="file-edit-header">
+                📄 src/lib/affiliate-config.ts — moon-reading.url
+              </div>
+              <div class="file-edit-body">
+                <span class="diff-old">- url: 'https://moonreading.com',</span><br>
+                <span class="diff-new">+ url: 'https://moonreading.com/?ref=<strong>YOUR_AFFILIATE_ID</strong>',</span>
+              </div>
+            </div>
+            <div class="alert alert-warn">
+              ⚠️ TODO 주석(<code>// TODO: 신청 후 실제 어필리에이트 URL로 교체</code>)을 찾아 위와 같이 교체하세요.
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h3>빌드 및 배포</h3>
+            <div class="code-block">
+              npm run build<br>
+              npm run cf:deploy
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <hr class="divider">
+      <strong style="font-size:0.85rem;">✅ 완료 체크리스트</strong>
+      <div class="checklist">
+        <label class="check-item"><input type="checkbox"> moonreading.com/affiliates 신청 완료</label>
+        <label class="check-item"><input type="checkbox"> 승인 이메일 수신</label>
+        <label class="check-item"><input type="checkbox"> affiliate-config.ts URL 교체 완료</label>
+        <label class="check-item"><input type="checkbox"> npm run build → 빌드 성공</label>
+        <label class="check-item"><input type="checkbox"> 실제 배포 후 링크 클릭 테스트</label>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════
+       STEP 3: LifeReader + Keen
+  ══════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-badge badge-life">🔮</div>
+      <div>
+        <h2>STEP 3 — LifeReader &amp; Keen 어필리에이트</h2>
+        <div class="subtitle">LifeReader $80/고객 · Keen $100/고객 · 궁합 페이지 연계</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <!-- LifeReader -->
+      <p style="font-weight:600; font-size:0.95rem; margin-bottom:1rem; color:#93c5fd;">🔮 LifeReader</p>
+      <div class="steps">
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>LifeReader 어필리에이트 신청</h3>
+            <a class="link-btn btn-blue" href="https://www.lifereader.com/affiliates" target="_blank">
+              🔗 lifereader.com/affiliates 바로가기 →
+            </a>
+            <ul>
+              <li>웹사이트 URL, 월 방문자 수 (예상치 입력 가능), 트래픽 소스 설명</li>
+              <li>트래픽 소스: "별자리/운세 서비스 — 궁합 결과 페이지 노출" 입력</li>
+              <li>승인까지 <strong>2~5 영업일</strong> 소요</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>승인 후 코드 교체 (LifeReader)</h3>
+            <div class="file-edit">
+              <div class="file-edit-header">📄 src/lib/affiliate-config.ts — lifereader.url</div>
+              <div class="file-edit-body">
+                <span class="diff-old">- url: 'https://www.lifereader.com',</span><br>
+                <span class="diff-new">+ url: 'https://www.lifereader.com/?aff=<strong>YOUR_ID</strong>',</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <hr class="divider">
+
+      <!-- Keen -->
+      <p style="font-weight:600; font-size:0.95rem; margin-bottom:1rem; margin-top:0.5rem; color:#a78bfa;">⭐ Keen Psychic</p>
+      <div class="steps">
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>Keen 어필리에이트 신청 (Commission Junction 경유)</h3>
+            <p>Keen은 <strong>CJ Affiliate (Commission Junction)</strong>를 통해 운영됩니다.</p>
+            <a class="link-btn btn-moon" href="https://www.cj.com" target="_blank">
+              🔗 cj.com 회원가입 →
+            </a>
+            <ul>
+              <li>CJ 계정 생성 → 퍼블리셔(Publisher)로 등록</li>
+              <li>검색창에 <strong>"Keen"</strong> 검색 → 프로그램 신청</li>
+              <li>신청 후 <strong>Keen 측 승인</strong>까지 1~7일 소요</li>
+            </ul>
+            <div class="alert alert-info">
+              ℹ️ 대안: <a href="https://www.shareasale.com" style="color:#93c5fd">ShareASale</a>에서도 유사한 Psychic/Astrology 어필리에이트 프로그램 다수 검색 가능합니다.
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>승인 후 코드 교체 (Keen)</h3>
+            <div class="file-edit">
+              <div class="file-edit-header">📄 src/lib/affiliate-config.ts — keen.url</div>
+              <div class="file-edit-body">
+                <span class="diff-old">- url: 'https://www.keen.com',</span><br>
+                <span class="diff-new">+ url: 'https://www.keen.com/?utm_source=affiliate&utm_medium=<strong>YOUR_CJ_ID</strong>',</span>
+              </div>
+            </div>
+            <div class="alert alert-green">
+              ✅ 3개 URL 모두 교체 후: <code>npm run build && npm run cf:deploy</code>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <hr class="divider">
+      <strong style="font-size:0.85rem;">✅ 완료 체크리스트</strong>
+      <div class="checklist">
+        <label class="check-item"><input type="checkbox"> LifeReader 어필리에이트 신청 완료</label>
+        <label class="check-item"><input type="checkbox"> CJ Affiliate 계정 생성 완료</label>
+        <label class="check-item"><input type="checkbox"> Keen 프로그램 신청 완료</label>
+        <label class="check-item"><input type="checkbox"> lifereader.url 교체 완료</label>
+        <label class="check-item"><input type="checkbox"> keen.url 교체 완료</label>
+        <label class="check-item"><input type="checkbox"> 배포 후 궁합 페이지에서 배너 확인</label>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════
+       STEP 4: Ezoic
+  ══════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-badge badge-ezoic">📊</div>
+      <div>
+        <h2>STEP 4 — Ezoic 광고 네트워크 전환</h2>
+        <div class="subtitle">AdSense 대비 RPM 3~5배 · 트래픽 제한 없음 · AI 광고 최적화</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="alert alert-warn" style="margin-bottom:1.2rem;">
+        ⚠️ Ezoic 설정은 <strong>DNS 레코드 변경</strong>이 포함되어 가장 복잡합니다. 단계를 순서대로 따라가세요.
+        Cloudflare를 사용 중이므로 Cloudflare 연동 방식을 권장합니다.
+      </div>
+
+      <div class="steps">
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>Ezoic 계정 신청</h3>
+            <a class="link-btn btn-green" href="https://www.ezoic.com" target="_blank">
+              🔗 ezoic.com 바로가기 →
+            </a>
+            <ul>
+              <li>우측 상단 <strong>Get Started</strong> 클릭</li>
+              <li>웹사이트 URL 입력, 월간 세션 수 입력 (현재 실제 수치 또는 예상치)</li>
+              <li>사이트 소유권 확인: <strong>DNS 방식</strong> 또는 <strong>WordPress 플러그인</strong> 중 선택</li>
+              <li>우리 서비스는 <strong>Cloudflare + DNS 방식</strong> 사용 권장</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>Cloudflare 연동 (권장 방법)</h3>
+            <p>Ezoic 대시보드 → <strong>Site Settings → Nameservers → Cloudflare Integration</strong> 선택</p>
+            <ul>
+              <li>Cloudflare에서 <strong>Ezoic IP를 A 레코드에 추가</strong>하는 방식</li>
+              <li>기존 Cloudflare Workers 설정과 충돌 없이 동작</li>
+              <li>Ezoic이 CDN 앞단에 위치하여 광고를 자동으로 삽입</li>
+            </ul>
+            <div class="alert alert-info">
+              ℹ️ Cloudflare Pages 배포를 유지하면서 Ezoic을 함께 쓰려면 <strong>Cloudflare Worker를 통한 Ezoic 통합</strong> 문서를 참고하세요:
+              <br>→ Ezoic Dashboard → Settings → Cloudflare → "Add via Worker"
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>ads.txt 업데이트</h3>
+            <p>Ezoic 승인 후 제공되는 Publisher ID를 <code>public/ads.txt</code>에 추가합니다.</p>
+            <div class="file-edit">
+              <div class="file-edit-header">📄 public/ads.txt</div>
+              <div class="file-edit-body">
+                <span class="diff-ctx">google.com, pub-4166976105261105, DIRECT, f08c47fec0942fa0</span><br>
+                <span class="diff-old">- # ezoic.com, XXXXXXXXX, DIRECT</span><br>
+                <span class="diff-new">+ ezoic.com, <strong>YOUR_EZOIC_PUBLISHER_ID</strong>, DIRECT</span><br>
+                <span class="diff-new">+ <em>(Ezoic이 추가로 요청하는 라인들을 그대로 붙여넣기)</em></span>
+              </div>
+            </div>
+            <div class="alert alert-warn">
+              ⚠️ Ezoic 대시보드의 <strong>Monetization → ads.txt</strong> 탭에서 복사해야 할 전체 라인이 제공됩니다. 그 내용을 그대로 사용하세요.
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h3>Ezoic EPMV 대시보드 확인</h3>
+            <p>통합 완료 후 <strong>48~72시간</strong> 이내에 Ezoic이 사이트를 분석하고 광고 최적화를 시작합니다.</p>
+            <ul>
+              <li>Ezoic Big Data Analytics로 RPM/EPMV 모니터링</li>
+              <li>Ad Tester로 광고 위치/개수 A/B 테스트 자동화</li>
+              <li>Leap로 Core Web Vitals 자동 최적화</li>
+            </ul>
+            <div class="alert alert-green">
+              ✅ Ezoic 전환 후 기존 AdSense 코드는 유지해도 됩니다. Ezoic이 AdSense를 포함한 여러 광고 네트워크를 통합 관리합니다.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <hr class="divider">
+      <strong style="font-size:0.85rem;">✅ 완료 체크리스트</strong>
+      <div class="checklist">
+        <label class="check-item"><input type="checkbox"> Ezoic 계정 신청 완료</label>
+        <label class="check-item"><input type="checkbox"> 사이트 소유권 확인 완료</label>
+        <label class="check-item"><input type="checkbox"> Cloudflare 연동 완료</label>
+        <label class="check-item"><input type="checkbox"> ads.txt Ezoic 라인 추가 및 배포</label>
+        <label class="check-item"><input type="checkbox"> 72시간 후 EPMV 확인</label>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════
+       수익 예측 요약
+  ══════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-badge" style="background:rgba(16,185,129,0.2);color:#10b981;">💰</div>
+      <div>
+        <h2>수익 예측 요약 (월간)</h2>
+        <div class="subtitle">각 레이어 설정 완료 후 예상 수익</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <table class="revenue-table">
+        <thead>
+          <tr>
+            <th>레이어</th>
+            <th>조건</th>
+            <th>예상 수익</th>
+            <th>우선순위</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>☕ Ko-fi 팁</td>
+            <td>방문자 0.1% 팁</td>
+            <td class="amount">$10 ~ $50</td>
+            <td>즉시 (10분)</td>
+          </tr>
+          <tr>
+            <td>🌙 Moon Reading</td>
+            <td>클릭 100회, 전환 2~3%</td>
+            <td class="amount">$30 ~ $120</td>
+            <td>승인 후 즉시</td>
+          </tr>
+          <tr>
+            <td>🔮 LifeReader</td>
+            <td>클릭 50회, 전환 1%</td>
+            <td class="amount">$40 ~ $80</td>
+            <td>승인 후 즉시</td>
+          </tr>
+          <tr>
+            <td>⭐ Keen</td>
+            <td>클릭 30회, 전환 1%</td>
+            <td class="amount">$30 ~ $100</td>
+            <td>승인 후 즉시</td>
+          </tr>
+          <tr>
+            <td>📊 Ezoic 전환</td>
+            <td>AdSense 대비 3~5배 RPM</td>
+            <td class="amount">현재 × 3~5배</td>
+            <td>설정 후 3일</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="alert alert-green" style="margin-top:1.2rem;">
+        ✅ 전체 설정 완료 시 예상 월 추가 수익: <strong>$110 ~ $350+</strong>
+        (현재 AdSense 수익 제외, 트래픽에 따라 변동)
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════
+       코드 수정 위치 빠른 참조
+  ══════════════════════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-badge" style="background:rgba(245,158,11,0.2);color:#f59e0b;">📌</div>
+      <div>
+        <h2>코드 수정 위치 빠른 참조</h2>
+        <div class="subtitle">어필리에이트 링크 교체 시 변경할 파일 목록</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="code-block">
+        <span class="comment"># 어필리에이트 링크 단일 관리 파일</span><br>
+        <span class="file">src/lib/affiliate-config.ts</span><br><br>
+
+        <span class="comment"># Ko-fi URL이 있는 파일 (2곳)</span><br>
+        <span class="file">src/components/horoscope/PersonalizedResult.tsx</span>&nbsp;&nbsp;<span class="comment">← 타로 아래 Ko-fi 섹션</span><br>
+        <span class="file">src/components/layout/Footer.tsx</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">← 푸터 Ko-fi 버튼</span><br><br>
+
+        <span class="comment"># ads.txt (Ezoic Publisher ID 추가)</span><br>
+        <span class="file">public/ads.txt</span>
+      </div>
+
+      <div class="alert alert-info" style="margin-top:1rem;">
+        ℹ️ <strong>affiliate-config.ts</strong> 한 파일만 수정하면 AffiliateBanner가 삽입된 모든 페이지(blog, compatibility, PersonalizedResult)에 자동 반영됩니다.
+      </div>
+    </div>
+  </div>
+
+
+  <div class="footer-note">
+    <p>별자리 운세 서비스 — 수익 다각화 설정 가이드</p>
+    <p style="margin-top:0.3rem;">docs/revenue-setup-guide.html · 2026-03-05</p>
+  </div>
+
+</div>
+
+<script>
+  // 체크박스 상태 localStorage에 저장
+  const KEY = 'revenue-guide-checks';
+  const saved = JSON.parse(localStorage.getItem(KEY) || '{}');
+  const boxes = document.querySelectorAll('input[type="checkbox"]');
+
+  boxes.forEach((box, i) => {
+    if (saved[i]) box.checked = true;
+    box.addEventListener('change', () => {
+      const state = {};
+      boxes.forEach((b, j) => { state[j] = b.checked; });
+      localStorage.setItem(KEY, JSON.stringify(state));
+    });
+  });
+</script>
+</body>
+</html>

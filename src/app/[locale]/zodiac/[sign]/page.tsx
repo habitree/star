@@ -12,6 +12,8 @@ import { isValidZodiacSign, ZODIAC_ORDER } from '@/lib/zodiac-utils';
 import { buildLanguageAlternates } from '@/lib/seo-utils';
 import FAQSection from '@/components/seo/FAQSection';
 import { getZodiacSignFAQs } from '@/data/faq-data';
+import { isAdSenseEnabled } from '@/lib/adsense-config';
+import { AdSenseUnit } from '@/components/ads';
 import type { ZodiacSignId } from '@/types/zodiac';
 
 export function generateStaticParams() {
@@ -159,6 +161,13 @@ export default async function LocaleZodiacSignPage({
 
         {/* 질문형 H2 — SEO 전용 (시각적으로 숨김) */}
         <h2 className="sr-only">{l.questionH2}</h2>
+
+        {/* AdSense 슬롯 */}
+        {isAdSenseEnabled() && (
+          <div className="mb-6">
+            <AdSenseUnit adFormat="auto" responsive={true} className="w-full" />
+          </div>
+        )}
 
         {/* FAQ — GEO 최적화 */}
         <FAQSection

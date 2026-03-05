@@ -5,6 +5,9 @@ import { locales, type Locale } from '@/i18n/config';
 import { getSiteUrl } from '@/lib/site-url';
 import { buildLanguageAlternates } from '@/lib/seo-utils';
 import { allArticles, getArticleBySlug } from '@/data/blog';
+import { isAdSenseEnabled } from '@/lib/adsense-config';
+import { AdSenseInArticle } from '@/components/ads';
+import AffiliateBanner from '@/components/ads/AffiliateBanner';
 import type { BlogSection } from '@/data/blog';
 
 export function generateStaticParams() {
@@ -100,6 +103,7 @@ export default async function BlogArticlePage({
   if (!article) notFound();
 
   const content = (article.content as Record<string, { title: string; excerpt: string; sections: BlogSection[] }>)[safeLocale] ?? article.content.ko;
+  const adsEnabled = isAdSenseEnabled();
 
   const BACK_LABEL: Record<string, string> = {
     ko: '← 블로그 목록으로',
@@ -110,8 +114,23 @@ export default async function BlogArticlePage({
   };
 
   const MIN_LABEL: Record<string, string> = {
-    ko: '분 읽기', en: 'min read', zh: '分钟阅读', ja: '分で読める', es: 'min de lectura',
+    ko: '분 읽기', en: 'min read', zh: '分钟阅读', ja: '분で読める', es: 'min de lectura',
   };
+
+  const RELATED_LABEL: Record<string, string> = {
+    ko: '관련 서비스',
+    en: 'Related Services',
+    zh: '相关服务',
+    ja: '関連サービス',
+    es: 'Servicios Relacionados',
+  };
+
+  // 섹션을 3개 단위로 분할하여 AdSense 삽입
+  const sections = content.sections;
+  const sectionGroups: BlogSection[][] = [];
+  for (let i = 0; i < sections.length; i += 3) {
+    sectionGroups.push(sections.slice(i, i + 3));
+  }
 
   return (
     <main className="min-h-screen py-12 px-4">
@@ -148,9 +167,28 @@ export default async function BlogArticlePage({
             </p>
           </header>
 
-          {/* Article body */}
+          {/* Article body — 3섹션마다 InArticle 광고 삽입 */}
           <div className="glass-card p-6 md:p-8">
-            {content.sections.map((section, idx) => renderSection(section, idx))}
+            {sectionGroups.map((group, groupIdx) => (
+              <div key={groupIdx}>
+                {group.map((section, sectionIdx) =>
+                  renderSection(section, groupIdx * 3 + sectionIdx)
+                )}
+                {/* 마지막 그룹 제외하고 광고 삽입 */}
+                {adsEnabled && groupIdx < sectionGroups.length - 1 && (
+                  <AdSenseInArticle className="w-full" />
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* 아티클 하단 어필리에이트 배너 */}
+          <div className="mt-6 space-y-3">
+            <p className="text-white/30 text-xs text-center uppercase tracking-widest">
+              {RELATED_LABEL[safeLocale] ?? RELATED_LABEL.ko}
+            </p>
+            <AffiliateBanner program="moon-reading" locale={safeLocale} variant="compact" />
+            <AffiliateBanner program="keen" locale={safeLocale} variant="compact" />
           </div>
 
           {/* Footer nav */}
