@@ -166,11 +166,13 @@ function getCompatibility(
 ): CompatibilityData | undefined {
   const matrix = getCachedCompatibility();
   if (matrix) {
-    return matrix.find(
+    const found = matrix.find(
       (d) =>
         (d.sign1 === sign1 && d.sign2 === sign2) ||
         (d.sign1 === sign2 && d.sign2 === sign1)
     );
+    if (found) return found;
+    // matrix 있지만 해당 쌍 없음 → bundled 폴백
   }
   return getCompatibilityData(sign1, sign2);
 }

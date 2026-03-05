@@ -8,7 +8,7 @@
  *   - compatibility (144개 궁합 매트릭스)
  * 빌드 타임(SSG / Supabase 미설정): 빈 객체 반환 → generator가 bundled 데이터로 자동 폴백
  *
- * Workers module-level 캐시: instance 재사용 시 Supabase 재호출 방지
+ * Workers module-level 캐시: TTL 6시간, 만료 시 재fetch
  */
 
 import type { SignTemplates } from '@/data/sign-templates/types';
@@ -20,11 +20,11 @@ import type { TemplateData } from '@/lib/horoscope-generator';
 
 export type { TemplateData };
 
-/** Workers module-level 캐시 (instance 재사용 시 반복 fetch 방지) */
-let cachedData: TemplateData | null = null;
+/** Workers module-level 캐시 TTL: 6시간 */
+const CACHE_TTL_MS = 6 * 60 * 60 * 1000;
 
-/** compatibility 매트릭스 런타임 캐시 (별도 export — compatibility API route 전용) */
-let cachedCompatibility: CompatibilityData[] | null = null;
+/** Workers module-level 캐시 (instance 재사용 시 반복 fetch 방지, TTL 만료 시 재fetch) */
+let cachedData: TemplateData | null = null;
 
 /** 빈 템플릿 데이터 (폴백용) */
 function emptyTemplateData(): TemplateData {
@@ -32,6 +32,7 @@ function emptyTemplateData(): TemplateData {
     signTemplates: {} as Record<string, SignTemplates>,
     elementTemplates: {} as Record<string, ElementTemplates>,
     tarotCards: [],
+    _cachedAt: Date.now(),
   };
 }
 
@@ -43,7 +44,10 @@ function emptyTemplateData(): TemplateData {
  *   → horoscope-generator가 generic horoscope-templates로 자동 폴백
  */
 export async function loadTemplates(): Promise<TemplateData> {
-  if (cachedData) return cachedData;
+  const now = Date.now();
+  if (cachedData && cachedData._cachedAt && now - cachedData._cachedAt < CACHE_TTL_MS) {
+    return cachedData;
+  }
 
   const supabase = createServerSupabaseClient();
   if (!supabase) {
@@ -81,14 +85,19 @@ export async function loadTemplates(): Promise<TemplateData> {
       elementTemplates[row.id] = row.data as ElementTemplates;
     }
 
+    if (tarotErr) {
+      console.warn('[template-loader] tarot_cards 로드 오류 (bundled 폴백 사용):', tarotErr);
+    }
     const tarotCards: TarotCardData[] =
       !tarotErr && tarotRows?.data ? (tarotRows.data as TarotCardData[]) : [];
 
-    if (!compatErr && compatRows?.data) {
-      cachedCompatibility = compatRows.data as CompatibilityData[];
+    if (compatErr) {
+      console.warn('[template-loader] compatibility 로드 오류 (bundled 폴백 사용):', compatErr);
     }
+    const compatibility: CompatibilityData[] | undefined =
+      !compatErr && compatRows?.data ? (compatRows.data as CompatibilityData[]) : undefined;
 
-    cachedData = { signTemplates, elementTemplates, tarotCards };
+    cachedData = { signTemplates, elementTemplates, tarotCards, compatibility, _cachedAt: now };
   } catch (err) {
     console.error('[template-loader] 예상치 못한 오류:', err);
     cachedData = emptyTemplateData();
@@ -102,11 +111,10 @@ export async function loadTemplates(): Promise<TemplateData> {
  * loadTemplates() 호출 후 사용하세요.
  */
 export function getCachedCompatibility(): CompatibilityData[] | null {
-  return cachedCompatibility;
+  return cachedData?.compatibility ?? null;
 }
 
 /** 캐시 초기화 (테스트 또는 개발 환경 hot reload 시 사용) */
 export function clearTemplateCache(): void {
   cachedData = null;
-  cachedCompatibility = null;
 }

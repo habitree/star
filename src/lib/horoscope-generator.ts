@@ -27,6 +27,7 @@ import type {
   TrendCategory,
 } from '@/types/horoscope-extended';
 import { majorArcana, type TarotCardData } from '@/data/tarot-data';
+import type { CompatibilityData } from '@/data/compatibility-data';
 import { luckyDirections, luckyFoods, luckyActivities } from '@/data/lucky-elements-extended';
 import { affirmationTemplates } from '@/data/affirmation-templates';
 import { calculateCompatibilityScore } from '@/lib/zodiac-utils';
@@ -60,6 +61,8 @@ export interface TemplateData {
   signTemplates: Record<string, SignTemplates>;
   elementTemplates: Record<string, ElementTemplates>;
   tarotCards?: TarotCardData[];
+  compatibility?: CompatibilityData[];
+  _cachedAt?: number;
 }
 
 /**
