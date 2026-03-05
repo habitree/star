@@ -23,6 +23,7 @@ export default function Header({ locale = 'ko' }: HeaderProps) {
     { href: `/${locale}/zodiac`, label: locale === 'ko' ? '별자리' : locale === 'en' ? 'Zodiac' : locale === 'zh' ? '星座' : locale === 'ja' ? '星座' : 'Zodiaco' },
     { href: `/${locale}/compatibility`, label: locale === 'ko' ? '궁합' : locale === 'en' ? 'Compatibility' : locale === 'zh' ? '配对' : locale === 'ja' ? '相性' : 'Compatibilidad' },
     { href: `/${locale}/birth-chart`, label: locale === 'ko' ? '출생차트' : locale === 'en' ? 'Birth Chart' : locale === 'zh' ? '出生图' : locale === 'ja' ? '出生図' : 'Carta Natal' },
+    { href: `/${locale}/blog`, label: locale === 'ko' ? '블로그' : locale === 'en' ? 'Blog' : locale === 'zh' ? '博客' : locale === 'ja' ? 'ブログ' : 'Blog' },
   ];
 
   const isActive = (href: string) => {

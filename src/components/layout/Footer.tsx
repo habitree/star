@@ -18,6 +18,7 @@ export default function Footer() {
     { href: '/zodiac', label: '12별자리 목록' },
     { href: '/compatibility', label: '별자리 궁합' },
     { href: '/birth-chart', label: '출생 차트' },
+    { href: '/blog', label: '점성술 가이드' },
   ];
 
   return (

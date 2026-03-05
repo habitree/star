@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { ZODIAC_ORDER } from '@/lib/zodiac-utils';
 import { locales } from '@/i18n/config';
+import { allArticles } from '@/data/blog';
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://luckytoday.one';
 
@@ -53,6 +54,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
         lastModified: now,
         changeFrequency: 'weekly',
         priority: locale === 'ko' ? 0.8 : 0.7,
+      });
+    }
+
+    // 블로그 목록 페이지
+    entries.push({
+      url: `${baseUrl}/${locale}/blog`,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: locale === 'ko' ? 0.8 : 0.7,
+    });
+
+    // 블로그 아티클 페이지 (17 articles × 5 locales = 85 pages)
+    for (const article of allArticles) {
+      entries.push({
+        url: `${baseUrl}/${locale}/blog/${article.slug}`,
+        lastModified: new Date(article.publishedAt),
+        changeFrequency: 'monthly',
+        priority: locale === 'ko' ? 0.75 : 0.65,
       });
     }
 
