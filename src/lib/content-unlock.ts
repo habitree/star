@@ -43,6 +43,27 @@ export const unlockableContents: UnlockableContent[] = [
     status: 'locked',
   },
   {
+    id: 'moon-sign',
+    name: '달자리 (나의 내면 감정)',
+    description: 'Big Three 두 번째 — 달자리 공개',
+    unlockCondition: { type: 'streak', requiredStreak: 7 },
+    status: 'locked',
+  },
+  {
+    id: 'rising-sign',
+    name: '상승점 (타인에게 보이는 나)',
+    description: 'Big Three 세 번째 — 상승점 공개',
+    unlockCondition: { type: 'streak', requiredStreak: 30 },
+    status: 'locked',
+  },
+  {
+    id: 'big-three-synthesis',
+    name: 'Big Three 합성 리딩',
+    description: '태양·달·상승점 통합 분석 리딩',
+    unlockCondition: { type: 'premium' },
+    status: 'locked',
+  },
+  {
     id: 'premium-tarot',
     name: '프리미엄 3장 타로',
     description: '과거-현재-미래 3장 타로 스프레드',
@@ -130,6 +151,9 @@ export function getContentStatus(
 
     case 'visit':
       return 'locked'; // 기본 잠금
+
+    case 'premium':
+      return 'locked'; // 미래 프리미엄 구독
 
     default:
       return 'locked';

@@ -42,6 +42,11 @@ export async function generateMetadata({
   };
 }
 
-export default function LocaleBirthChartPage() {
-  return <BirthChartPageContent />;
+export default async function LocaleBirthChartPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  return <BirthChartPageContent locale={locale} />;
 }

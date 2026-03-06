@@ -25,15 +25,18 @@ import { zodiacData } from '@/data/zodiac-info';
 import { zodiacSigns } from '@/data/zodiac-signs';
 import BirthDateForm from './BirthDateForm';
 import WelcomeBack from './WelcomeBack';
+import WinBackBanner from './WinBackBanner';
 import PersonalizedResult from './PersonalizedResult';
 import OnboardingFlow from './OnboardingFlow';
 import DailyCheckIn from './DailyCheckIn';
 import StarIntro from './StarIntro';
 import FortuneChatBot from './FortuneChatBot';
 import StreakDashboard from './StreakDashboard';
+import BigThreeTeaser from './BigThreeTeaser';
 import type { ZodiacSignId, HoroscopeCategory, DetailedCategoryHoroscope, SubIndicator } from '@/types';
 import type { ContentLockStatus } from '@/types/engagement';
 import type { SmartCTA, CalendarDayData } from '@/types/horoscope-extended';
+import { getUserSegment, getDaysSinceLastVisit } from '@/lib/user-segment';
 
 const UI_TEXT = {
   ko: {
@@ -102,12 +105,14 @@ export default function HoroscopeClientApp({ locale = 'ko' }: { locale?: string 
     visitStreak, longestStreak, earnedBadges,
     unlockedContentIds, completedActions,
     onboardingCompleted, todayCheckedIn, lastCheckInDate,
+    lastVisit,
     history,
     preferences,
     setBirthDate, recordHoroscopeView, addToHistory,
     performCheckIn, addBadge, unlockContent, completeAction,
     completeOnboarding,
     setTheme,
+    recordWinBack,
   } = useUserStore();
 
   const [hydrated, setHydrated] = useState(false);
@@ -286,6 +291,16 @@ export default function HoroscopeClientApp({ locale = 'ko' }: { locale?: string 
   }
 
   const todayStr = today.toISOString().split('T')[0];
+
+  // 사용자 세그먼트 계산
+  const userSegment = getUserSegment({
+    onboardingCompleted,
+    visitStreak,
+    lastVisit,
+    lastCheckInDate,
+  });
+  const daysSinceLast = getDaysSinceLastVisit(lastVisit, lastCheckInDate);
+
   const horoscope = generateDailyHoroscope(currentSign, today, locale);
 
   const categories: HoroscopeCategory[] = ['overall', 'love', 'career', 'health', 'money'];
@@ -461,8 +476,31 @@ export default function HoroscopeClientApp({ locale = 'ko' }: { locale?: string 
         </div>
       )}
 
-      {/* 재방문 환영 + 오늘 한 줄 요약 */}
-      {visitStreak > 0 && (
+      {/* Win-Back 배너 (at-risk 세그먼트 — 3일+ 미방문) */}
+      {userSegment === 'at-risk' && (
+        <section aria-label="win-back">
+          <WinBackBanner
+            signId={currentSign}
+            visitStreak={visitStreak}
+            daysSinceLast={daysSinceLast}
+            recentScores={history
+              .filter(h => h.signId === currentSign)
+              .slice(0, 2)
+              .map((h, i) => ({ score: h.overallScore, daysAgo: i + 1 }))}
+            todayScore={overallPercent}
+            todayCheckedIn={todayCheckedIn}
+            onCheckIn={() => {
+              handleCheckIn();
+              recordWinBack();
+              trackEvent('winback_checkin', { streak: visitStreak });
+            }}
+            locale={locale}
+          />
+        </section>
+      )}
+
+      {/* 재방문 환영 + 오늘 한 줄 요약 (at-risk 아닌 경우) */}
+      {visitStreak > 0 && userSegment !== 'at-risk' && (
         <section aria-label={t.welcomeSection}>
           <WelcomeBack
             signId={currentSign}
@@ -548,6 +586,13 @@ export default function HoroscopeClientApp({ locale = 'ko' }: { locale?: string 
         smartCTAs={smartCTAs}
         visitedDates={visitedDates}
       />
+
+      {/* Big Three 티저 (engaged D3+, committed, power 세그먼트) */}
+      {(userSegment === 'engaged' || userSegment === 'committed' || userSegment === 'power') && visitStreak >= 3 && (
+        <div className="mt-4">
+          <BigThreeTeaser signId={currentSign} visitStreak={visitStreak} locale={locale} />
+        </div>
+      )}
 
       {/* 별의 도사 채팅 */}
       {contentStatuses['chat-fortune'] === 'unlocked' && (

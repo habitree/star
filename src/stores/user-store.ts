@@ -5,7 +5,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import type { ZodiacSignId } from '@/types';
-import type { Badge, OnboardingStep } from '@/types/engagement';
+import type { Badge, OnboardingStep, FortuneFeedback, FeedbackReaction, FeedbackCategory } from '@/types/engagement';
 
 // 즐겨찾기 항목 타입
 export interface FavoriteSign {
@@ -102,6 +102,20 @@ interface UserState {
   clearBirthDate: () => void;
   recordHoroscopeView: () => void;
 
+  // Win-Back 필드
+  streakRescued: boolean;
+  lastWinBackDate: string | null;
+
+  // 운세 피드백
+  fortuneFeedback: FortuneFeedback[];
+
+  // Big Three 출생 시간
+  birthTime: string | null;
+
+  // Web Push 알림
+  pushPermissionStatus: 'default' | 'granted' | 'denied';
+  notificationTimeSlot: 'morning' | 'noon' | 'evening';
+
   // 참여도/리텐션 액션
   performCheckIn: () => void;
   addBadge: (badge: Badge) => void;
@@ -110,6 +124,16 @@ interface UserState {
   completeOnboarding: () => void;
   setOnboardingStep: (step: OnboardingStep) => void;
   recordChatSession: () => void;
+
+  // Win-Back 액션
+  recordWinBack: () => void;
+
+  // 피드백 액션
+  addFortuneFeedback: (feedback: Omit<FortuneFeedback, 'date'>) => void;
+  getRecentFeedbackBias: (signId: string, category: FeedbackCategory) => FeedbackReaction | null;
+
+  // Big Three 액션
+  setBirthTime: (time: string | null) => void;
 }
 
 // 기본 설정값
@@ -148,6 +172,12 @@ export const useUserStore = create<UserState>()(
       todayCheckedIn: false,
       lastCheckInDate: null,
       lastChatDate: null,
+      streakRescued: false,
+      lastWinBackDate: null,
+      fortuneFeedback: [],
+      birthTime: null,
+      pushPermissionStatus: 'default' as const,
+      notificationTimeSlot: 'morning' as const,
 
       // 즐겨찾기 액션
       addFavorite: (signId, nickname) => {
@@ -364,10 +394,43 @@ export const useUserStore = create<UserState>()(
       recordChatSession: () => {
         set({ lastChatDate: new Date().toISOString().split('T')[0] });
       },
+
+      recordWinBack: () => {
+        set({
+          streakRescued: true,
+          lastWinBackDate: new Date().toISOString().split('T')[0],
+        });
+      },
+
+      addFortuneFeedback: (feedback) => {
+        const today = new Date().toISOString().split('T')[0];
+        const existing = get().fortuneFeedback;
+        const filtered = existing.filter(
+          f => !(f.date === today && f.signId === feedback.signId && f.isRetro === feedback.isRetro)
+        );
+        const newFeedback: FortuneFeedback = { ...feedback, date: today };
+        const updated = [newFeedback, ...filtered].slice(0, 30);
+        set({ fortuneFeedback: updated });
+      },
+
+      getRecentFeedbackBias: (signId, category) => {
+        const feedbacks = get().fortuneFeedback
+          .filter(f => f.signId === signId && !f.isRetro)
+          .filter(f => !f.missCategory || f.missCategory === category)
+          .slice(0, 5);
+        if (feedbacks.length < 3) return null;
+        const misses = feedbacks.filter(f => f.reaction === 'miss').length;
+        if (misses >= 3) return 'miss';
+        return null;
+      },
+
+      setBirthTime: (time) => {
+        set({ birthTime: time });
+      },
     }),
     {
       name: 'zodiac-user-store',
-      version: 3,
+      version: 4,
       storage: createJSONStorage(() => ({
         getItem: (name: string) => {
           try { return localStorage.getItem(name); }
@@ -423,6 +486,15 @@ export const useUserStore = create<UserState>()(
             visited: true,
           }));
         }
+        if (version < 4) {
+          // v3 → v4: Win-Back + 피드백 + Big Three 필드 추가
+          state.streakRescued = state.streakRescued ?? false;
+          state.lastWinBackDate = state.lastWinBackDate ?? null;
+          state.fortuneFeedback = state.fortuneFeedback ?? [];
+          state.birthTime = state.birthTime ?? null;
+          state.pushPermissionStatus = state.pushPermissionStatus ?? 'default';
+          state.notificationTimeSlot = state.notificationTimeSlot ?? 'morning';
+        }
         return state as unknown as UserState;
       },
       partialize: (state) => ({
@@ -444,6 +516,12 @@ export const useUserStore = create<UserState>()(
         todayCheckedIn: state.todayCheckedIn,
         lastCheckInDate: state.lastCheckInDate,
         lastChatDate: state.lastChatDate,
+        streakRescued: state.streakRescued,
+        lastWinBackDate: state.lastWinBackDate,
+        fortuneFeedback: state.fortuneFeedback,
+        birthTime: state.birthTime,
+        pushPermissionStatus: state.pushPermissionStatus,
+        notificationTimeSlot: state.notificationTimeSlot,
       }),
     }
   )

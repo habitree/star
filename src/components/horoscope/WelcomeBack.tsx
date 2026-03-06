@@ -1,7 +1,9 @@
 'use client';
 
+import { useUserStore } from '@/stores/user-store';
 import { zodiacData } from '@/data/zodiac-info';
 import { zodiacSigns } from '@/data/zodiac-signs';
+import RetroFeedback from './RetroFeedback';
 import type { ZodiacSignId } from '@/types';
 
 const WELCOME_TEXT = {
@@ -32,6 +34,18 @@ export default function WelcomeBack({ signId, visitStreak, yesterdayScore, today
   const signName = signNameMap[signId]?.[locale] ?? info.name;
   const scoreDiff = yesterdayScore ? todayScore - yesterdayScore : null;
 
+  // 전일 피드백 미완료 여부 확인
+  const { fortuneFeedback } = useUserStore();
+  const yesterday = (() => {
+    const d = new Date();
+    d.setDate(d.getDate() - 1);
+    return d.toISOString().split('T')[0];
+  })();
+  const hasRetroDone = fortuneFeedback.some(
+    f => f.date === yesterday && f.signId === signId && f.isRetro
+  );
+  const showRetro = visitStreak > 1 && !!yesterdayScore && !hasRetroDone;
+
   return (
     <div className="glass-card p-5 mb-6 bg-gradient-to-r from-purple-500/10 to-pink-500/10">
       <div className="flex items-center gap-4">
@@ -56,6 +70,11 @@ export default function WelcomeBack({ signId, visitStreak, yesterdayScore, today
           </div>
         )}
       </div>
+
+      {/* 전일 회상 피드백 */}
+      {showRetro && (
+        <RetroFeedback signId={signId} yesterdayScore={yesterdayScore!} locale={locale} />
+      )}
     </div>
   );
 }

@@ -43,7 +43,7 @@ export interface UnlockableContent {
 
 /** 해금 조건 */
 export interface UnlockCondition {
-  type: 'streak' | 'visit' | 'action' | 'birthdate';
+  type: 'streak' | 'visit' | 'action' | 'birthdate' | 'premium';
   requiredStreak?: number;
   requiredVisits?: number;
   requiredAction?: string;
@@ -82,6 +82,33 @@ export interface ChatScenario {
   startNodeId: string;
 }
 
+/** 사용자 세그먼트 */
+export type UserSegment =
+  | 'at-risk'    // 3일+ 미방문 (최우선)
+  | 'new'        // 온보딩 미완료
+  | 'explorer'   // streak <= 2
+  | 'engaged'    // streak 3-7
+  | 'committed'  // streak 8-29
+  | 'power';     // streak 30+
+
+/** 피드백 반응 */
+export type FeedbackReaction = 'great' | 'okay' | 'miss';
+
+/** 피드백 카테고리 */
+export type FeedbackCategory = 'love' | 'career' | 'health' | 'money' | 'overall';
+
+/** 운세 피드백 */
+export interface FortuneFeedback {
+  date: string;              // YYYY-MM-DD
+  signId: string;
+  reaction: FeedbackReaction;
+  missCategory?: FeedbackCategory; // 'miss' 선택 시 세부 카테고리
+  isRetro: boolean;          // 전일 회상(true) vs 당일 즉시(false)
+}
+
+/** Big Three 단계 */
+export type BigThreeStage = 'sun' | 'moon' | 'rising' | 'synthesis';
+
 /** 참여도 이벤트 타입 */
 export type EngagementEventType =
   | 'page_view'
@@ -95,7 +122,13 @@ export type EngagementEventType =
   | 'onboarding_complete'
   | 'checkin_complete'
   | 'section_scroll'
-  | 'ui_interaction';
+  | 'ui_interaction'
+  | 'winback_view'
+  | 'winback_checkin'
+  | 'fortune_feedback'
+  | 'retro_feedback'
+  | 'share_card_generate'
+  | 'viral_link_click';
 
 /** 참여도 이벤트 */
 export interface EngagementEvent {

@@ -22,6 +22,7 @@ import LuckyElements from './LuckyElements';
 import TimeBasedFortune from './TimeBasedFortune';
 import FortuneComparison from './FortuneComparison';
 import ShareCard from './ShareCard';
+import FortuneFeedback from './FortuneFeedback';
 import LockedContent from './LockedContent';
 import ParticleEffect from './ParticleEffect';
 import TypingReveal from './TypingReveal';
@@ -329,6 +330,11 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
           <SmartCTASection ctas={smartCTAs} locale={locale} />
         </RevealSection>
       )}
+
+      {/* ⑥‑c 운세 피드백 (SmartCTA 바로 아래) */}
+      <RevealSection>
+        <FortuneFeedback signId={signId} locale={locale} />
+      </RevealSection>
 
       {/* ⑦ 확장 행운 요소 */}
       <RevealSection>
