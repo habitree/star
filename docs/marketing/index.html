@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>별자리 운세 서비스 — 마케팅 전략 대시보드</title>
+  <style>
+    :root {
+      --bg: #0d0d1a;
+      --surface: #16162a;
+      --surface2: #1e1e38;
+      --border: #2e2e55;
+      --accent: #7c6ef7;
+      --accent2: #c084fc;
+      --gold: #fbbf24;
+      --text: #e2e2f0;
+      --muted: #8888aa;
+      --green: #34d399;
+      --red: #f87171;
+      --blue: #60a5fa;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', 'Apple SD Gothic Neo', sans-serif;
+      line-height: 1.6;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #1a0a3a 0%, #0d0d1a 60%, #1a0a2a 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 2rem 2rem 1.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '✨ ⭐ 🌟 💫 ✨ ⭐ 🌟 💫 ✨ ⭐ 🌟 💫 ✨';
+      position: absolute; top: 8px; left: 0; right: 0;
+      font-size: 0.8rem; opacity: 0.3; letter-spacing: 4px;
+    }
+    header h1 {
+      font-size: 1.9rem;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 0.4rem;
+    }
+    header p { color: var(--muted); font-size: 0.9rem; }
+
+    /* ── Nav ── */
+    nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 1rem;
+      display: flex; gap: 0; overflow-x: auto;
+    }
+    nav button {
+      background: none; border: none; color: var(--muted);
+      padding: 0.9rem 1.2rem; cursor: pointer; font-size: 0.88rem;
+      border-bottom: 3px solid transparent;
+      white-space: nowrap; transition: all 0.2s;
+    }
+    nav button:hover { color: var(--text); }
+    nav button.active { color: var(--accent2); border-bottom-color: var(--accent2); }
+
+    /* ── Layout ── */
+    main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Cards ── */
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    @media(max-width:720px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem;
+    }
+    .card h3 {
+      font-size: 1rem; margin-bottom: 0.8rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+
+    /* ── Section titles ── */
+    .section-title {
+      font-size: 1.3rem; font-weight: 700;
+      margin: 1.8rem 0 1rem;
+      padding-left: 0.8rem;
+      border-left: 4px solid var(--accent);
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .section-title:first-child { margin-top: 0; }
+
+    /* ── Table ── */
+    .tbl-wrap { overflow-x: auto; margin: 1rem 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.87rem; }
+    th {
+      background: var(--surface2); color: var(--accent2);
+      padding: 0.6rem 0.9rem; text-align: left; font-weight: 600;
+      border-bottom: 2px solid var(--border);
+    }
+    td { padding: 0.55rem 0.9rem; border-bottom: 1px solid var(--border); }
+    tr:hover td { background: rgba(124,110,247,0.05); }
+
+    /* ── Tags / Badges ── */
+    .badge {
+      display: inline-block; padding: 0.15rem 0.55rem;
+      border-radius: 99px; font-size: 0.75rem; font-weight: 600;
+    }
+    .badge-purple { background: rgba(124,110,247,0.2); color: var(--accent); }
+    .badge-gold { background: rgba(251,191,36,0.15); color: var(--gold); }
+    .badge-green { background: rgba(52,211,153,0.15); color: var(--green); }
+    .badge-red { background: rgba(248,113,113,0.15); color: var(--red); }
+    .badge-blue { background: rgba(96,165,250,0.15); color: var(--blue); }
+
+    /* ── Progress Bar ── */
+    .progress-wrap { margin: 0.4rem 0 0.8rem; }
+    .progress-label { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--muted); margin-bottom: 0.3rem; }
+    .progress-bar { height: 7px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+
+    /* ── Timeline ── */
+    .timeline { position: relative; padding-left: 1.5rem; }
+    .timeline::before {
+      content: ''; position: absolute; left: 6px; top: 0; bottom: 0;
+      width: 2px; background: var(--border);
+    }
+    .timeline-item { position: relative; margin-bottom: 1.2rem; }
+    .timeline-item::before {
+      content: ''; position: absolute; left: -1.15rem; top: 0.35rem;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--accent); border: 2px solid var(--bg);
+    }
+    .timeline-item h4 { font-size: 0.9rem; color: var(--accent2); margin-bottom: 0.3rem; }
+    .timeline-item p { font-size: 0.83rem; color: var(--muted); }
+
+    /* ── Budget donut placeholder ── */
+    .budget-ring {
+      width: 120px; height: 120px; border-radius: 50%;
+      background: conic-gradient(
+        var(--accent) 0% 35%,
+        var(--accent2) 35% 60%,
+        var(--gold) 60% 80%,
+        var(--green) 80% 92.5%,
+        var(--blue) 92.5% 97.5%,
+        var(--muted) 97.5% 100%
+      );
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1rem;
+      position: relative;
+    }
+    .budget-ring::after {
+      content: ''; position: absolute;
+      width: 72px; height: 72px; border-radius: 50%;
+      background: var(--surface);
+    }
+
+    /* ── Stat box ── */
+    .stat-box {
+      text-align: center; padding: 1rem;
+      background: var(--surface2); border-radius: 10px;
+    }
+    .stat-box .num { font-size: 1.8rem; font-weight: 800; }
+    .stat-box .label { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* ── Channel priority ── */
+    .channel-row {
+      display: flex; align-items: center; gap: 0.8rem;
+      padding: 0.7rem 0; border-bottom: 1px solid var(--border);
+    }
+    .channel-row:last-child { border-bottom: none; }
+    .channel-icon { font-size: 1.4rem; width: 2rem; text-align: center; }
+    .channel-info { flex: 1; }
+    .channel-info .name { font-size: 0.9rem; font-weight: 600; }
+    .channel-info .desc { font-size: 0.78rem; color: var(--muted); }
+
+    /* ── Campaign card ── */
+    .campaign-card {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1rem; margin-bottom: 0.8rem;
+    }
+    .campaign-card h4 { color: var(--gold); font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .campaign-card p { font-size: 0.82rem; color: var(--muted); }
+    .campaign-card .tags { margin-top: 0.5rem; display: flex; gap: 0.4rem; flex-wrap: wrap; }
+
+    /* ── Keyword pill ── */
+    .pill {
+      display: inline-block; background: var(--surface2);
+      border: 1px solid var(--border); border-radius: 6px;
+      padding: 0.2rem 0.6rem; font-size: 0.78rem; margin: 0.2rem;
+      color: var(--text);
+    }
+
+    ul { padding-left: 1.2rem; }
+    ul li { font-size: 0.87rem; margin-bottom: 0.35rem; color: var(--muted); }
+    ul li strong { color: var(--text); }
+
+    code {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 4px; padding: 0.1rem 0.35rem;
+      font-family: monospace; font-size: 0.82rem; color: var(--accent2);
+    }
+
+    pre {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 8px; padding: 1rem; overflow-x: auto;
+      font-size: 0.82rem; color: var(--text); line-height: 1.7;
+      margin: 0.8rem 0;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🌟 별자리 운세 서비스 — 마케팅 전략 대시보드</h1>
+  <p>광고 · 홍보 · SNS · SEO · 커뮤니티 · 글로벌 · 예산 통합 전략</p>
+</header>
+
+<nav id="nav">
+  <button class="active" onclick="show('overview', this)">📊 전략 개요</button>
+  <button onclick="show('sns', this)">📱 SNS · 바이럴</button>
+  <button onclick="show('influencer', this)">🤝 인플루언서</button>
+  <button onclick="show('ads', this)">💰 유료광고</button>
+  <button onclick="show('seo', this)">🔍 SEO · 콘텐츠</button>
+  <button onclick="show('community', this)">💬 커뮤니티</button>
+  <button onclick="show('email', this)">📧 이메일</button>
+  <button onclick="show('season', this)">🗓️ 시즌 이벤트</button>
+  <button onclick="show('global', this)">🌍 글로벌</button>
+  <button onclick="show('budget', this)">📈 예산 · ROI</button>
+</nav>
+
+<main>
+
+<!-- ════════════════ OVERVIEW ════════════════ -->
+<div id="tab-overview" class="tab-panel active">
+
+  <p class="section-title">🎯 마케팅 전략 한눈에 보기</p>
+
+  <div class="grid3" style="margin-bottom:1.2rem">
+    <div class="stat-box">
+      <div class="num" style="color:var(--gold)">5</div>
+      <div class="label">지원 언어 (ko·en·ja·zh·es)</div>
+    </div>
+    <div class="stat-box">
+      <div class="num" style="color:var(--accent)">10</div>
+      <div class="label">마케팅 채널</div>
+    </div>
+    <div class="stat-box">
+      <div class="num" style="color:var(--green)">3단계</div>
+      <div class="label">예산 성장 페이즈</div>
+    </div>
+  </div>
+
+  <p class="section-title">🏆 채널 우선순위</p>
+  <div class="card" style="margin-bottom:1.2rem">
+    <div class="channel-row">
+      <div class="channel-icon">🔍</div>
+      <div class="channel-info">
+        <div class="name">SEO (오가닉 검색)</div>
+        <div class="desc">854 정적 페이지 이미 구현. 핵심 키워드 10위 목표. 비용 대비 최고 ROI.</div>
+      </div>
+      <div><span class="badge badge-gold">최우선</span></div>
+    </div>
+    <div class="channel-row">
+      <div class="channel-icon">📱</div>
+      <div class="channel-info">
+        <div class="name">Instagram / TikTok</div>
+        <div class="desc">별자리 콘텐츠 바이럴 가능성 최고. 오늘의 별자리 카드 + 릴스.</div>
+      </div>
+      <div><span class="badge badge-purple">높음</span></div>
+    </div>
+    <div class="channel-row">
+      <div class="channel-icon">🇰🇷</div>
+      <div class="channel-info">
+        <div class="name">네이버 검색광고</div>
+        <div class="desc">"오늘의 운세" 월간 검색량 10만+. 한국 핵심 트래픽 획득 채널.</div>
+      </div>
+      <div><span class="badge badge-purple">높음</span></div>
+    </div>
+    <div class="channel-row">
+      <div class="channel-icon">🤝</div>
+      <div class="channel-info">
+        <div class="name">마이크로 인플루언서</div>
+        <div class="desc">팔로워 1~10만 별자리/타로 크리에이터. 전환율 높고 비용 낮음.</div>
+      </div>
+      <div><span class="badge badge-blue">중간</span></div>
+    </div>
+    <div class="channel-row">
+      <div class="channel-icon">📧</div>
+      <div class="channel-info">
+        <div class="name">이메일 마케팅</div>
+        <div class="desc">매일 07:00 별자리 운세 뉴스레터. 리텐션 극대화, LTV 향상.</div>
+      </div>
+      <div><span class="badge badge-blue">중간</span></div>
+    </div>
+  </div>
+
+  <p class="section-title">🎪 주요 바이럴 캠페인</p>
+  <div class="grid2">
+    <div class="campaign-card">
+      <h4>캠페인 1 — "내 별자리 챌린지"</h4>
+      <p>TikTok/릴스에서 별자리 성격 공유 챌린지. 상위 참여자 프리미엄 1개월 증정.</p>
+      <div class="tags">
+        <span class="badge badge-purple">TikTok</span>
+        <span class="badge badge-purple">Instagram</span>
+        <span class="badge badge-gold">바이럴</span>
+      </div>
+    </div>
+    <div class="campaign-card">
+      <h4>캠페인 2 — "별자리 궁합 테스트"</h4>
+      <p>"우리 XX%이나 맞아!" 이미지 카드 자동 생성 + SNS 공유. 공유할수록 포인트.</p>
+      <div class="tags">
+        <span class="badge badge-green">궁합</span>
+        <span class="badge badge-gold">공유 유도</span>
+      </div>
+    </div>
+    <div class="campaign-card">
+      <h4>캠페인 3 — "올해의 별자리 예언"</h4>
+      <p>연초/생일 1년 예언 카드. "2026년 내 예언" 공유 → 연말 확인 유도.</p>
+      <div class="tags">
+        <span class="badge badge-gold">시즌</span>
+        <span class="badge badge-blue">자이가르닉</span>
+      </div>
+    </div>
+    <div class="campaign-card">
+      <h4>캠페인 4 — "별자리 MBTI 매핑"</h4>
+      <p>16 MBTI × 12 별자리 = 192 조합. "나는 INTJ 전갈자리" 정체성 표현 공유.</p>
+      <div class="tags">
+        <span class="badge badge-purple">MBTI</span>
+        <span class="badge badge-gold">정체성</span>
+        <span class="badge badge-green">고공유율</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-title">⚡ 즉시 실행 가능한 무료 액션</p>
+  <div class="card">
+    <ul>
+      <li><strong>운세 결과 공유 버튼</strong> 추가 — 이미지 카드 자동 생성 + 서비스 URL 워터마크</li>
+      <li><strong>Product Hunt</strong> 런칭 등록 — 초기 1,000~5,000 방문 기대</li>
+      <li><strong>Reddit r/astrology</strong> 가입 — 정보 제공자로 활동 시작</li>
+      <li><strong>Instagram 공식 계정</strong> 개설 — 오늘의 별자리 카드 매일 게시</li>
+      <li><strong>네이버 블로그</strong> 개설 — 주 3회 별자리 운세/정보 글 작성</li>
+      <li><strong>이메일 수집 팝업</strong> — 온보딩 마지막 단계 "운세 알림 받기"</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════ SNS ════════════════ -->
+<div id="tab-sns" class="tab-panel">
+  <p class="section-title">📱 SNS 채널별 전략</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>🎵 TikTok (최우선)</h3>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>바이럴 가능성</span><span>95%</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:95%"></div></div>
+      </div>
+      <ul>
+        <li><strong>훅 (0~3초)</strong>: "당신이 [별자리]라면 이거 무조건 공감"</li>
+        <li><strong>중간 (3~15초)</strong>: 운세/성격 묘사 (바넘 효과)</li>
+        <li><strong>CTA (15~30초)</strong>: "오늘 운세 확인하세요 ↑"</li>
+        <li>Spark Ads로 바이럴 영상 유료 부스트</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>📸 Instagram</h3>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>도달 가능성</span><span>85%</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:85%"></div></div>
+      </div>
+      <ul>
+        <li>매일 오전 7시 12별자리 운세 카드</li>
+        <li>주 1회 주간 운세 릴스</li>
+        <li>주 3회 별자리 밈 콘텐츠</li>
+        <li>스토리: 별자리 퀴즈/투표</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>▶️ YouTube</h3>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>SEO 가치</span><span>90%</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:90%"></div></div>
+      </div>
+      <ul>
+        <li>주 1회 이번 주 별자리 운세 (5~8분)</li>
+        <li>월 1회 별자리 심층 분석 시리즈</li>
+        <li>매일 30~60초 별자리 쇼츠</li>
+        <li>수성역행, 달 위상 이벤트 특집</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🐦 X(Twitter)</h3>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>실시간 반응</span><span>70%</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div>
+      </div>
+      <ul>
+        <li>매일 12별자리 한 줄 운세 시리즈</li>
+        <li>트렌딩 + 별자리 결합 트윗</li>
+        <li>일본어 트위터 집중 공략 (일본 사용자 多)</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="section-title">🔖 해시태그 전략</p>
+  <div class="card">
+    <div style="margin-bottom:0.8rem">
+      <div style="font-size:0.85rem; color:var(--muted); margin-bottom:0.4rem">🇰🇷 한국어</div>
+      <span class="pill">#별자리운세</span><span class="pill">#오늘의운세</span>
+      <span class="pill">#양자리</span><span class="pill">#천칭자리</span><span class="pill">#2026운세</span>
+      <span class="pill">#별자리궁합</span><span class="pill">#타로운세</span>
+    </div>
+    <div style="margin-bottom:0.8rem">
+      <div style="font-size:0.85rem; color:var(--muted); margin-bottom:0.4rem">🇺🇸 영어</div>
+      <span class="pill">#horoscope</span><span class="pill">#zodiac</span>
+      <span class="pill">#astrology</span><span class="pill">#dailyhoroscope</span>
+      <span class="pill">#scorpioseason</span><span class="pill">#mercuryretrograde</span>
+    </div>
+    <div style="margin-bottom:0.8rem">
+      <div style="font-size:0.85rem; color:var(--muted); margin-bottom:0.4rem">🇯🇵 일본어</div>
+      <span class="pill">#星座運勢</span><span class="pill">#今日の運勢</span>
+      <span class="pill">#占い</span><span class="pill">#星座</span>
+    </div>
+    <div>
+      <div style="font-size:0.85rem; color:var(--muted); margin-bottom:0.4rem">🇪🇸 스페인어</div>
+      <span class="pill">#horoscopo</span><span class="pill">#signos</span>
+      <span class="pill">#astrologia</span><span class="pill">#zodiac</span>
+    </div>
+  </div>
+
+  <p class="section-title">🚀 바이럴 공유 UI 설계</p>
+  <div class="card">
+    <pre>운세 결과 카드 하단:
+┌─────────────────────────────────────────┐
+│ 📱 오늘 운세 공유하기  🖼️ 카드 저장  🔗 링크 │
+└─────────────────────────────────────────┘
+
+자동 생성 공유 이미지:
+  ⭐ [별자리 심볼] 2026년 3월 3일
+  오늘 운세 핵심: "새로운 시작의 기운..."
+  오늘의 점수: ★★★★☆ 87점
+  star-horoscope.com</pre>
+  </div>
+</div>
+
+<!-- ════════════════ INFLUENCER ════════════════ -->
+<div id="tab-influencer" class="tab-panel">
+  <p class="section-title">🤝 인플루언서 마케팅</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>티어</th><th>팔로워</th><th>접근법</th><th>예산/건</th><th>특징</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-green">나노</span></td><td>1K~10K</td><td>무료 체험 → 리뷰 요청</td><td>0원</td><td>충성 팔로워, 전환율 최고</td></tr>
+        <tr><td><span class="badge badge-blue">마이크로</span></td><td>10K~100K</td><td>협찬 + 수익쉐어</td><td>10~50만원</td><td>타겟 커뮤니티 침투</td></tr>
+        <tr><td><span class="badge badge-purple">매크로</span></td><td>100K~1M</td><td>유료 스폰서십</td><td>100~500만원</td><td>브랜드 인지도 급상승</td></tr>
+        <tr><td><span class="badge badge-gold">메가</span></td><td>1M+</td><td>PR + 뉴스 가치</td><td>1000만원+</td><td>매스 인지도 (선택적)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="section-title">🎯 핵심 타겟 카테고리</p>
+  <div class="grid2">
+    <div class="card">
+      <h3>⭐ 별자리 · 타로 크리에이터</h3>
+      <p style="font-size:0.85rem; color:var(--muted); margin-bottom:0.8rem">이미 팔로워가 관심 → 전환율 최고. 핵심 공략 대상.</p>
+      <ul>
+        <li>DM: "서비스 한번 써보시겠어요?"</li>
+        <li>리뷰 콘텐츠 자연스럽게 요청</li>
+        <li>프리미엄 무료 3개월 제공</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🧠 MBTI · 자기계발 크리에이터</h3>
+      <p style="font-size:0.85rem; color:var(--muted); margin-bottom:0.8rem">별자리 + MBTI 결합 콘텐츠로 협업 제안.</p>
+      <ul>
+        <li>"당신의 MBTI + 별자리 궁합" 콘텐츠</li>
+        <li>192조합 데이터 독점 제공</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>💑 연애 · 관계 크리에이터</h3>
+      <p style="font-size:0.85rem; color:var(--muted); margin-bottom:0.8rem">별자리 궁합 기능 강조. 커플 콘텐츠.</p>
+      <ul>
+        <li>"별자리로 본 우리 관계" 협업</li>
+        <li>144 궁합 조합 데이터 제공</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>📹 일상 브이로그 크리에이터</h3>
+      <p style="font-size:0.85rem; color:var(--muted); margin-bottom:0.8rem">아침 루틴에 운세 확인 습관 자연스럽게 노출.</p>
+      <ul>
+        <li>"아침 루틴: 커피 + 별자리 운세"</li>
+        <li>일상적 노출로 신뢰 구축</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="section-title">💸 어필리에이트 프로그램</p>
+  <div class="card">
+    <pre>고유 링크/쿠폰 발급
+├── 무료 가입 유도: 기록 추적 (수익 없음)
+├── 프리미엄 전환: 건당 30% 수익 쉐어
+├── 월 정산 / 최소 출금 5만원
+└── 전용 대시보드: 클릭수, 전환수, 수익 실시간 확인</pre>
+  </div>
+
+  <p class="section-title">📅 실행 로드맵</p>
+  <div class="timeline">
+    <div class="timeline-item">
+      <h4>Week 1~2</h4>
+      <p>SNS 계정 개설, 브랜드 아이덴티티 확립, 첫 30개 콘텐츠 제작</p>
+    </div>
+    <div class="timeline-item">
+      <h4>Week 3~4</h4>
+      <p>나노/마이크로 인플루언서 10명 접촉, 어필리에이트 프로그램 런칭</p>
+    </div>
+    <div class="timeline-item">
+      <h4>Month 2</h4>
+      <p>TikTok 첫 바이럴 캠페인 "내 별자리 챌린지", YouTube 주간 운세 시작</p>
+    </div>
+    <div class="timeline-item">
+      <h4>Month 3</h4>
+      <p>데이터 분석, 잘 되는 채널 집중 투자, 마이크로 인플루언서 20명 확장</p>
+    </div>
+    <div class="timeline-item">
+      <h4>Month 6</h4>
+      <p>매크로 인플루언서 1~2명 협업, 첫 시즌 바이럴 캠페인</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ ADS ════════════════ -->
+<div id="tab-ads" class="tab-panel">
+  <p class="section-title">💰 유료 광고 전략</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>🔵 Google Ads</h3>
+      <ul style="margin-top:0.5rem">
+        <li><strong>브랜드 보호 캠페인</strong>: 월 5만원</li>
+        <li><strong>별자리 운세 핵심</strong>: 12별자리 개별 광고그룹</li>
+        <li><strong>시즌 캠페인</strong>: 수성역행, 달 위상 연동</li>
+        <li>목표 CPA: 가입 1건당 500원 이하</li>
+        <li>3개월 후 Target CPA 스마트 입찰</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🟢 Naver 검색광고</h3>
+      <ul style="margin-top:0.5rem">
+        <li>"오늘의 운세" 월 검색량 100K+</li>
+        <li>"별자리 운세" 월 검색량 50K+</li>
+        <li>12별자리별 개별 파워링크</li>
+        <li>네이버 블로그 콘텐츠 광고 연계</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="section-title">📊 네이버 핵심 키워드 테이블</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>키워드</th><th>월 검색량</th><th>예상 CPC</th><th>우선순위</th></tr></thead>
+      <tbody>
+        <tr><td>오늘의 운세</td><td>100,000+</td><td>100~300원</td><td><span class="badge badge-gold">최우선</span></td></tr>
+        <tr><td>별자리 운세</td><td>50,000+</td><td>80~200원</td><td><span class="badge badge-gold">최우선</span></td></tr>
+        <tr><td>별자리 궁합</td><td>20,000+</td><td>100~250원</td><td><span class="badge badge-purple">우선</span></td></tr>
+        <tr><td>[별자리이름] 운세</td><td>5,000~20,000</td><td>50~150원</td><td><span class="badge badge-purple">우선</span></td></tr>
+        <tr><td>오늘 별자리</td><td>30,000+</td><td>80~180원</td><td><span class="badge badge-purple">우선</span></td></tr>
+        <tr><td>타로 운세</td><td>30,000+</td><td>100~300원</td><td><span class="badge badge-blue">2순위</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="section-title">📸 Meta Ads 타겟팅</p>
+  <div class="card">
+    <pre>핵심 타겟:
+  관심사: Astrology, Horoscope, Zodiac, Tarot
+  나이: 18~45세 / 여성 위주 (70%)
+
+유사 타겟 (Lookalike):
+  현재 사용자 → 1% 유사 타겟
+  높은 LTV 사용자 → 별도 1% 유사 타겟
+
+리타겟팅:
+  웹사이트 방문자 (7일, 30일)
+  앱 설치 후 미활성
+  특정 별자리 페이지 방문자</pre>
+  </div>
+</div>
+
+<!-- ════════════════ SEO ════════════════ -->
+<div id="tab-seo" class="tab-panel">
+  <p class="section-title">🔍 SEO 전략</p>
+
+  <div class="grid2" style="margin-bottom:1.2rem">
+    <div class="card">
+      <h3>✅ 현재 구현 완료</h3>
+      <ul>
+        <li>854개 정적 페이지 생성</li>
+        <li>x-default hreflang 5개 언어</li>
+        <li>NewsArticle + FAQ JSON-LD</li>
+        <li>SpeakableSpecification (GEO)</li>
+        <li>Twitter Card + OG 메타</li>
+        <li>robots.ts + sitemap 660 궁합 entries</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🔧 추가 개선 필요</h3>
+      <ul>
+        <li>OG 이미지 생성 (12별자리 + default)</li>
+        <li>Core Web Vitals 측정 및 최적화</li>
+        <li>BreadcrumbList Schema 추가</li>
+        <li>E-E-A-T: 저자 섹션 + 리뷰 Schema</li>
+        <li>주간/연간 운세 페이지 신설</li>
+        <li>별자리 입문 가이드 Pillar Page</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="section-title">🗂️ 콘텐츠 클러스터 구조</p>
+  <div class="card">
+    <pre>Pillar: /ko/guide/zodiac-horoscope (별자리 운세 완전 가이드)
+  ├── /ko/zodiac/aries (양자리 성격 · 특징)
+  ├── /ko/zodiac/[sign] × 12
+  ├── /ko/compatibility/[s1]/[s2] × 660
+  └── /ko/guide/compatibility
+
+Pillar: /ko/daily (오늘의 별자리 운세)
+  ├── /ko/daily/[sign] × 12
+  ├── /ko/weekly/ [신설 필요]
+  └── /ko/yearly/2026/ [신설 필요]</pre>
+  </div>
+
+  <p class="section-title">📝 콘텐츠 캘린더</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>요일</th><th>콘텐츠</th><th>채널</th></tr></thead>
+      <tbody>
+        <tr><td>월요일</td><td>이번 주 별자리 운세</td><td>블로그 + SNS</td></tr>
+        <tr><td>수요일</td><td>별자리 심층 분석 (순환)</td><td>블로그</td></tr>
+        <tr><td>금요일</td><td>주말 별자리 가이드</td><td>SNS</td></tr>
+        <tr><td>매일</td><td>오늘의 별자리 카드</td><td>Instagram / TikTok</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="section-title">🌐 영어권 콘텐츠 전략</p>
+  <div class="grid2">
+    <div class="card">
+      <h3>📌 Reddit 전략</h3>
+      <ul>
+        <li>r/astrology (1.2M), r/horoscopes (200K+)</li>
+        <li>가치 있는 정보 제공자로 신뢰 구축</li>
+        <li>AMA: "점성술 Q&A" 이벤트</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>📌 Pinterest SEO</h3>
+      <ul>
+        <li>별자리 인포그래픽 100개+ 업로드</li>
+        <li>"zodiac compatibility chart" 상위 검색어</li>
+        <li>장기 Google 이미지 검색 유입</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ COMMUNITY ════════════════ -->
+<div id="tab-community" class="tab-panel">
+  <p class="section-title">💬 커뮤니티 마케팅</p>
+
+  <div class="card" style="margin-bottom:1.2rem">
+    <h3>🎮 Discord 서버 구성</h3>
+    <pre>서버명: ✨ 별자리 덕후 모임
+채널:
+  📢 공지사항
+  ⭐ 오늘의-운세 (봇 자동 07:00)
+  ♈ 양자리방 ♉ 황소자리방 ... (12개)
+  💑 궁합-질문
+  🔮 타로-리딩
+  👑 프리미엄-멤버 (구독자 전용)
+
+봇 명령어:
+  !운세 양자리    → 오늘 운세 자동 응답
+  !궁합 양자리 천칭  → 궁합 점수 응답</pre>
+  </div>
+
+  <p class="section-title">🎉 커뮤니티 이벤트 캘린더</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>이벤트</th><th>주기</th><th>내용</th><th>인센티브</th></tr></thead>
+      <tbody>
+        <tr><td>주간 운세 토론</td><td>주 1회</td><td>"이번 주 운세 맞았나요?"</td><td>추첨 프리미엄 1주</td></tr>
+        <tr><td>별자리 TMI 공유</td><td>월 2회</td><td>"내 별자리 공감 포인트"</td><td>베스트 댓글 프리미엄 1개월</td></tr>
+        <tr><td>궁합 매칭 이벤트</td><td>월 1회</td><td>커뮤니티 내 별자리 궁합 찾기</td><td>전원 포인트 지급</td></tr>
+        <tr><td>맞춤 운세 검증</td><td>월 1회</td><td>"이번 달 운세 실제 어땠나요?"</td><td>특별 운세 리딩 제공</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="section-title">🏘️ 외부 커뮤니티 채널</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>플랫폼</th><th>타겟 커뮤니티</th><th>접근 방법</th></tr></thead>
+      <tbody>
+        <tr><td>네이버 카페</td><td>별자리/타로/영성 카페</td><td>정보성 글 + 자연스러운 서비스 언급</td></tr>
+        <tr><td>디시인사이드</td><td>별자리 갤러리, 타로 갤러리</td><td>일일 운세 정보 제공자로 포지셔닝</td></tr>
+        <tr><td>Reddit</td><td>r/astrology, r/horoscopes</td><td>영어권 공략, 유용한 정보 제공</td></tr>
+        <tr><td>카카오 오픈채팅</td><td>별자리 주제 채팅방</td><td>운영자 참여 + 일일 운세 공유</td></tr>
+        <tr><td>X(Twitter)</td><td>별자리 커뮤니티</td><td>트렌딩 별자리 토픽 참여</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════ EMAIL ════════════════ -->
+<div id="tab-email" class="tab-panel">
+  <p class="section-title">📧 이메일 마케팅</p>
+
+  <p class="section-title" style="font-size:1.1rem">📥 이메일 수집 포인트</p>
+  <div class="grid2">
+    <div class="card">
+      <ul>
+        <li>온보딩 마지막 단계: "운세 알림 받기"</li>
+        <li>운세 결과 페이지: "내일 운세 이메일로 받기"</li>
+        <li>30초 후 팝업: 이메일 입력 요청</li>
+      </ul>
+    </div>
+    <div class="card">
+      <ul>
+        <li>Meta 리드폼 광고</li>
+        <li>블로그 콘텐츠 업그레이드 (PDF)</li>
+        <li>프리미엄 무료 체험: 이메일 필수</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="section-title" style="font-size:1.1rem">📬 Welcome 시퀀스 (7일)</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>시점</th><th>제목</th><th>목표</th></tr></thead>
+      <tbody>
+        <tr><td>즉시</td><td>✨ 오늘 [별자리] 운세 도착!</td><td>첫 방문 유도</td></tr>
+        <tr><td>D+1</td><td>어제 운세 맞았나요? 오늘은...</td><td>습관 형성</td></tr>
+        <tr><td>D+3</td><td>[이름]님 별자리의 비밀 3가지</td><td>관심 심화</td></tr>
+        <tr><td>D+5</td><td>[이름]님과 가장 잘 맞는 별자리는?</td><td>기능 탐색</td></tr>
+        <tr><td>D+7</td><td>7일 연속 체크인! 배지 획득 🏆</td><td>프리미엄 전환</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="section-title" style="font-size:1.1rem">🔁 재활성화 시퀀스</p>
+  <div class="card">
+    <pre>D+7 미방문:  "보고 싶었어요 💙 오늘 [별자리] 운세"
+D+14 미방문: "스트릭이 끊길 것 같아요... [별자리] 운세 확인"
+D+30 미방문: "[별자리]자리에 큰 변화의 기운이... 지금 확인하세요"</pre>
+  </div>
+
+  <p class="section-title" style="font-size:1.1rem">📊 이메일 도구 비교</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>도구</th><th>특징</th><th>월 비용 (1만명)</th><th>추천</th></tr></thead>
+      <tbody>
+        <tr><td>Brevo</td><td>무제한 contacts, 무료 시작</td><td>무료~$25</td><td><span class="badge badge-gold">초기 추천</span></td></tr>
+        <tr><td>Mailchimp</td><td>사용 쉬움</td><td>$13~$350</td><td></td></tr>
+        <tr><td>ConvertKit</td><td>크리에이터 특화</td><td>$29~$79</td><td></td></tr>
+        <tr><td>Klaviyo</td><td>세그먼트 강력, 이커머스</td><td>$45~$100</td><td><span class="badge badge-blue">성장기</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════ SEASON ════════════════ -->
+<div id="tab-season" class="tab-panel">
+  <p class="section-title">🗓️ 시즌 이벤트 캘린더</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>날짜</th><th>이벤트</th><th>마케팅 행동</th><th>규모</th></tr></thead>
+      <tbody>
+        <tr><td>1월 1일</td><td>신년</td><td>"2026년 별자리 운세 완전 공개" 캠페인</td><td><span class="badge badge-gold">최대</span></td></tr>
+        <tr><td>2월 14일</td><td>발렌타인</td><td>"별자리 궁합 특집" 유료 광고 집중</td><td><span class="badge badge-gold">대형</span></td></tr>
+        <tr><td>3월 춘분</td><td>양자리 시즌</td><td>"새 시작의 별자리" 캠페인</td><td><span class="badge badge-purple">중형</span></td></tr>
+        <tr><td>5월</td><td>스승의 날/어버이날</td><td>"부모님 별자리 운세 선물" 캠페인</td><td><span class="badge badge-purple">중형</span></td></tr>
+        <tr><td>6월</td><td>수성역행</td><td>"수성역행 완벽 대비 가이드"</td><td><span class="badge badge-gold">대형</span></td></tr>
+        <tr><td>7~8월</td><td>여름 휴가</td><td>"휴가 별자리 궁합" + 여름 특별 운세</td><td><span class="badge badge-gold">대형</span></td></tr>
+        <tr><td>9월 추석</td><td>추석</td><td>"추석 별자리 운세" 한국 타겟</td><td><span class="badge badge-purple">중형</span></td></tr>
+        <tr><td>10월 31일</td><td>할로윈</td><td>"타로 리딩 특집" + 미스터리 테마</td><td><span class="badge badge-purple">중형</span></td></tr>
+        <tr><td>11월</td><td>블랙프라이데이</td><td>프리미엄 50% 할인 프로모션</td><td><span class="badge badge-gold">최대</span></td></tr>
+        <tr><td>12월 25일</td><td>크리스마스</td><td>"2027 별자리 미리보기" + 선물 프로모션</td><td><span class="badge badge-gold">대형</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="section-title">🌑 천문 이벤트 자동화</p>
+  <div class="card">
+    <pre>자동화 트리거:
+  🌕 보름달     → "보름달의 기운을 받아보세요" 푸시/이메일
+  ☿ 수성역행   → 시작 3일 전 카운트다운 콘텐츠
+  ♈ 별자리 전환 → 새 시즌 시작 = 해당 별자리 특집
+  🌑 일식/월식  → "희귀 천문 이벤트의 별자리 영향" 특집
+  🪐 행성 정렬  → "5행성 정렬 특별 운세" 한정 콘텐츠</pre>
+  </div>
+
+  <p class="section-title">🎁 시즌 한정 콘텐츠</p>
+  <div class="grid2">
+    <div class="campaign-card">
+      <h4>🎄 크리스마스</h4>
+      <p>"크리스마스 별자리 타로 리딩" 한정 해제</p>
+      <div class="tags"><span class="badge badge-red">한정 해제</span></div>
+    </div>
+    <div class="campaign-card">
+      <h4>💝 발렌타인</h4>
+      <p>"특별 연애 궁합 리딩" 무료 제공</p>
+      <div class="tags"><span class="badge badge-red">무료 제공</span></div>
+    </div>
+    <div class="campaign-card">
+      <h4>🎆 신년</h4>
+      <p>"2026년 12달 운세 달력" PDF (이메일 수집)</p>
+      <div class="tags"><span class="badge badge-blue">이메일 수집</span></div>
+    </div>
+    <div class="campaign-card">
+      <h4>🏮 추석/설날</h4>
+      <p>"가족 별자리 궁합" 특집 + 공유 이벤트</p>
+      <div class="tags"><span class="badge badge-green">공유 유도</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ GLOBAL ════════════════ -->
+<div id="tab-global" class="tab-panel">
+  <p class="section-title">🌍 글로벌 마케팅 전략</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>언어</th><th>주요 검색</th><th>주요 SNS</th><th>결제</th><th>특이점</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-gold">🇰🇷 한국어</span></td>
+          <td>네이버 / 구글</td>
+          <td>인스타 / 유튜브 / 카카오</td>
+          <td>카드 / 카카오페이</td>
+          <td>MBTI 결합 포지셔닝</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-purple">🇺🇸 영어</span></td>
+          <td>구글 (압도적)</td>
+          <td>Instagram / TikTok</td>
+          <td>Stripe / PayPal</td>
+          <td>트래픽 볼륨 최대</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-blue">🇯🇵 일본어</span></td>
+          <td>Yahoo / 구글</td>
+          <td>Twitter(X) / LINE</td>
+          <td>PayPay / 라인페이</td>
+          <td>혈액형 결합 마케팅</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-green">🇨🇳 중국어</span></td>
+          <td>바이두(제한적)</td>
+          <td>微博 / 小红书</td>
+          <td>알리페이 / 위챗페이</td>
+          <td>동서양 융합 콘텐츠</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-red">🇪🇸 스페인어</span></td>
+          <td>구글</td>
+          <td>Instagram / TikTok</td>
+          <td>PayPal / 현지 카드</td>
+          <td>중남미 6억+ 시장</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="section-title">🎯 언어별 핵심 전략</p>
+  <div class="grid2">
+    <div class="card">
+      <h3>🇯🇵 일본 (우선 공략)</h3>
+      <ul>
+        <li>별자리 × 혈액형 결합 = 일본 차별화</li>
+        <li>Twitter(X) 집중 (일본 사용자 매우 많음)</li>
+        <li>LINE 공유 버튼 추가 필수</li>
+        <li>Yahoo! Japan 검색 최적화</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🇨🇳 중국어권</h3>
+      <ul>
+        <li>서양 12궁 + 중국 12지신 결합 콘텐츠</li>
+        <li>小红书(샤오홍수) 계정 운영</li>
+        <li>WeChat 미니프로그램 검토 (중장기)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🇺🇸 영어권</h3>
+      <ul>
+        <li>Google SEO 집중 (경쟁 치열, 볼륨 압도적)</li>
+        <li>Reddit, Pinterest 커뮤니티 마케팅</li>
+        <li>미국/영국/호주 타임존별 이메일 발송</li>
+        <li>목표: 전체 트래픽의 40%+</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🇪🇸 스페인어권</h3>
+      <ul>
+        <li>중남미 인구 6억+, 관심도 높음</li>
+        <li>Google Ads CPC 낮음 → ROI 유리</li>
+        <li>Instagram/TikTok 스페인어 인플루언서</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ BUDGET ════════════════ -->
+<div id="tab-budget" class="tab-panel">
+  <p class="section-title">📈 예산 계획 및 ROI</p>
+
+  <div class="grid3" style="margin-bottom:1.5rem">
+    <div class="stat-box">
+      <div class="num" style="color:var(--green)">50만원</div>
+      <div class="label">Phase 1 월 예산</div>
+    </div>
+    <div class="stat-box">
+      <div class="num" style="color:var(--accent)">200만원</div>
+      <div class="label">Phase 2 월 예산</div>
+    </div>
+    <div class="stat-box">
+      <div class="num" style="color:var(--gold)">500만원+</div>
+      <div class="label">Phase 3 월 예산</div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>📊 Phase 2 예산 배분</h3>
+      <div class="budget-ring"></div>
+      <ul style="font-size:0.82rem">
+        <li><span style="color:var(--accent)">■</span> 검색광고 35% — 70만원</li>
+        <li><span style="color:var(--accent2)">■</span> 소셜광고 25% — 50만원</li>
+        <li><span style="color:var(--gold)">■</span> 인플루언서 20% — 40만원</li>
+        <li><span style="color:var(--green)">■</span> 콘텐츠 제작 12.5% — 25만원</li>
+        <li><span style="color:var(--blue)">■</span> 커뮤니티 5% — 10만원</li>
+        <li><span style="color:var(--muted)">■</span> 이메일 도구 2.5% — 5만원</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>💡 ROI 시뮬레이션 가정</h3>
+      <ul>
+        <li>평균 CPC: <code>150원</code></li>
+        <li>클릭 → 가입 전환율: <code>10%</code></li>
+        <li>가입 → 프리미엄 전환: <code>3%</code></li>
+        <li>프리미엄 ARPU: <code>9,900원/월</code></li>
+        <li>광고 수익 ARPU: <code>500원/월</code></li>
+        <li>프리미엄 LTV: <code>90,000원</code> (12개월)</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="section-title">📉 손익분기점 분석</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>페이즈</th><th>월 광고비</th><th>예상 가입자</th><th>프리미엄</th><th>월 수익</th><th>ROAS</th></tr></thead>
+      <tbody>
+        <tr><td>Phase 1</td><td>50만원</td><td>333명</td><td>10명</td><td>26만원</td><td><span class="badge badge-red">52%</span></td></tr>
+        <tr><td>Phase 2</td><td>200만원</td><td>+1,333명</td><td>100명</td><td>112만원</td><td><span class="badge badge-blue">56%</span></td></tr>
+        <tr><td>Phase 3 목표</td><td>500만원</td><td>1만명 누적</td><td>505명+</td><td>500만원</td><td><span class="badge badge-green">100%+</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="section-title">🆓 무료 마케팅 채널 (0원)</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>채널</th><th>방법</th><th>예상 효과</th></tr></thead>
+      <tbody>
+        <tr><td>Product Hunt</td><td>서비스 런칭 등록</td><td>초기 1,000~5,000 방문</td></tr>
+        <tr><td>Hacker News</td><td>Show HN 포스팅</td><td>500~2,000 방문</td></tr>
+        <tr><td>Reddit</td><td>관련 서브레딧 공유</td><td>지속적 오가닉</td></tr>
+        <tr><td>별자리 커뮤니티</td><td>정보 제공자로 활동</td><td>충성 초기 유저</td></tr>
+        <tr><td>SEO 블로그</td><td>고품질 콘텐츠 작성</td><td>장기 오가닉 트래픽</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="section-title">🛠️ 마케팅 스택</p>
+  <div class="grid2">
+    <div class="card">
+      <h3>📊 분석 도구</h3>
+      <ul>
+        <li>Google Analytics 4 — 웹 트래픽</li>
+        <li>Meta Pixel — 광고 전환 추적</li>
+        <li>Google Search Console — SEO 키워드</li>
+        <li>Ahrefs / Semrush — 키워드 리서치</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>⚙️ 운영 도구</h3>
+      <ul>
+        <li>Brevo / Klaviyo — 이메일 뉴스레터</li>
+        <li>Buffer / Later — SNS 예약 발행</li>
+        <li>Canva Pro — 콘텐츠 디자인</li>
+        <li>Notion — 인플루언서 CRM</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
