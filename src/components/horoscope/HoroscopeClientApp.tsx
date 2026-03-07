@@ -33,6 +33,8 @@ import StarIntro from './StarIntro';
 import FortuneChatBot from './FortuneChatBot';
 import StreakDashboard from './StreakDashboard';
 import BigThreeTeaser from './BigThreeTeaser';
+import SeasonalEventBanner from './SeasonalEventBanner';
+import PushNotificationPrompt from './PushNotificationPrompt';
 import type { ZodiacSignId, HoroscopeCategory, DetailedCategoryHoroscope, SubIndicator } from '@/types';
 import type { ContentLockStatus } from '@/types/engagement';
 import type { SmartCTA, CalendarDayData } from '@/types/horoscope-extended';
@@ -101,18 +103,21 @@ type SupportedLocale = keyof typeof UI_TEXT;
 export default function HoroscopeClientApp({ locale = 'ko' }: { locale?: string }) {
   const t = UI_TEXT[(locale as SupportedLocale) in UI_TEXT ? (locale as SupportedLocale) : 'ko'];
   const {
-    birthDate, birthSign,
+    birthDate, birthSign, birthTime,
     visitStreak, longestStreak, earnedBadges,
     unlockedContentIds, completedActions,
     onboardingCompleted, todayCheckedIn, lastCheckInDate,
     lastVisit,
     history,
     preferences,
+    fortuneFeedback,
+    pushPermissionStatus, pushPromptDismissed,
     setBirthDate, recordHoroscopeView, addToHistory,
     performCheckIn, addBadge, unlockContent, completeAction,
     completeOnboarding,
     setTheme,
     recordWinBack,
+    setPushPermissionStatus, setNotificationTimeSlot, dismissPushPrompt,
   } = useUserStore();
 
   const [hydrated, setHydrated] = useState(false);
@@ -182,7 +187,7 @@ export default function HoroscopeClientApp({ locale = 'ko' }: { locale?: string 
     );
     if (alreadySaved) return;
 
-    const horoscope = generateDailyHoroscope(currentSign, today, locale);
+    const horoscope = generateDailyHoroscope(currentSign, today, locale, currentBirthDate, birthTime);
     const cats = ['overall', 'love', 'career', 'health', 'money'] as const;
     const scores: Record<string, number> = {};
     let total = 0;
@@ -301,7 +306,7 @@ export default function HoroscopeClientApp({ locale = 'ko' }: { locale?: string 
   });
   const daysSinceLast = getDaysSinceLastVisit(lastVisit, lastCheckInDate);
 
-  const horoscope = generateDailyHoroscope(currentSign, today, locale);
+  const horoscope = generateDailyHoroscope(currentSign, today, locale, currentBirthDate, birthTime);
 
   const categories: HoroscopeCategory[] = ['overall', 'love', 'career', 'health', 'money'];
 
@@ -355,10 +360,13 @@ export default function HoroscopeClientApp({ locale = 'ko' }: { locale?: string 
   visitedDates.add(todayStr);
 
   // 확장 트렌드 (30일 과거 + 오늘 + 7일 미래)
-  const extendedTrend = getExtendedTrend(currentSign, today, visitedDates);
+  const extendedTrend = getExtendedTrend(currentSign, today, visitedDates, currentBirthDate, birthTime);
 
   // 이번 달 캘린더 데이터
-  const calendarData = getMonthCalendar(currentSign, today, visitedDates);
+  const calendarData = getMonthCalendar(currentSign, today, visitedDates, currentBirthDate, birthTime);
+
+  // 시즌 이벤트 (다중 이벤트 지원)
+  const activeEvents = getActiveEvents(today, locale);
 
   // 스마트 CTA
   const smartCTAs: SmartCTA[] = getSmartCTAs({
@@ -369,10 +377,8 @@ export default function HoroscopeClientApp({ locale = 'ko' }: { locale?: string 
     moneyScore: categoryDetailedScores.money,
     hasViewedBirthChart: completedActions.includes('view-birth-chart'),
     locale,
+    activeEventTypes: activeEvents.map(e => e.type),
   });
-
-  // 시즌 이벤트 (다중 이벤트 지원)
-  const activeEvents = getActiveEvents(today, locale);
 
   // 마이크로 스토리
   const microStory = generateDailyMicroStory(currentSign, today);
@@ -397,7 +403,7 @@ export default function HoroscopeClientApp({ locale = 'ko' }: { locale?: string 
   // 어제 점수 (세밀 점수 기반)
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayHoroscope = generateDailyHoroscope(currentSign, yesterday, locale);
+  const yesterdayHoroscope = generateDailyHoroscope(currentSign, yesterday, locale, currentBirthDate, birthTime);
   const yesterdayCategoryScores = {} as Record<HoroscopeCategory, number>;
   let yesterdayDetailedTotal = 0;
   for (const cat of categories) {
@@ -464,17 +470,31 @@ export default function HoroscopeClientApp({ locale = 'ko' }: { locale?: string 
         />
       </section>
 
-      {/* 시즌 이벤트 배너 (다중 표시) */}
-      {activeEvents.length > 0 && (
-        <div className="space-y-2 mb-4">
-          {activeEvents.slice(0, 3).map((event, i) => (
-            <div key={`${event.type}-${i}`} className="glass-card p-4 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border-indigo-500/20">
-              <p className="text-white/90 text-xs font-semibold mb-1">{event.name}</p>
-              <p className="text-white/70 text-sm leading-relaxed">{event.message}</p>
-            </div>
-          ))}
-        </div>
+      {/* Push 알림 프롬프트 (streak 3일 달성 + 아직 권한 미설정 + 미dismissed) */}
+      {visitStreak >= 3 && pushPermissionStatus === 'default' && !pushPromptDismissed && (
+        <section aria-label="push-notification-prompt">
+          <PushNotificationPrompt
+            signId={currentSign}
+            locale={locale}
+            onGranted={(slot) => {
+              setPushPermissionStatus('granted');
+              setNotificationTimeSlot(slot);
+              trackEvent('push_permission_granted', { signId: currentSign, timeSlot: slot });
+            }}
+            onDenied={() => {
+              setPushPermissionStatus('denied');
+              dismissPushPrompt();
+              trackEvent('push_permission_denied', { signId: currentSign });
+            }}
+            onDismiss={() => {
+              dismissPushPrompt();
+            }}
+          />
+        </section>
       )}
+
+      {/* 시즌 이벤트 배너 */}
+      <SeasonalEventBanner events={activeEvents} locale={locale} maxEvents={3} />
 
       {/* Win-Back 배너 (at-risk 세그먼트 — 3일+ 미방문) */}
       {userSegment === 'at-risk' && (
@@ -585,6 +605,7 @@ export default function HoroscopeClientApp({ locale = 'ko' }: { locale?: string 
         tomorrowTeaser={tomorrowTeaser}
         smartCTAs={smartCTAs}
         visitedDates={visitedDates}
+        fortuneFeedback={fortuneFeedback}
       />
 
       {/* Big Three 티저 (engaged D3+, committed, power 세그먼트) */}
@@ -600,6 +621,8 @@ export default function HoroscopeClientApp({ locale = 'ko' }: { locale?: string 
           <FortuneChatBot
             signId={currentSign}
             overallScore={overallPercent}
+            locale={locale}
+            birthDate={currentBirthDate}
           />
         </div>
       )}

@@ -79,3 +79,35 @@ export const AFFILIATE_LINKS: Record<AffiliateProgram, AffiliateLink> = {
 export function getAffiliateLink(program: AffiliateProgram): AffiliateLink {
   return AFFILIATE_LINKS[program];
 }
+
+interface ScoreContext {
+  loveScore?: number;
+  overallScore?: number;
+}
+
+/**
+ * 운세 점수 + 시즌 이벤트 기반으로 가장 적합한 어필리에이트 링크 반환
+ */
+export function getContextualAffiliate(
+  scores: ScoreContext,
+  activeEventTypes: string[] = []
+): AffiliateLink {
+  // 수성역행 → 소통/라이브 상담 강조
+  if (activeEventTypes.includes('mercury_retrograde')) {
+    return AFFILIATE_LINKS['lifereader'];
+  }
+  // 보름달/그믐달 → 문 리딩
+  if (activeEventTypes.includes('full_moon') || activeEventTypes.includes('new_moon')) {
+    return AFFILIATE_LINKS['moon-reading'];
+  }
+  // 발렌타인 → keen 궁합
+  if (activeEventTypes.includes('valentine')) {
+    return AFFILIATE_LINKS['keen'];
+  }
+  // 연애운 높음 → keen (궁합 전문)
+  if ((scores.loveScore ?? 0) > 70) {
+    return AFFILIATE_LINKS['keen'];
+  }
+  // 기본 → moon-reading (가장 높은 수수료)
+  return AFFILIATE_LINKS['moon-reading'];
+}

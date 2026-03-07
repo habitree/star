@@ -23,11 +23,14 @@ import TimeBasedFortune from './TimeBasedFortune';
 import FortuneComparison from './FortuneComparison';
 import ShareCard from './ShareCard';
 import FortuneFeedback from './FortuneFeedback';
+import FortuneAccuracyStats from './FortuneAccuracyStats';
 import LockedContent from './LockedContent';
 import ParticleEffect from './ParticleEffect';
 import TypingReveal from './TypingReveal';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import type { ZodiacSignId, HoroscopeCategory, SubIndicator } from '@/types';
+import type { FortuneFeedback as FortuneFeedbackItem } from '@/types/engagement';
+import { calculateAccuracyStats } from '@/lib/fortune-stats';
 import type {
   ExtendedLuckyElements,
   TarotCard as TarotCardType,
@@ -152,6 +155,7 @@ interface PersonalizedResultProps {
   smartCTAs?: SmartCTA[];
   visitedDates?: Set<string>;
   locale?: string;
+  fortuneFeedback?: FortuneFeedbackItem[];
 }
 
 const CAT_ICONS: Record<HoroscopeCategory, string> = {
@@ -217,6 +221,9 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
     contentStatuses?.[id] ?? 'unlocked';
 
   const streak = props.visitStreak ?? 0;
+  const accuracyStats = props.fortuneFeedback
+    ? calculateAccuracyStats(props.fortuneFeedback, signId)
+    : null;
 
   return (
     <div className="space-y-6 relative" style={cssVars}>
@@ -335,6 +342,13 @@ export default function PersonalizedResult(props: PersonalizedResultProps) {
       <RevealSection>
         <FortuneFeedback signId={signId} locale={locale} />
       </RevealSection>
+
+      {/* ⑥‑d 운세 적중 통계 (피드백 5개 이상 시 표시) */}
+      {accuracyStats && (
+        <RevealSection>
+          <FortuneAccuracyStats stats={accuracyStats} locale={locale} />
+        </RevealSection>
+      )}
 
       {/* ⑦ 확장 행운 요소 */}
       <RevealSection>

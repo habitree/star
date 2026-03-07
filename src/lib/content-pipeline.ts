@@ -22,18 +22,32 @@ export function seededRandom(seed: number): () => number {
   };
 }
 
-/** 날짜+별자리+카테고리로 시드 생성 */
+/** 날짜+별자리+카테고리로 시드 생성 (birthDate 있으면 개인화) */
 export function generateContentSeed(
   signId: ZodiacSignId,
   date: Date,
-  category: string
+  category: string,
+  birthDate?: string | null
 ): number {
   const signNum = signIdToNumber[signId];
   const y = date.getFullYear();
   const m = date.getMonth() + 1;
   const d = date.getDate();
   const catHash = category.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
-  return y * 10000000 + m * 100000 + d * 1000 + signNum * 10 + catHash;
+  const baseSeed = y * 10000000 + m * 100000 + d * 1000 + signNum * 10 + catHash;
+
+  if (!birthDate) return baseSeed;
+
+  const parts = birthDate.split('-');
+  if (parts.length !== 3) return baseSeed;
+  const birthYear = parseInt(parts[0], 10);
+  const birthMonth = parseInt(parts[1], 10);
+  const birthDay = parseInt(parts[2], 10);
+  if (isNaN(birthYear) || isNaN(birthMonth) || isNaN(birthDay)) return baseSeed;
+
+  const personalizer = (birthYear - 1900) * 366 + birthMonth * 31 + birthDay;
+  const mixed = Math.imul(personalizer, 2654435761) >>> 0;
+  return (baseSeed ^ mixed) >>> 0;
 }
 
 /** 배열에서 시드 기반 랜덤 선택 */

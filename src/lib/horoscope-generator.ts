@@ -121,8 +121,16 @@ function seededRandom(seed: number): () => number {
 
 /**
  * 날짜와 별자리로부터 시드 생성
+ * birthDate 있을 때: Knuth 곱셈 해싱으로 개인화 레이어 추가
+ * birthDate 없을 때: baseSeed 그대로 반환 (SSG 페이지 하위 호환)
  */
-function generateSeed(signId: ZodiacSignId, date: Date, category?: string): number {
+function generateSeed(
+  signId: ZodiacSignId,
+  date: Date,
+  category?: string,
+  birthDate?: string | null,
+  birthTime?: string | null
+): number {
   const signNumber = signIdToNumber[signId];
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
@@ -131,7 +139,37 @@ function generateSeed(signId: ZodiacSignId, date: Date, category?: string): numb
   // 카테고리별로 다른 시드를 생성하기 위해 카테고리 해시 추가
   const categoryHash = category ? category.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) : 0;
 
-  return year * 10000000 + month * 100000 + day * 1000 + signNumber * 10 + categoryHash;
+  const baseSeed = year * 10000000 + month * 100000 + day * 1000 + signNumber * 10 + categoryHash;
+
+  if (!birthDate) return baseSeed;
+
+  // birthDate "YYYY-MM-DD" 파싱
+  const parts = birthDate.split('-');
+  if (parts.length !== 3) return baseSeed;
+  const birthYear = parseInt(parts[0], 10);
+  const birthMonth = parseInt(parts[1], 10);
+  const birthDay = parseInt(parts[2], 10);
+  if (isNaN(birthYear) || isNaN(birthMonth) || isNaN(birthDay)) return baseSeed;
+
+  // Knuth 곱셈 해싱으로 생년월일 → 32비트 분산값
+  const personalizer = (birthYear - 1900) * 366 + birthMonth * 31 + birthDay;
+  const mixed = Math.imul(personalizer, 2654435761) >>> 0;
+  let seed = (baseSeed ^ mixed) >>> 0;
+
+  // 출생 시간 2차 레이어 (12 어센던트 구간)
+  if (birthTime) {
+    const timeParts = birthTime.split(':');
+    if (timeParts.length >= 2) {
+      const hours = parseInt(timeParts[0], 10);
+      const minutes = parseInt(timeParts[1], 10);
+      if (!isNaN(hours) && !isNaN(minutes)) {
+        const segment = Math.floor((hours * 60 + minutes) / 120); // 0~11
+        seed = (seed + Math.imul(segment, 7919)) >>> 0;
+      }
+    }
+  }
+
+  return seed;
 }
 
 /**
@@ -399,9 +437,11 @@ function selectTemplate(
 function generateCategoryHoroscope(
   signId: ZodiacSignId,
   date: Date,
-  category: HoroscopeCategory
+  category: HoroscopeCategory,
+  birthDate?: string | null,
+  birthTime?: string | null
 ): DetailedCategoryHoroscope {
-  const seed = generateSeed(signId, date, category);
+  const seed = generateSeed(signId, date, category, birthDate, birthTime);
   const random = seededRandom(seed);
 
   // 세밀 점수 생성
@@ -421,22 +461,26 @@ function generateCategoryHoroscope(
 
 /**
  * 일일 운세 생성
+ * birthDate/birthTime 있을 때 개인화된 운세 생성
+ * SSG 페이지는 파라미터 없이 호출 → 별자리 단위 공개 운세 유지
  */
 export function generateDailyHoroscope(
   signId: ZodiacSignId,
   date: Date = new Date(),
-  locale: string = 'ko'
+  locale: string = 'ko',
+  birthDate?: string | null,
+  birthTime?: string | null
 ): DailyHoroscope {
   const dateStr = toISODateString(date);
-  const baseSeed = generateSeed(signId, date);
+  const baseSeed = generateSeed(signId, date, undefined, birthDate, birthTime);
   const random = seededRandom(baseSeed);
 
   // 각 카테고리별 운세 생성
-  const overall = generateCategoryHoroscope(signId, date, 'overall');
-  const love = generateCategoryHoroscope(signId, date, 'love');
-  const career = generateCategoryHoroscope(signId, date, 'career');
-  const health = generateCategoryHoroscope(signId, date, 'health');
-  const money = generateCategoryHoroscope(signId, date, 'money');
+  const overall = generateCategoryHoroscope(signId, date, 'overall', birthDate, birthTime);
+  const love = generateCategoryHoroscope(signId, date, 'love', birthDate, birthTime);
+  const career = generateCategoryHoroscope(signId, date, 'career', birthDate, birthTime);
+  const health = generateCategoryHoroscope(signId, date, 'health', birthDate, birthTime);
+  const money = generateCategoryHoroscope(signId, date, 'money', birthDate, birthTime);
 
   // 행운의 요소들 선택 (원소 기반 행운 색상 우선 사용)
   const element = getSignElement(signId);
@@ -1150,7 +1194,9 @@ export function generateCompatibilityHighlight(
 export function getExtendedTrend(
   signId: ZodiacSignId,
   date: Date = new Date(),
-  visitedDates: Set<string> = new Set()
+  visitedDates: Set<string> = new Set(),
+  birthDate?: string | null,
+  birthTime?: string | null
 ): ExtendedTrendPoint[] {
   const dayLabels = ['일', '월', '화', '수', '목', '금', '토'];
   const todayStr = toISODateString(date);
@@ -1162,7 +1208,7 @@ export function getExtendedTrend(
     d.setDate(d.getDate() + offset);
     const dateStr = toISODateString(d);
 
-    const horoscope = generateDailyHoroscope(signId, d);
+    const horoscope = generateDailyHoroscope(signId, d, 'ko', birthDate, birthTime);
 
     const catScores: Record<string, number> = {};
     let fineTotal = 0;
@@ -1197,7 +1243,9 @@ export function getExtendedTrend(
 export function getMonthCalendar(
   signId: ZodiacSignId,
   monthDate: Date = new Date(),
-  visitedDates: Set<string> = new Set()
+  visitedDates: Set<string> = new Set(),
+  birthDate?: string | null,
+  birthTime?: string | null
 ): CalendarDayData[] {
   const year = monthDate.getFullYear();
   const month = monthDate.getMonth();
@@ -1211,7 +1259,7 @@ export function getMonthCalendar(
     const d = new Date(year, month, day);
     const dateStr = toISODateString(d);
 
-    const horoscope = generateDailyHoroscope(signId, d);
+    const horoscope = generateDailyHoroscope(signId, d, 'ko', birthDate, birthTime);
 
     const catScores: Record<string, number> = {};
     let fineTotal = 0;

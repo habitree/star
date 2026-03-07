@@ -11,21 +11,34 @@ import {
   getCurrentChoices,
   type ChatState,
 } from '@/lib/chat-fortune';
+import { CHAT_I18N, type SupportedLocale } from '@/data/chat-fortune-i18n';
 import { trackEvent, trackRetentionView } from '@/lib/engagement-tracker';
 
 interface FortuneChatBotProps {
   signId: ZodiacSignId;
   overallScore: number;
+  locale?: string;
+  birthDate?: string | null;
   onTarotRequested?: () => void;
   onComplete?: () => void;
+}
+
+function getLocale(locale?: string): SupportedLocale {
+  const supported: SupportedLocale[] = ['ko', 'en', 'zh', 'ja', 'es'];
+  return supported.includes(locale as SupportedLocale) ? (locale as SupportedLocale) : 'ko';
 }
 
 export default function FortuneChatBot({
   signId,
   overallScore,
+  locale,
+  birthDate,
   onTarotRequested,
   onComplete,
 }: FortuneChatBotProps) {
+  const loc = getLocale(locale);
+  const t = CHAT_I18N[loc];
+
   const [chatState, setChatState] = useState<ChatState | null>(null);
   const [visibleCount, setVisibleCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -33,11 +46,11 @@ export default function FortuneChatBot({
 
   // 채팅 초기화
   const initChat = () => {
-    const state = createChatState(signId);
+    const state = createChatState(signId, new Date(), loc, birthDate);
     setChatState(state);
     setVisibleCount(0);
     setIsOpen(true);
-    trackEvent('chat_start', { signId });
+    trackEvent('chat_start', { signId, locale: loc });
     trackRetentionView({ surface: 'chatbot', action: 'view' });
   };
 
@@ -70,14 +83,14 @@ export default function FortuneChatBot({
       let newState = handleEmotionChoice(chatState, emotion);
       newState = advanceToFortuneIntro(newState, overallScore);
       setChatState(newState);
-      setVisibleCount(chatState.messages.length); // user msg will trigger cascade
+      setVisibleCount(chatState.messages.length);
     } else if (chatState.phase === 'tarot-offer') {
       const accepted = choiceId === 'tarot-yes';
       const newState = handleTarotChoice(chatState, accepted);
       setChatState(newState);
       setVisibleCount(chatState.messages.length);
       if (accepted) onTarotRequested?.();
-      trackEvent('chat_complete', { signId, tookTarot: accepted });
+      trackEvent('chat_complete', { signId, tookTarot: accepted, locale: loc });
       onComplete?.();
     }
   };
@@ -91,33 +104,33 @@ export default function FortuneChatBot({
 
   if (!isOpen) {
     return (
-      <section className="glass-card p-5 text-center" aria-label="별의 도사 대화 시작">
-        <p className="text-white/70 text-sm mb-3">오늘 기분에 맞춘 한 줄 조언이 필요할 때</p>
+      <section className="glass-card p-5 text-center" aria-label={t.chatTitle}>
+        <p className="text-white/70 text-sm mb-3">{t.closeLabel}</p>
         <button
           onClick={initChat}
           className="btn-primary text-sm px-5 py-2.5"
         >
-          🔮 대화 시작하기
+          {t.openLabel}
         </button>
       </section>
     );
   }
 
   return (
-    <section className="glass-card p-4 max-h-[500px] flex flex-col" aria-label="별의 도사와의 대화">
+    <section className="glass-card p-4 max-h-[500px] flex flex-col" aria-label={t.chatTitle}>
       {/* 헤더 */}
       <header className="flex items-center justify-between mb-3 pb-3 border-b border-white/10">
         <div className="flex items-center gap-2">
           <span className="text-xl" aria-hidden="true">🔮</span>
           <div className="flex flex-col">
-            <span className="text-white font-medium text-sm">별의 도사</span>
-            <span className="text-[11px] text-white/40">감정에 맞춰 오늘의 메시지를 전해드려요</span>
+            <span className="text-white font-medium text-sm">{t.chatTitle}</span>
+            <span className="text-[11px] text-white/40">{t.chatSubtitle}</span>
           </div>
         </div>
         <button
           onClick={() => setIsOpen(false)}
           className="text-white/40 hover:text-white/70 text-sm transition-colors"
-          aria-label="대화 닫기"
+          aria-label="close"
         >
           ✕
         </button>
@@ -164,7 +177,7 @@ export default function FortuneChatBot({
 
       {/* 선택지 */}
       {showChoices && currentChoices && (
-        <div className="flex flex-col gap-2 border-t border-white/10 pt-3" aria-label="감정 선택지">
+        <div className="flex flex-col gap-2 border-t border-white/10 pt-3" aria-label="choices">
           {currentChoices.map((choice) => (
             <button
               key={choice.id}
@@ -186,7 +199,7 @@ export default function FortuneChatBot({
             onClick={initChat}
             className="text-white/50 text-xs hover:text-white/70 transition-colors"
           >
-            다시 대화하기
+            {t.restartLabel}
           </button>
         </div>
       )}

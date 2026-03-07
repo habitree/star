@@ -128,7 +128,12 @@ export type EngagementEventType =
   | 'fortune_feedback'
   | 'retro_feedback'
   | 'share_card_generate'
-  | 'viral_link_click';
+  | 'viral_link_click'
+  | 'push_prompt_view'
+  | 'push_permission_granted'
+  | 'push_permission_denied'
+  | 'ai_qa_request'
+  | 'ai_qa_complete';
 
 /** 참여도 이벤트 */
 export interface EngagementEvent {
@@ -185,6 +190,27 @@ export interface MicroStory {
 
 /** 온보딩 단계 */
 export type OnboardingStep = 'welcome' | 'birthdate' | 'element' | 'first-fortune' | 'complete';
+
+/** 운세 적중 통계 */
+export interface AccuracyStats {
+  totalFeedbacks: number;
+  accuracy: number; // 0-100 (%)
+  categoryAccuracy: Partial<Record<FeedbackCategory, number>>;
+  bestCategory: FeedbackCategory | null;
+  streak: {
+    greatStreak: number; // 최근 연속 'great' 반응 수
+    missStreak: number;  // 최근 연속 'miss' 반응 수
+  };
+}
+
+/** Push 알림 구독 레코드 */
+export interface PushSubscriptionRecord {
+  endpoint: string;
+  keys: { p256dh: string; auth: string };
+  timeSlot: 'morning' | 'noon' | 'evening';
+  locale: string;
+  signId: string;
+}
 
 /** 사용자 참여 상태 (스토어 확장용) */
 export interface EngagementState {

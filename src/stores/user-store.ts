@@ -134,6 +134,12 @@ interface UserState {
 
   // Big Three 액션
   setBirthTime: (time: string | null) => void;
+
+  // Push 알림 액션
+  setPushPermissionStatus: (status: 'default' | 'granted' | 'denied') => void;
+  setNotificationTimeSlot: (slot: 'morning' | 'noon' | 'evening') => void;
+  dismissPushPrompt: () => void;
+  pushPromptDismissed: boolean;
 }
 
 // 기본 설정값
@@ -178,6 +184,7 @@ export const useUserStore = create<UserState>()(
       birthTime: null,
       pushPermissionStatus: 'default' as const,
       notificationTimeSlot: 'morning' as const,
+      pushPromptDismissed: false,
 
       // 즐겨찾기 액션
       addFavorite: (signId, nickname) => {
@@ -427,10 +434,22 @@ export const useUserStore = create<UserState>()(
       setBirthTime: (time) => {
         set({ birthTime: time });
       },
+
+      setPushPermissionStatus: (status) => {
+        set({ pushPermissionStatus: status });
+      },
+
+      setNotificationTimeSlot: (slot) => {
+        set({ notificationTimeSlot: slot });
+      },
+
+      dismissPushPrompt: () => {
+        set({ pushPromptDismissed: true });
+      },
     }),
     {
       name: 'zodiac-user-store',
-      version: 4,
+      version: 5,
       storage: createJSONStorage(() => ({
         getItem: (name: string) => {
           try { return localStorage.getItem(name); }
@@ -495,6 +514,10 @@ export const useUserStore = create<UserState>()(
           state.pushPermissionStatus = state.pushPermissionStatus ?? 'default';
           state.notificationTimeSlot = state.notificationTimeSlot ?? 'morning';
         }
+        if (version < 5) {
+          // v4 → v5: Push 프롬프트 dismissed 필드 추가
+          state.pushPromptDismissed = state.pushPromptDismissed ?? false;
+        }
         return state as unknown as UserState;
       },
       partialize: (state) => ({
@@ -522,6 +545,7 @@ export const useUserStore = create<UserState>()(
         birthTime: state.birthTime,
         pushPermissionStatus: state.pushPermissionStatus,
         notificationTimeSlot: state.notificationTimeSlot,
+        pushPromptDismissed: state.pushPromptDismissed,
       }),
     }
   )
