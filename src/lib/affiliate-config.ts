@@ -96,9 +96,9 @@ export function getContextualAffiliate(
   if (activeEventTypes.includes('mercury_retrograde')) {
     return AFFILIATE_LINKS['lifereader'];
   }
-  // 보름달/그믐달 → 문 리딩
+  // 보름달/그믐달 → keen (궁합/운명)
   if (activeEventTypes.includes('full_moon') || activeEventTypes.includes('new_moon')) {
-    return AFFILIATE_LINKS['moon-reading'];
+    return AFFILIATE_LINKS['keen'];
   }
   // 발렌타인 → keen 궁합
   if (activeEventTypes.includes('valentine')) {
@@ -108,6 +108,6 @@ export function getContextualAffiliate(
   if ((scores.loveScore ?? 0) > 70) {
     return AFFILIATE_LINKS['keen'];
   }
-  // 기본 → moon-reading (가장 높은 수수료)
-  return AFFILIATE_LINKS['moon-reading'];
+  // 기본 → lifereader (라이브 상담)
+  return AFFILIATE_LINKS['lifereader'];
 }

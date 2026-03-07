@@ -44,7 +44,7 @@ export const SEASONAL_UPSELLS: Partial<Record<SeasonalEventType, SeasonalUpsell>
   full_moon: {
     eventType: 'full_moon',
     icon: '🌕',
-    affiliateTarget: 'moon-reading',
+    affiliateTarget: 'keen',
     title: {
       ko: '보름달 문 리딩',
       en: 'Full Moon Reading',
@@ -70,7 +70,7 @@ export const SEASONAL_UPSELLS: Partial<Record<SeasonalEventType, SeasonalUpsell>
   new_moon: {
     eventType: 'new_moon',
     icon: '🌑',
-    affiliateTarget: 'moon-reading',
+    affiliateTarget: 'lifereader',
     title: {
       ko: '새달 새출발 리딩',
       en: 'New Moon Fresh Start Reading',

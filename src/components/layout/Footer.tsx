@@ -76,22 +76,10 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="pt-8 border-t border-white/10 text-center">
           <p className="text-white/40 text-sm">
             &copy; {currentYear} {t('logo')}. {t('allRightsReserved')}
           </p>
-
-          {/* Ko-fi support button */}
-          <a
-            href="https://ko-fi.com/starzodiac"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full
-                       bg-[#FF5E5B]/20 hover:bg-[#FF5E5B]/40 border border-[#FF5E5B]/30
-                       text-white/70 hover:text-white text-sm transition-colors"
-          >
-            ☕ {t('supportUs')}
-          </a>
         </div>
       </div>
     </footer>

@@ -187,7 +187,6 @@ export default async function BlogArticlePage({
             <p className="text-white/30 text-xs text-center uppercase tracking-widest">
               {RELATED_LABEL[safeLocale] ?? RELATED_LABEL.ko}
             </p>
-            <AffiliateBanner program="moon-reading" locale={safeLocale} variant="compact" />
             <AffiliateBanner program="keen" locale={safeLocale} variant="compact" />
           </div>
 

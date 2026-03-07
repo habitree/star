@@ -1,14 +1,8 @@
 import { Inter, Playfair_Display } from 'next/font/google';
 import Script from 'next/script';
-import { NextIntlClientProvider } from 'next-intl';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
-import CookieConsent from '@/components/layout/CookieConsent';
 import JsonLd from '@/components/seo/JsonLd';
-import koMessages from '@/i18n/messages/ko.json';
 import './globals.css';
 
-// 애드센스 소유권 확인용 (스니펫 + 메타태그)
 const ADSENSE_PUBLISHER_ID = 'ca-pub-4166976105261105';
 
 const inter = Inter({
@@ -97,13 +91,11 @@ export default function RootLayout({
   return (
     <html lang="ko" className={`${inter.variable} ${playfair.variable}`}>
       <head>
-        {/* Google AdSense 소유권 확인 메타태그 */}
         <meta name="google-adsense-account" content={ADSENSE_PUBLISHER_ID} />
         <JsonLd data={websiteJsonLd} />
         <JsonLd data={organizationJsonLd} />
       </head>
       <body className="font-sans min-h-screen flex flex-col">
-        {/* Google AdSense 스크립트 - 자동 광고 + 수동 광고 유닛 모두 지원 */}
         <Script
           id="adsense-script"
           async
@@ -111,12 +103,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
-        <NextIntlClientProvider locale="ko" messages={koMessages}>
-          <Header locale="ko" />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <CookieConsent />
-        </NextIntlClientProvider>
+        {children}
       </body>
     </html>
   );

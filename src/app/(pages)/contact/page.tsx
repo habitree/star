@@ -83,23 +83,6 @@ export default function ContactPage() {
             </a>
           </div>
 
-          {/* Ko-fi 응원 */}
-          <div className="glass-card p-6 border border-[#FF5E5B]/20 text-center">
-            <p className="text-white/60 text-sm mb-3">
-              서비스가 마음에 드셨다면 커피 한 잔으로 응원해 주세요 ☕
-            </p>
-            <a
-              href="https://ko-fi.com/starzodiac"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full
-                         bg-[#FF5E5B]/90 hover:bg-[#FF5E5B] text-white text-sm font-medium
-                         transition-colors"
-            >
-              ☕ Ko-fi로 응원하기
-            </a>
-          </div>
-
           {/* 문의 유형 안내 */}
           <div className="glass-card p-8">
             <h2 className="text-xl font-semibold text-white mb-6">문의 유형 안내</h2>

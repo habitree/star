@@ -1,5 +1,3 @@
-import { Inter, Playfair_Display } from 'next/font/google';
-import Script from 'next/script';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -9,25 +7,9 @@ import CookieConsent from '@/components/layout/CookieConsent';
 import JsonLd from '@/components/seo/JsonLd';
 import { locales, type Locale } from '@/i18n/config';
 import { buildLanguageAlternates } from '@/lib/seo-utils';
-import '../globals.css';
-
-const ADSENSE_PUBLISHER_ID = 'ca-pub-4166976105261105';
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-});
-
-const playfair = Playfair_Display({
-  subsets: ['latin'],
-  variable: '--font-playfair',
-  display: 'swap',
-});
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://luckytoday.one';
 
-// hreflang alternates for SEO (x-default 포함)
 function buildAlternates(locale: Locale) {
   return {
     canonical: `${siteUrl}/${locale}`,
@@ -126,26 +108,12 @@ export default async function LocaleLayout({
   };
 
   return (
-    <html lang={locale} className={`${inter.variable} ${playfair.variable}`}>
-      <head>
-        <meta name="google-adsense-account" content={ADSENSE_PUBLISHER_ID} />
-        <JsonLd data={websiteJsonLd} />
-      </head>
-      <body className="font-sans min-h-screen flex flex-col">
-        <Script
-          id="adsense-script"
-          async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_PUBLISHER_ID}`}
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          <Header locale={locale as Locale} />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <CookieConsent />
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <NextIntlClientProvider locale={locale} messages={messages}>
+      <JsonLd data={websiteJsonLd} />
+      <Header locale={locale as Locale} />
+      <main className="flex-1">{children}</main>
+      <Footer />
+      <CookieConsent />
+    </NextIntlClientProvider>
   );
 }
