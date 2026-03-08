@@ -12,7 +12,7 @@
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",
-    "cf:build": "npx opennextjs-cloudflare build",
+    "cf:build": "node scripts/cf-build.mjs",
     "cf:dev": "npx wrangler dev",
     "cf:deploy": "npm run cf:build && npx wrangler deploy",
     "cf:deploy:preview": "npm run cf:build && npx wrangler deploy --env preview",

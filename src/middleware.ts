@@ -88,7 +88,7 @@ export default function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // locale 독립 정적 페이지
+  // locale 독립 정적 페이지 (ko 전용 — about/privacy/terms/contact)
   if (
     pathname === '/about' ||
     pathname === '/privacy' ||

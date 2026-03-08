@@ -7,8 +7,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { PushSubscriptionRecord } from '@/types/engagement';
 
-export const runtime = 'edge';
-
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const body = await req.json() as Partial<PushSubscriptionRecord>;

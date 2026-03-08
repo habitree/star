@@ -8,8 +8,6 @@ import type { NextRequest } from 'next/server';
 import { getSignGradient } from '@/lib/share-card-generator';
 import type { ZodiacSignId } from '@/types';
 
-export const runtime = 'edge';
-
 const SIGN_SYMBOLS: Record<string, string> = {
   aries: '♈', taurus: '♉', gemini: '♊', cancer: '♋',
   leo: '♌', virgo: '♍', libra: '♎', scorpio: '♏',
