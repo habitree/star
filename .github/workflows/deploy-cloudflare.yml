@@ -30,43 +30,8 @@ jobs:
           NEXT_PUBLIC_ADSENSE_PUBLISHER_ID: ${{ secrets.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID }}
           NEXT_PUBLIC_VAPID_PUBLIC_KEY: ${{ secrets.NEXT_PUBLIC_VAPID_PUBLIC_KEY }}
 
-      - name: Check build artifacts
-        run: |
-          echo "=== wrangler version ==="
-          npx wrangler --version
-          echo "=== .open-next/ ==="
-          ls -lh .open-next/ || echo "MISSING: .open-next/"
-          echo "=== worker.js ==="
-          ls -lh .open-next/worker.js || echo "MISSING: worker.js"
-          echo "=== assets/ count ==="
-          ls .open-next/assets/ 2>/dev/null | wc -l || echo "MISSING: assets/"
-
-      - name: Verify Cloudflare auth
-        run: npx wrangler whoami
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-
-      - name: Check token permissions (Workers list)
-        run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
-            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-            "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts")
-          echo "Workers scripts API status: $STATUS"
-          if [ "$STATUS" = "403" ]; then
-            echo "ERROR: Token missing 'Workers Scripts: Edit' permission!"
-            exit 1
-          elif [ "$STATUS" = "200" ]; then
-            echo "OK: Token has Workers permission"
-          else
-            echo "Unexpected status: $STATUS"
-          fi
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-
       - name: Deploy to Cloudflare Workers
-        run: npx wrangler deploy --verbose 2>&1
+        run: npx wrangler deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
