@@ -48,53 +48,57 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; sign: string }>;
 }): Promise<Metadata> {
-  const { locale, sign } = await params;
+  try {
+    const { locale, sign } = await params;
 
-  if (!validSigns.includes(sign as ZodiacSignId)) {
-    return { title: 'Not Found' };
+    if (!validSigns.includes(sign as ZodiacSignId)) {
+      return { title: 'Not Found' };
+    }
+
+    const signData = zodiacData[sign as ZodiacSignId];
+    const signMeta = zodiacSigns.find((s) => s.id === sign);
+    const signName = signMeta?.names[locale as Locale] ?? signMeta?.names.ko ?? signData.name;
+    const baseUrl = getSiteUrl();
+    const url = `${baseUrl}/${locale}/horoscope/daily/${sign}`;
+
+    const descriptions: Record<Locale, string> = {
+      ko: `${signName} 오늘의 운세. 종합운·연애운·직장운·건강운·금전운과 타로, 시간대별 운세를 확인하세요.`,
+      en: `${signName} daily horoscope. Check overall, love, career, health, money fortune and tarot reading.`,
+      zh: `${signName}今日运势。查看综合运、爱情运、事业运、健康运、财运和塔罗牌解读。`,
+      ja: `${signName}の今日の運勢。総合運・恋愛運・仕事運・健康運・金運とタロット占いをチェック。`,
+      es: `Horoscopo diario de ${signName}. Consulta fortuna general, amor, trabajo, salud, dinero y tarot.`,
+    };
+
+    const description = descriptions[locale as Locale] ?? descriptions.ko;
+
+    const today = new Date();
+
+    return {
+      title: `${signName} ${locale === 'ko' ? '오늘의 운세' : 'Daily Horoscope'}`,
+      description,
+      openGraph: {
+        title: `${signName} Daily Horoscope`,
+        description,
+        url,
+        type: 'article',
+        publishedTime: today.toISOString(),
+        modifiedTime: today.toISOString(),
+        images: [{ url: `/api/og?sign=${sign}&title=${encodeURIComponent(`${signName} Daily Horoscope`)}`, width: 1200, height: 630, alt: `${signName} Daily Horoscope` }],
+      },
+      twitter: {
+        card: 'summary_large_image' as const,
+        title: `${signName} Daily Horoscope`,
+        description,
+        images: [`/api/og?sign=${sign}&title=${encodeURIComponent(`${signName} Daily Horoscope`)}`],
+      },
+      alternates: {
+        canonical: url,
+        languages: buildLanguageAlternates(baseUrl, `/horoscope/daily/${sign}`),
+      },
+    };
+  } catch {
+    return { title: 'LuckyToday — Daily Horoscope' };
   }
-
-  const signData = zodiacData[sign as ZodiacSignId];
-  const signMeta = zodiacSigns.find((s) => s.id === sign);
-  const signName = signMeta?.names[locale as Locale] ?? signMeta?.names.ko ?? signData.name;
-  const baseUrl = getSiteUrl();
-  const url = `${baseUrl}/${locale}/horoscope/daily/${sign}`;
-
-  const descriptions: Record<Locale, string> = {
-    ko: `${signName} 오늘의 운세. 종합운·연애운·직장운·건강운·금전운과 타로, 시간대별 운세를 확인하세요.`,
-    en: `${signName} daily horoscope. Check overall, love, career, health, money fortune and tarot reading.`,
-    zh: `${signName}今日运势。查看综合运、爱情运、事业运、健康运、财运和塔罗牌解读。`,
-    ja: `${signName}の今日の運勢。総合運・恋愛運・仕事運・健康運・金運とタロット占いをチェック。`,
-    es: `Horoscopo diario de ${signName}. Consulta fortuna general, amor, trabajo, salud, dinero y tarot.`,
-  };
-
-  const description = descriptions[locale as Locale] ?? descriptions.ko;
-
-  const today = new Date();
-
-  return {
-    title: `${signName} ${locale === 'ko' ? '오늘의 운세' : 'Daily Horoscope'}`,
-    description,
-    openGraph: {
-      title: `${signName} Daily Horoscope`,
-      description,
-      url,
-      type: 'article',
-      publishedTime: today.toISOString(),
-      modifiedTime: today.toISOString(),
-      images: [{ url: `/og/signs/${sign}.jpg`, width: 1200, height: 630, alt: `${signName} Daily Horoscope` }],
-    },
-    twitter: {
-      card: 'summary_large_image' as const,
-      title: `${signName} Daily Horoscope`,
-      description,
-      images: [`/og/signs/${sign}.jpg`],
-    },
-    alternates: {
-      canonical: url,
-      languages: buildLanguageAlternates(baseUrl, `/horoscope/daily/${sign}`),
-    },
-  };
 }
 
 const categoryIcons: Record<HoroscopeCategory, string> = {
@@ -166,12 +170,12 @@ export default async function LocaleSignDailyHoroscopePage({
     headline: `${signName} ${safeLocale === 'ko' ? '오늘의 운세' : 'Daily Horoscope'} - ${dateFormatted}`,
     datePublished: today.toISOString(),
     dateModified: today.toISOString(),
-    author: { '@type': 'Organization', name: 'LuckyToday', url: baseUrl },
+    author: { '@type': 'Person', name: 'LuckyToday Editorial Team', url: `${baseUrl}/about` },
     publisher: {
       '@type': 'Organization',
       name: 'LuckyToday',
       url: baseUrl,
-      logo: { '@type': 'ImageObject', url: `${baseUrl}/og/default.jpg` },
+      logo: { '@type': 'ImageObject', url: `${baseUrl}/api/og` },
     },
     about: {
       '@type': 'Thing',
@@ -180,7 +184,7 @@ export default async function LocaleSignDailyHoroscopePage({
     },
     inLanguage: safeLocale,
     url: pageUrl,
-    image: `${baseUrl}/og/signs/${sign}.jpg`,
+    image: `${baseUrl}/api/og?sign=${sign}&title=${encodeURIComponent(`${signName} Daily Horoscope`)}`,
   };
 
   const speakableJsonLd = {
@@ -400,12 +404,107 @@ export default async function LocaleSignDailyHoroscopePage({
           </div>
         </div>
 
+        {/* 엔터테인먼트 면책조항 */}
+        <div className="glass-card p-5 mb-8 border border-amber-500/20 bg-amber-500/5">
+          <p className="text-amber-200/80 text-xs leading-relaxed text-center">
+            {safeLocale === 'ko' && '⚠️ 본 운세는 오락 및 참고 목적으로만 제공됩니다. 과학적으로 검증된 정보가 아니며, 건강·재정·법률 등 중요한 의사결정의 근거로 사용하지 마십시오. 개인 상담이 필요한 경우 해당 분야 전문가와 상담하시기 바랍니다.'}
+            {safeLocale === 'en' && '⚠️ This horoscope is provided for entertainment and reference purposes only. It is not scientifically validated information. Please do not use it as the basis for important decisions regarding health, finances, or legal matters. Consult qualified professionals for personal advice.'}
+            {safeLocale === 'zh' && '⚠️ 本星座运势仅供娱乐和参考目的。这不是经过科学验证的信息，请勿将其作为健康、财务或法律等重要决策的依据。如需个人建议，请咨询相关专业人士。'}
+            {safeLocale === 'ja' && '⚠️ この星座占いはエンターテインメントおよび参考目的のみで提供されています。科学的に検証された情報ではなく、健康・財務・法律などの重要な意思決定の根拠として使用しないでください。個人的なアドバイスが必要な場合は、専門家にご相談ください。'}
+            {safeLocale === 'es' && '⚠️ Este horóscopo se proporciona únicamente con fines de entretenimiento y referencia. No es información científicamente validada. No lo utilice como base para decisiones importantes sobre salud, finanzas o asuntos legales. Consulte a profesionales cualificados para asesoramiento personal.'}
+          </p>
+        </div>
+
         {/* FAQ — GEO 최적화 */}
         <FAQSection
           items={faqItems}
           title={faqTitles[safeLocale]}
           pageUrl={pageUrl}
         />
+
+        {/* 별자리 기본 정보 교육 섹션 */}
+        {signMeta && (() => {
+          const elementLabel: Record<string, Record<string, string>> = {
+            fire:  { ko: '불', en: 'Fire', zh: '火', ja: '火', es: 'Fuego' },
+            earth: { ko: '흙', en: 'Earth', zh: '土', ja: '地', es: 'Tierra' },
+            air:   { ko: '공기', en: 'Air', zh: '风', ja: '風', es: 'Aire' },
+            water: { ko: '물', en: 'Water', zh: '水', ja: '水', es: 'Agua' },
+          };
+          const modalityLabel: Record<string, Record<string, string>> = {
+            cardinal: { ko: '활동궁', en: 'Cardinal', zh: '本位宫', ja: '活動宮', es: 'Cardinal' },
+            fixed:    { ko: '고정궁', en: 'Fixed', zh: '固定宫', ja: '不動宮', es: 'Fijo' },
+            mutable:  { ko: '변통궁', en: 'Mutable', zh: '变动宫', ja: '柔軟宮', es: 'Mutable' },
+          };
+          const sectionTitles: Record<string, string> = {
+            ko: `${signName} 별자리 특성`,
+            en: `About ${signName}`,
+            zh: `${signName}星座特征`,
+            ja: `${signName}の特徴`,
+            es: `Características de ${signName}`,
+          };
+          const learnMoreLabel: Record<string, string> = {
+            ko: `${signName} 상세 프로필 →`,
+            en: `${signName} Full Profile →`,
+            zh: `${signName}详细介绍 →`,
+            ja: `${signName}の詳細 →`,
+            es: `Perfil completo de ${signName} →`,
+          };
+          const positiveTraitsLabel: Record<string, string> = {
+            ko: '주요 특성', en: 'Key Traits', zh: '主要特征', ja: '主な特性', es: 'Rasgos Clave',
+          };
+          const element = signData.element;
+          const modality = signMeta.modality;
+          const rulingPlanet = signMeta.rulingPlanet[safeLocale] ?? signMeta.rulingPlanet.en;
+          const positiveTraits = signMeta.traits.positive.slice(0, 3).map(
+            (t) => t[safeLocale] ?? t.en
+          );
+
+          return (
+            <section className="glass-card p-6 mb-8" aria-label="Zodiac profile">
+              <h2 className="text-lg font-semibold text-white mb-5 text-center">
+                {sectionTitles[safeLocale] ?? sectionTitles.en}
+              </h2>
+              <div className="grid grid-cols-3 gap-3 mb-5 text-center text-sm">
+                <div className="bg-white/5 rounded-lg p-3">
+                  <p className="text-white/40 text-xs mb-1">
+                    {safeLocale === 'ko' ? '원소' : safeLocale === 'zh' ? '元素' : safeLocale === 'ja' ? '元素' : safeLocale === 'es' ? 'Elemento' : 'Element'}
+                  </p>
+                  <p className="text-white font-medium">{elementLabel[element]?.[safeLocale] ?? elementLabel[element]?.en}</p>
+                </div>
+                <div className="bg-white/5 rounded-lg p-3">
+                  <p className="text-white/40 text-xs mb-1">
+                    {safeLocale === 'ko' ? '수호 행성' : safeLocale === 'zh' ? '守护星' : safeLocale === 'ja' ? '守護星' : safeLocale === 'es' ? 'Planeta' : 'Planet'}
+                  </p>
+                  <p className="text-white font-medium">{rulingPlanet}</p>
+                </div>
+                <div className="bg-white/5 rounded-lg p-3">
+                  <p className="text-white/40 text-xs mb-1">
+                    {safeLocale === 'ko' ? '모달리티' : safeLocale === 'zh' ? '模式' : safeLocale === 'ja' ? 'モダリティ' : safeLocale === 'es' ? 'Modalidad' : 'Modality'}
+                  </p>
+                  <p className="text-white font-medium">{modalityLabel[modality]?.[safeLocale] ?? modalityLabel[modality]?.en}</p>
+                </div>
+              </div>
+              <div className="mb-4">
+                <p className="text-white/50 text-xs mb-2 uppercase tracking-wider">{positiveTraitsLabel[safeLocale] ?? positiveTraitsLabel.en}</p>
+                <div className="flex flex-wrap gap-2">
+                  {positiveTraits.map((trait) => (
+                    <span key={trait} className="px-3 py-1 rounded-full text-sm bg-purple-500/20 border border-purple-500/30 text-purple-200">
+                      {trait}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="text-center mt-4">
+                <Link
+                  href={`/${safeLocale}/zodiac/${signId}`}
+                  className="text-sm text-purple-400 hover:text-purple-300 transition-colors"
+                >
+                  {learnMoreLabel[safeLocale] ?? learnMoreLabel.en}
+                </Link>
+              </div>
+            </section>
+          );
+        })()}
 
         {/* 관련 링크 */}
         <section className="glass-card p-6 mb-8" aria-label="Related content">
@@ -418,6 +517,9 @@ export default async function LocaleSignDailyHoroscopePage({
             </Link>
             <Link href={`/${safeLocale}/horoscope`} className="px-5 py-2.5 rounded-full text-sm font-medium bg-white/10 hover:bg-white/20 text-white transition-colors">
               {safeLocale === 'ko' ? '오늘의 운세 메인' : 'Horoscope Home'}
+            </Link>
+            <Link href={`/${safeLocale}/blog`} className="px-5 py-2.5 rounded-full text-sm font-medium bg-white/10 hover:bg-white/20 text-white transition-colors">
+              {safeLocale === 'ko' ? '점성술 블로그' : safeLocale === 'zh' ? '占星博客' : safeLocale === 'ja' ? '占星術ブログ' : safeLocale === 'es' ? 'Blog de Astrología' : 'Astrology Blog'}
             </Link>
           </div>
         </section>

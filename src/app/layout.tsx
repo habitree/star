@@ -1,6 +1,6 @@
 import { Inter, Playfair_Display } from 'next/font/google';
-import Script from 'next/script';
 import JsonLd from '@/components/seo/JsonLd';
+import AdSenseScript from '@/components/ads/AdSenseScript';
 import './globals.css';
 
 const ADSENSE_PUBLISHER_ID = 'ca-pub-4166976105261105';
@@ -37,13 +37,13 @@ export const metadata = {
     locale: 'ko_KR',
     url: siteUrl,
     siteName: '별자리 운세 - LuckyToday',
-    images: [{ url: '/og/default.jpg', width: 1200, height: 630, alt: '별자리 운세 LuckyToday' }],
+    images: [{ url: '/api/og', width: 1200, height: 630, alt: '별자리 운세 LuckyToday' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: '별자리 운세 - 오늘의 운세와 별자리 궁합',
     description: '12별자리의 오늘의 운세, 별자리 궁합, 출생 차트를 확인하세요.',
-    images: ['/og/default.jpg'],
+    images: ['/api/og'],
   },
   robots: {
     index: true,
@@ -96,13 +96,7 @@ export default function RootLayout({
         <JsonLd data={organizationJsonLd} />
       </head>
       <body className="font-sans min-h-screen flex flex-col">
-        <Script
-          id="adsense-script"
-          async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_PUBLISHER_ID}`}
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        <AdSenseScript />
         {children}
       </body>
     </html>

@@ -1,35 +1,123 @@
-# Google 검색엔진 크롤러
+# LuckyToday — Daily Horoscope Service
+# GEO-optimized robots.txt | Updated: 2026-03-18
+# Strategy: Maximum exposure to search engines + AI crawlers (GEO)
+# Note: public/robots.txt takes precedence over app/robots.ts in Next.js
+
+# ─── Google 계열 ────────────────────────────────────────────────
 User-agent: Googlebot
 Allow: /
+Disallow: /login
+Disallow: /signup
+Disallow: /profile
+Disallow: /api/push/
+Disallow: /api/share-card
 
-# Google AdSense 크롤러 (광고 매칭용) - 반드시 허용
-User-agent: Mediapartners-Google
-Allow: /
-
-# Google AdsBot (광고 품질 검사용)
-User-agent: AdsBot-Google
-Allow: /
-
-# Google AdsBot 모바일
-User-agent: AdsBot-Google-Mobile
-Allow: /
-
-# Google 이미지 봇
 User-agent: Googlebot-Image
 Allow: /
 
-# Bing 검색엔진
-User-agent: Bingbot
+User-agent: Googlebot-News
 Allow: /
 
-# 네이버 검색엔진
+# Google AdSense — 광고 품질 심사 (허용 필수)
+User-agent: Mediapartners-Google
+Allow: /
+
+User-agent: AdsBot-Google
+Allow: /
+
+User-agent: AdsBot-Google-Mobile
+Allow: /
+
+# Google-Extended — Gemini AI 학습 허용 (GEO)
+User-agent: Google-Extended
+Allow: /
+
+# ─── Bing / Microsoft ───────────────────────────────────────────
+User-agent: Bingbot
+Allow: /
+Disallow: /login
+Disallow: /signup
+Disallow: /profile
+Disallow: /api/push/
+
+User-agent: MicrosoftPreview
+Allow: /
+
+# ─── OpenAI / ChatGPT (GEO 핵심) ────────────────────────────────
+# GPTBot: ChatGPT 학습 데이터 수집 — 허용 시 ChatGPT 답변에 노출
+User-agent: GPTBot
+Allow: /
+Disallow: /login
+Disallow: /signup
+Disallow: /profile
+Disallow: /api/push/
+
+# ChatGPT-User: ChatGPT 브라우징 플러그인 실시간 참조
+User-agent: ChatGPT-User
+Allow: /
+
+# ─── Anthropic / Claude (GEO) ───────────────────────────────────
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# ─── Perplexity AI (GEO) ────────────────────────────────────────
+User-agent: PerplexityBot
+Allow: /
+
+# ─── Apple Intelligence (GEO) ───────────────────────────────────
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# ─── Meta AI (GEO) ──────────────────────────────────────────────
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: Meta-ExternalFetcher
+Allow: /
+
+# ─── Amazon / Alexa (GEO) ───────────────────────────────────────
+User-agent: Amazonbot
+Allow: /
+
+# ─── Cohere AI (GEO) ────────────────────────────────────────────
+User-agent: cohere-ai
+Allow: /
+
+# ─── You.com AI Search (GEO) ────────────────────────────────────
+User-agent: YouBot
+Allow: /
+
+# ─── Diffbot — 지식 그래프 구축 (GEO) ──────────────────────────
+User-agent: Diffbot
+Allow: /
+
+# ─── 네이버 / 기타 아시아 검색엔진 ──────────────────────────────
 User-agent: Yeti
 Allow: /
 
-# 일반 검색엔진 크롤러
+User-agent: DuckDuckBot
+Allow: /
+
+# ─── 기본 규칙 (모든 나머지 크롤러) ─────────────────────────────
+# /api/og 는 명시적 허용: 소셜/AI 미리보기 이미지 생성 엔드포인트
 User-agent: *
 Allow: /
-Disallow: /api/
+Allow: /api/og
+Disallow: /login
+Disallow: /signup
+Disallow: /profile
+Disallow: /api/push/
+Disallow: /api/share-card
+Disallow: /api/horoscope/
+Disallow: /api/birth-chart
+Disallow: /api/compatibility
 Disallow: /_next/static/
 
+# ─── Sitemap ─────────────────────────────────────────────────────
 Sitemap: https://luckytoday.one/sitemap.xml

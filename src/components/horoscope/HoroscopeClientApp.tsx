@@ -95,8 +95,17 @@ const UI_TEXT = {
     resetBtn: 'Ver con otra fecha de nacimiento',
     checkInSection: 'Check-in de hoy',
     welcomeSection: 'Resumen del Horóscopo',
+    winBackWelcome: '¡Bienvenido de vuelta! Tu racha se ha restaurado 🌟',
   },
 } as const;
+
+const WIN_BACK_WELCOME: Record<string, string> = {
+  ko: '다시 돌아오셨군요! 스트릭이 복구됩니다 🌟',
+  en: 'Welcome back! Your streak is restored 🌟',
+  zh: '欢迎回来！您的连续记录已恢复 🌟',
+  ja: 'おかえりなさい！ストリークが復活しました 🌟',
+  es: '¡Bienvenido de vuelta! Tu racha se ha restaurado 🌟',
+};
 
 type SupportedLocale = keyof typeof UI_TEXT;
 
@@ -306,7 +315,7 @@ export default function HoroscopeClientApp({ locale = 'ko' }: { locale?: string 
   });
   const daysSinceLast = getDaysSinceLastVisit(lastVisit, lastCheckInDate);
 
-  const horoscope = generateDailyHoroscope(currentSign, today, locale, currentBirthDate, birthTime);
+  const horoscope = generateDailyHoroscope(currentSign, today, locale, currentBirthDate, birthTime, fortuneFeedback);
 
   const categories: HoroscopeCategory[] = ['overall', 'love', 'career', 'health', 'money'];
 
@@ -513,6 +522,12 @@ export default function HoroscopeClientApp({ locale = 'ko' }: { locale?: string 
               handleCheckIn();
               recordWinBack();
               trackEvent('winback_checkin', { streak: visitStreak });
+              // 마일스톤 미달 시에도 Win-Back 환영 메시지 표시
+              if (!newRewardMessage) {
+                const msg = WIN_BACK_WELCOME[locale] ?? WIN_BACK_WELCOME.ko;
+                setNewRewardMessage(msg);
+                setTimeout(() => setNewRewardMessage(null), 4000);
+              }
             }}
             locale={locale}
           />

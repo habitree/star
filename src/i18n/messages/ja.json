@@ -122,11 +122,13 @@
     "birthChart": "出生図",
     "zodiacSigns": "星座",
     "blog": "占星術ガイド",
-    "allRightsReserved": "全著作権所有。"
+    "allRightsReserved": "全著作権所有。",
+    "howItWorks": "運勢の仕組み"
   },
   "cookie": {
-    "message": "当サイトはサービス改善とパーソナライズ広告のためにCookieを使用しています。サイトを引き続きご利用の場合、Cookie使用に同意したものとみなします。",
+    "message": "当サイトはサービス改善とパーソナライズ広告（Google AdSense）のためにCookieを使用しています。",
     "privacyLink": "プライバシーポリシー",
-    "accept": "同意する"
+    "accept": "同意する",
+    "reject": "拒否する"
   }
 }

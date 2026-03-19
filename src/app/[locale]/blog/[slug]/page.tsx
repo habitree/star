@@ -8,6 +8,7 @@ import { allArticles, getArticleBySlug } from '@/data/blog';
 import { isAdSenseEnabled } from '@/lib/adsense-config';
 import { AdSenseInArticle } from '@/components/ads';
 import AffiliateBanner from '@/components/ads/AffiliateBanner';
+import JsonLd from '@/components/seo/JsonLd';
 import type { BlogSection } from '@/data/blog';
 
 export function generateStaticParams() {
@@ -30,6 +31,8 @@ export async function generateMetadata({
   const baseUrl = getSiteUrl();
   const url = `${baseUrl}/${safeLocale}/blog/${slug}`;
 
+  const ogImageUrl = `${baseUrl}/api/og?title=${encodeURIComponent(content.title)}`;
+
   return {
     title: content.title,
     description: content.excerpt,
@@ -39,6 +42,13 @@ export async function generateMetadata({
       url,
       type: 'article',
       publishedTime: article.publishedAt,
+      images: [{ url: ogImageUrl, width: 1200, height: 630, alt: content.title }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: content.title,
+      description: content.excerpt,
+      images: [ogImageUrl],
     },
     alternates: {
       canonical: url,
@@ -104,6 +114,28 @@ export default async function BlogArticlePage({
 
   const content = (article.content as Record<string, { title: string; excerpt: string; sections: BlogSection[] }>)[safeLocale] ?? article.content.ko;
   const adsEnabled = isAdSenseEnabled();
+  const baseUrl = getSiteUrl();
+  const pageUrl = `${baseUrl}/${safeLocale}/blog/${slug}`;
+
+  const blogPostingJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: content.title,
+    description: content.excerpt,
+    url: pageUrl,
+    datePublished: article.publishedAt,
+    dateModified: article.publishedAt,
+    inLanguage: safeLocale,
+    articleSection: article.category === 'basics' ? 'Astrology Basics' : 'Zodiac Guides',
+    author: { '@type': 'Organization', name: 'LuckyToday', url: baseUrl },
+    publisher: {
+      '@type': 'Organization',
+      name: 'LuckyToday',
+      url: baseUrl,
+      logo: { '@type': 'ImageObject', url: `${baseUrl}/api/og` },
+    },
+    image: `${baseUrl}/api/og?title=${encodeURIComponent(content.title)}`,
+  };
 
   const BACK_LABEL: Record<string, string> = {
     ko: '← 블로그 목록으로',
@@ -114,7 +146,15 @@ export default async function BlogArticlePage({
   };
 
   const MIN_LABEL: Record<string, string> = {
-    ko: '분 읽기', en: 'min read', zh: '分钟阅读', ja: '분で読める', es: 'min de lectura',
+    ko: '분 읽기', en: 'min read', zh: '分钟阅读', ja: '分で読める', es: 'min de lectura',
+  };
+
+  const DISCLAIMER: Record<string, string> = {
+    ko: '이 콘텐츠는 오락 및 참고 목적으로만 제공됩니다. 의료·재정·법적 조언이 아닙니다.',
+    en: 'This content is for entertainment purposes only and is not medical, financial, or legal advice.',
+    zh: '本内容仅供娱乐参考，不构成医疗、财务或法律建议。',
+    ja: 'このコンテンツは娯楽および参考目的のみで提供されます。医療・財務・法的助言ではありません。',
+    es: 'Este contenido es solo para entretenimiento y no constituye asesoramiento médico, financiero o legal.',
   };
 
   const RELATED_LABEL: Record<string, string> = {
@@ -134,6 +174,7 @@ export default async function BlogArticlePage({
 
   return (
     <main className="min-h-screen py-12 px-4">
+      <JsonLd data={blogPostingJsonLd} />
       <div className="max-w-2xl mx-auto">
         {/* Back link */}
         <Link
@@ -142,6 +183,12 @@ export default async function BlogArticlePage({
         >
           {BACK_LABEL[safeLocale] ?? BACK_LABEL.ko}
         </Link>
+
+        {/* 면책조항 배너 */}
+        <div className="flex items-start gap-2 mb-6 px-4 py-3 rounded-lg bg-amber-500/10 border border-amber-500/25 text-amber-200/80 text-xs leading-relaxed">
+          <span className="shrink-0 mt-0.5">⚠️</span>
+          <p>{DISCLAIMER[safeLocale] ?? DISCLAIMER.en}</p>
+        </div>
 
         {/* Article header */}
         <article>

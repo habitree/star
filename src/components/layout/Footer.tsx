@@ -1,15 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 export default function Footer() {
   const t = useTranslations('footer');
+  const locale = useLocale();
   const currentYear = new Date().getFullYear();
 
   const footerLinks = [
     { href: '/about', label: t('about') },
-    { href: '/privacy', label: t('privacy') },
+    { href: '/how-it-works', label: t('howItWorks') },
+    { href: `/${locale}/privacy`, label: t('privacy') },
     { href: '/terms', label: t('terms') },
     { href: '/contact', label: t('contact') },
   ];

@@ -5,6 +5,14 @@
 
 const CACHE_NAME = 'zodiac-sw-v1';
 
+const PUSH_TEXT = {
+  ko: { title: '별자리 운세', body: '오늘의 운세를 확인하세요! ✨', view: '운세 보기', dismiss: '닫기' },
+  en: { title: 'Daily Horoscope', body: 'Check your fortune today! ✨', view: 'View', dismiss: 'Dismiss' },
+  zh: { title: '每日运势', body: '查看您今天的运势！✨', view: '查看运势', dismiss: '关闭' },
+  ja: { title: '今日の運勢', body: '今日の運勢を確認しましょう！✨', view: '運勢を見る', dismiss: '閉じる' },
+  es: { title: 'Horóscopo Diario', body: '¡Consulta tu fortuna de hoy! ✨', view: 'Ver', dismiss: 'Cerrar' },
+};
+
 // SW 설치
 self.addEventListener('install', (event) => {
   self.skipWaiting();
@@ -28,10 +36,12 @@ self.addEventListener('push', (event) => {
   try {
     payload = event.data.json();
   } catch {
-    payload = { title: '별자리 운세', body: event.data.text(), icon: '/icons/icon-192.png' };
+    payload = { title: null, body: event.data.text(), icon: '/icons/icon-192.png' };
   }
 
-  const { title = '별자리 운세', body = '오늘의 운세를 확인하세요! ✨', icon, url = '/' } = payload;
+  const lang = (payload.locale && PUSH_TEXT[payload.locale]) ? payload.locale : 'ko';
+  const txt = PUSH_TEXT[lang];
+  const { title = txt.title, body = txt.body, icon, url = '/' } = payload;
 
   event.waitUntil(
     self.registration.showNotification(title, {
@@ -43,8 +53,8 @@ self.addEventListener('push', (event) => {
       requireInteraction: false,
       data: { url },
       actions: [
-        { action: 'view', title: '운세 보기' },
-        { action: 'dismiss', title: '닫기' },
+        { action: 'view', title: txt.view },
+        { action: 'dismiss', title: txt.dismiss },
       ],
     })
   );

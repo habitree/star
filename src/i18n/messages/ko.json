@@ -122,11 +122,13 @@
     "birthChart": "출생차트",
     "zodiacSigns": "별자리",
     "blog": "점성술 가이드",
-    "allRightsReserved": "모든 권리 보유."
+    "allRightsReserved": "모든 권리 보유.",
+    "howItWorks": "운세 생성 방법"
   },
   "cookie": {
-    "message": "이 웹사이트는 서비스 개선과 맞춤 광고 제공을 위해 쿠키를 사용합니다. 사이트를 계속 이용하시면 쿠키 사용에 동의하는 것으로 간주됩니다.",
+    "message": "이 웹사이트는 서비스 개선과 맞춤 광고(Google AdSense) 제공을 위해 쿠키를 사용합니다.",
     "privacyLink": "개인정보처리방침",
-    "accept": "동의합니다"
+    "accept": "동의합니다",
+    "reject": "거부합니다"
   }
 }

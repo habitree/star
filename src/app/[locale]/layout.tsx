@@ -49,13 +49,13 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       locale: localeToOgLocale[locale as Locale] ?? 'ko_KR',
       url: `${siteUrl}/${locale}`,
       siteName: 'LuckyToday',
-      images: [{ url: '/og/default.jpg', width: 1200, height: 630, alt: 'LuckyToday' }],
+      images: [{ url: '/api/og', width: 1200, height: 630, alt: 'LuckyToday' }],
     },
     twitter: {
       card: 'summary_large_image',
       title: t('title'),
       description: t('subtitle'),
-      images: ['/og/default.jpg'],
+      images: ['/api/og'],
     },
     robots: {
       index: true,

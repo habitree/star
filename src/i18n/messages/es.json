@@ -122,11 +122,13 @@
     "birthChart": "Carta Natal",
     "zodiacSigns": "Signos del Zodiaco",
     "blog": "Guia de Astrologia",
-    "allRightsReserved": "Todos los derechos reservados."
+    "allRightsReserved": "Todos los derechos reservados.",
+    "howItWorks": "Cómo Funciona"
   },
   "cookie": {
-    "message": "Este sitio web utiliza cookies para mejorar nuestros servicios y proporcionar anuncios personalizados. Al continuar usando el sitio, acepta nuestro uso de cookies.",
-    "privacyLink": "Politica de Privacidad",
-    "accept": "Aceptar"
+    "message": "Este sitio utiliza cookies para mejorar nuestros servicios y proporcionar anuncios personalizados (Google AdSense).",
+    "privacyLink": "Política de Privacidad",
+    "accept": "Aceptar",
+    "reject": "Rechazar"
   }
 }

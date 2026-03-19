@@ -48,6 +48,8 @@ import type { SignTemplates } from '@/data/sign-templates/types';
 import { zodiacSigns } from '@/data/zodiac-signs';
 import { getPlanetForSign, isPlanetAffectingCategory } from '@/data/planet-influences';
 import { toISODateString, getWeekStart, getWeekEnd } from '@/lib/utils';
+import { computeFeedbackBias, applyFeedbackBias, type FeedbackBias } from '@/lib/feedback-adjuster';
+import type { FortuneFeedback, FeedbackCategory } from '@/types/engagement';
 
 // ─── 런타임 주입 템플릿 데이터 ───────────────────────────────
 // setTemplateData()로 주입. 주입 전에는 빈 객체 → generic 템플릿으로 폴백
@@ -187,6 +189,16 @@ function getTemplateLevel(score: HoroscopeScore): 'high' | 'medium' | 'low' {
 function selectRandom<T>(array: T[], random: () => number): T {
   const index = Math.floor(random() * array.length);
   return array[index];
+}
+
+/**
+ * 피드백 바이어스를 적용하여 배열에서 요소 선택 (포스트-프로세싱 레이어)
+ * 시드 패턴 자체는 변경하지 않음
+ */
+function selectRandomBiased<T>(array: T[], random: () => number, bias: FeedbackBias): T {
+  const baseIndex = Math.floor(random() * array.length);
+  const finalIndex = applyFeedbackBias(baseIndex, array.length, bias);
+  return array[finalIndex];
 }
 
 /**
@@ -361,11 +373,12 @@ function generateSubIndicators(
 function selectGenericTemplate(
   category: HoroscopeCategory,
   score: HoroscopeScore,
-  random: () => number
+  random: () => number,
+  bias: FeedbackBias = null
 ): LocalizedText {
   const level = getTemplateLevel(score);
   const templates = horoscopeTemplates[category][level];
-  return selectRandom(templates, random);
+  return selectRandomBiased(templates, random, bias);
 }
 
 /**
@@ -376,15 +389,16 @@ function selectElementTemplate(
   signId: ZodiacSignId,
   category: HoroscopeCategory,
   score: HoroscopeScore,
-  random: () => number
+  random: () => number,
+  bias: FeedbackBias = null
 ): LocalizedText {
   const element = getSignElement(signId);
   const level = getTemplateLevel(score);
   const pool = _elementTemplates[element]?.[category]?.[level];
   if (!pool || pool.length === 0) {
-    return selectGenericTemplate(category, score, random);
+    return selectGenericTemplate(category, score, random, bias);
   }
-  return selectRandom(pool, random);
+  return selectRandomBiased(pool, random, bias);
 }
 
 /**
@@ -395,14 +409,15 @@ function selectSignTemplate(
   signId: ZodiacSignId,
   category: HoroscopeCategory,
   score: HoroscopeScore,
-  random: () => number
+  random: () => number,
+  bias: FeedbackBias = null
 ): LocalizedText {
   const level = getTemplateLevel(score);
   const pool = _signTemplates[signId]?.[category]?.[level];
   if (!pool || pool.length === 0) {
-    return selectGenericTemplate(category, score, random);
+    return selectGenericTemplate(category, score, random, bias);
   }
-  return selectRandom(pool, random);
+  return selectRandomBiased(pool, random, bias);
 }
 
 /**
@@ -415,20 +430,21 @@ function selectTemplate(
   category: HoroscopeCategory,
   score: HoroscopeScore,
   random: () => number,
-  signId?: ZodiacSignId
+  signId?: ZodiacSignId,
+  bias: FeedbackBias = null
 ): LocalizedText {
   if (signId) {
     const roll = random();
     if (roll < 0.60) {
       // 60%: 별자리 전용 템플릿
-      return selectSignTemplate(signId, category, score, random);
+      return selectSignTemplate(signId, category, score, random, bias);
     } else if (roll < 0.90) {
       // 30%: 원소 기반 템플릿
-      return selectElementTemplate(signId, category, score, random);
+      return selectElementTemplate(signId, category, score, random, bias);
     }
   }
   // 10%: 범용 템플릿 (또는 signId 없을 때)
-  return selectGenericTemplate(category, score, random);
+  return selectGenericTemplate(category, score, random, bias);
 }
 
 /**
@@ -439,7 +455,8 @@ function generateCategoryHoroscope(
   date: Date,
   category: HoroscopeCategory,
   birthDate?: string | null,
-  birthTime?: string | null
+  birthTime?: string | null,
+  feedbacks?: FortuneFeedback[]
 ): DetailedCategoryHoroscope {
   const seed = generateSeed(signId, date, category, birthDate, birthTime);
   const random = seededRandom(seed);
@@ -453,8 +470,13 @@ function generateCategoryHoroscope(
   // 서브지표 생성
   const subIndicators = generateSubIndicators(random, category, detailedScore);
 
-  // 원소 기반 템플릿 사용
-  const text = selectTemplate(category, score, random, signId);
+  // 피드백 바이어스 계산 (포스트-프로세싱 레이어, 시드 패턴 불변)
+  const bias = feedbacks && feedbacks.length > 0
+    ? computeFeedbackBias(feedbacks, category as FeedbackCategory)
+    : null;
+
+  // 원소 기반 템플릿 사용 (바이어스 적용)
+  const text = selectTemplate(category, score, random, signId, bias);
 
   return { score, text, detailedScore, subIndicators };
 }
@@ -469,18 +491,19 @@ export function generateDailyHoroscope(
   date: Date = new Date(),
   locale: string = 'ko',
   birthDate?: string | null,
-  birthTime?: string | null
+  birthTime?: string | null,
+  feedbacks?: FortuneFeedback[]
 ): DailyHoroscope {
   const dateStr = toISODateString(date);
   const baseSeed = generateSeed(signId, date, undefined, birthDate, birthTime);
   const random = seededRandom(baseSeed);
 
-  // 각 카테고리별 운세 생성
-  const overall = generateCategoryHoroscope(signId, date, 'overall', birthDate, birthTime);
-  const love = generateCategoryHoroscope(signId, date, 'love', birthDate, birthTime);
-  const career = generateCategoryHoroscope(signId, date, 'career', birthDate, birthTime);
-  const health = generateCategoryHoroscope(signId, date, 'health', birthDate, birthTime);
-  const money = generateCategoryHoroscope(signId, date, 'money', birthDate, birthTime);
+  // 각 카테고리별 운세 생성 (클라이언트 피드백 바이어스 적용)
+  const overall = generateCategoryHoroscope(signId, date, 'overall', birthDate, birthTime, feedbacks);
+  const love = generateCategoryHoroscope(signId, date, 'love', birthDate, birthTime, feedbacks);
+  const career = generateCategoryHoroscope(signId, date, 'career', birthDate, birthTime, feedbacks);
+  const health = generateCategoryHoroscope(signId, date, 'health', birthDate, birthTime, feedbacks);
+  const money = generateCategoryHoroscope(signId, date, 'money', birthDate, birthTime, feedbacks);
 
   // 행운의 요소들 선택 (원소 기반 행운 색상 우선 사용)
   const element = getSignElement(signId);

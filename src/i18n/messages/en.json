@@ -122,11 +122,13 @@
     "birthChart": "Birth Chart",
     "zodiacSigns": "Zodiac Signs",
     "blog": "Astrology Guide",
-    "allRightsReserved": "All rights reserved."
+    "allRightsReserved": "All rights reserved.",
+    "howItWorks": "How It Works"
   },
   "cookie": {
-    "message": "This website uses cookies to improve our services and provide personalized ads. By continuing to use this site, you agree to our use of cookies.",
+    "message": "This website uses cookies to improve our services and provide personalized ads (Google AdSense).",
     "privacyLink": "Privacy Policy",
-    "accept": "Accept"
+    "accept": "Accept",
+    "reject": "Decline"
   }
 }

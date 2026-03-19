@@ -122,11 +122,13 @@
     "birthChart": "出生图",
     "zodiacSigns": "星座",
     "blog": "占星指南",
-    "allRightsReserved": "版权所有。"
+    "allRightsReserved": "版权所有。",
+    "howItWorks": "运势生成方式"
   },
   "cookie": {
-    "message": "本网站使用Cookie来改善服务并提供个性化广告。继续使用本网站即表示您同意使用Cookie。",
+    "message": "本网站使用Cookie来改善服务并提供个性化广告（Google AdSense）。",
     "privacyLink": "隐私政策",
-    "accept": "接受"
+    "accept": "接受",
+    "reject": "拒绝"
   }
 }

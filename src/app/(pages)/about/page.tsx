@@ -7,9 +7,15 @@ import { getSiteUrl } from '@/lib/site-url';
 const baseUrl = getSiteUrl();
 
 export const metadata: Metadata = {
-  title: '소개 | 별자리 운세',
-  description: '별자리 운세는 12별자리 × 5카테고리 × 5언어를 지원하는 무료 점성술 서비스입니다. 매일 업데이트되는 운세, 타로, 바이오리듬, 궁합을 확인하세요.',
+  title: 'About LuckyToday — Free Daily Horoscope & Astrology Service',
+  description: 'LuckyToday is a free multilingual astrology service covering 12 zodiac signs × 5 categories × 5 languages. Explore daily horoscopes, tarot, biorhythm, and compatibility — updated every day.',
   alternates: { canonical: `${baseUrl}/about` },
+  openGraph: {
+    title: 'About LuckyToday — Free Daily Horoscope',
+    description: 'Free multilingual daily horoscope service for 12 zodiac signs in 5 languages. Entertainment-focused astrology for self-reflection and fun.',
+    url: `${baseUrl}/about`,
+    type: 'website',
+  },
 };
 
 const FEATURES = [
@@ -140,9 +146,84 @@ export default function AboutPage() {
             </p>
           </div>
 
+          {/* 에디토리얼 팀 */}
+          <div className="glass-card p-8">
+            <h2 className="text-2xl font-semibold text-white mb-6">Editorial Team / 편집팀</h2>
+            <p className="text-white/70 leading-relaxed text-sm mb-6">
+              LuckyToday&apos;s horoscope content is developed and maintained by our editorial team, combining traditional astrological knowledge with modern content systems.
+            </p>
+            <div className="grid gap-4">
+              <div className="flex gap-4 p-4 bg-white/5 rounded-xl">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-xl flex-shrink-0">
+                  🔮
+                </div>
+                <div>
+                  <h3 className="text-white font-semibold mb-1">LuckyToday Editorial Team</h3>
+                  <p className="text-white/55 text-sm leading-relaxed">
+                    Our editorial team curates daily horoscope interpretations based on traditional Western astrology — including planetary transits, elemental influences, and zodiac archetypes. All content is reviewed for accuracy against established astrological traditions.
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-4 p-4 bg-white/5 rounded-xl">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-xl flex-shrink-0">
+                  🌍
+                </div>
+                <div>
+                  <h3 className="text-white font-semibold mb-1">Localization Team</h3>
+                  <p className="text-white/55 text-sm leading-relaxed">
+                    Our localization team ensures cultural adaptation — not just translation — for Korean, English, Chinese, Japanese, and Spanish audiences. Astrological metaphors and cultural nuances are preserved across all five languages.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="mt-4 p-4 bg-purple-500/10 border border-purple-500/20 rounded-xl">
+              <p className="text-white/70 text-sm">
+                <strong className="text-white">Contact our team:</strong>{' '}
+                <a href="mailto:contact@luckytoday.one" className="text-purple-400 hover:text-purple-300">
+                  contact@luckytoday.one
+                </a>
+              </p>
+            </div>
+          </div>
+
+          {/* 운세 생성 방법 투명성 */}
+          <div className="glass-card p-8">
+            <h2 className="text-2xl font-semibold text-white mb-4">How Our Horoscopes Work / 운세 생성 방법</h2>
+            <p className="text-white/70 leading-relaxed text-sm mb-4">
+              We believe in full transparency about how our content is generated.
+            </p>
+            <div className="space-y-3 text-sm">
+              <div className="flex gap-3 p-3 bg-white/5 rounded-lg">
+                <span className="text-purple-400 shrink-0 mt-0.5">1.</span>
+                <p className="text-white/70"><strong className="text-white">Template-based system:</strong> Each zodiac sign has a curated library of interpretations written by our editorial team, covering personality archetypes, elemental energies, and planetary influences.</p>
+              </div>
+              <div className="flex gap-3 p-3 bg-white/5 rounded-lg">
+                <span className="text-purple-400 shrink-0 mt-0.5">2.</span>
+                <p className="text-white/70"><strong className="text-white">Daily variation:</strong> The system selects interpretations daily based on the current date and sign combination, ensuring each day feels fresh while remaining grounded in traditional astrology.</p>
+              </div>
+              <div className="flex gap-3 p-3 bg-white/5 rounded-lg">
+                <span className="text-purple-400 shrink-0 mt-0.5">3.</span>
+                <p className="text-white/70"><strong className="text-white">Entertainment focus:</strong> All content is designed for entertainment and self-reflection. We do not claim to predict specific future events. Horoscopes are a lens for thinking about your day, not a roadmap.</p>
+              </div>
+              <div className="flex gap-3 p-3 bg-white/5 rounded-lg">
+                <span className="text-purple-400 shrink-0 mt-0.5">4.</span>
+                <p className="text-white/70"><strong className="text-white">Tarot cards:</strong> Our tarot readings are drawn from the 22 Major Arcana cards using traditional interpretations. Card selection is date-based, ensuring consistent but daily-varying insights.</p>
+              </div>
+            </div>
+            <Link
+              href="/how-it-works"
+              className="inline-block mt-5 text-sm text-purple-400 hover:text-purple-300 transition-colors"
+            >
+              Learn more about our methodology →
+            </Link>
+          </div>
+
           {/* 참고사항 */}
           <div className="glass-card p-8 border border-yellow-500/10">
-            <h2 className="text-xl font-semibold text-white mb-3">⚠️ 참고사항</h2>
+            <h2 className="text-xl font-semibold text-white mb-3">⚠️ Disclaimer / 참고사항</h2>
+            <p className="text-white/70 leading-relaxed text-sm mb-3">
+              All horoscope and astrology content on LuckyToday is provided for <strong className="text-white">entertainment and reference purposes only</strong>. It is not scientifically validated. Do not use it as the basis for decisions regarding health, finances, or legal matters. Consult qualified professionals for serious life decisions.
+            </p>
             <p className="text-white/70 leading-relaxed text-sm mb-3">
               본 서비스에서 제공하는 모든 운세 및 점성술 정보는
               <strong className="text-white"> 오락 및 참고 목적</strong>으로만 제공됩니다.
@@ -150,8 +231,7 @@ export default function AboutPage() {
               사용하지 마시고 해당 분야 전문가와 상담하시기 바랍니다.
             </p>
             <p className="text-white/50 text-xs">
-              일부 페이지에 후원자 연결 링크(어필리에이트 링크)가 포함될 수 있습니다.
-              클릭 시 서비스 운영에 도움이 됩니다.
+              Some pages may contain affiliate links. Clicking these helps support the service at no additional cost to you.
             </p>
           </div>
 
